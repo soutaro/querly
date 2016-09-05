@@ -144,24 +144,28 @@ module Querly
         end
 
         def test_args(nodes, args)
-          if !args || nodes.empty?
-            return nodes.empty? && !args
-          end
+          first_node = nodes.first
 
           case args
           when Argument::AnySeq
             true
           when Argument::Expr
-            args.expr =~ nodes.first && test_args(nodes.drop(1), args.tail)
-          when Argument::KeyValue
-            types = nodes.map(&:type)
-            if types == [:hash]
-              test_hash_args(nodes.first, args)
-            elsif types == [:hash, :kwsplat]
-              true
-            else
-              false
+            if first_node
+              args.expr =~ nodes.first && test_args(nodes.drop(1), args.tail)
             end
+          when Argument::KeyValue
+            if first_node
+              types = nodes.map(&:type)
+              if types == [:hash]
+                test_hash_args(nodes.first, args)
+              elsif types == [:hash, :kwsplat]
+                true
+              else
+                false
+              end
+            end
+          when nil
+            node.empty?
           end
         end
 
