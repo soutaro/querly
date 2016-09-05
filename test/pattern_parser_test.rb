@@ -15,4 +15,8 @@ class PatternParserTest < Minitest::Test
     assert_equal :foo, pattern.receiver.name
     assert_instance_of A::AnySeq, pattern.receiver.args
   end
+
+  def test_aaa
+    p Querly::Pattern::Parser.parse("foo(!foo: bar)")
+  end
 end

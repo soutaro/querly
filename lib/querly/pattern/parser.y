@@ -9,7 +9,7 @@ rule
 
 target: expr
 
-expr: UIDENT { result = Expr::Constant.new(path: [val[0]]) }
+expr: constant { result = Expr::Constant.new(path: val[0]) }
   | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0]) }
   | method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new,
                                                              name: val[0],
@@ -30,8 +30,9 @@ expr: UIDENT { result = Expr::Constant.new(path: [val[0]]) }
   | LPAREN expr RPAREN { result = val[1] }
 
 args:  { result = nil }
-  | expr { result = Argument::Expr.new(expr: val[0])}
+  | expr { result = Argument::Expr.new(expr: val[0], tail: nil)}
   | expr COMMA args { result = Argument::Expr.new(expr: val[0], tail: val[2]) }
+  | kw_args
   | DOTDOTDOT { result = Argument::AnySeq.new }
   | DOTDOTDOT COMMA kw_args { result = Argument::AnySeq.new(tail: val[2]) }
 
@@ -52,6 +53,9 @@ key_value: LIDENT COLON expr { result = { key: val[0].to_sym, value: val[2], neg
 method_name: LIDENT
   | UIDENT
   | METHOD
+
+constant: UIDENT { result = [val[0]] }
+  | UIDENT COLONCOLON constant { result = [val[0]] + val[2] }
 end
 
 ---- inner
@@ -122,7 +126,7 @@ def next_token
   when input.scan(/\_/)
     [:UNDERBAR, input.matched]
   when input.scan(/::/)
-    [:COLONCOLON, input.mathced]
+    [:COLONCOLON, input.matched]
   when input.scan(/:/)
     [:COLON, input.matched]
   when input.scan(/\*/)
