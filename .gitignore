@@ -8,3 +8,5 @@
 /spec/reports/
 /tmp/
 /.idea
+/parser.output
+/lib/querly/pattern/parser.rb

@@ -9,6 +9,7 @@ require 'querly/pattern/argument'
 require 'querly/script'
 require 'querly/script_enumerator'
 require 'querly/node_pair'
+require "querly/pattern/parser"
 
 Parser::Builders::Default.emit_lambda = true
 
