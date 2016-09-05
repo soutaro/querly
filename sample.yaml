@@ -1,0 +1,46 @@
+rules:
+  - id: com.ubiregi.delete_all
+    pattern: delete_all
+    message:
+      - delete_all は callback や validation をスキップします
+      - レコードを一つずつ destroy するよりも高速ですが、危険なことがあります
+    justification:
+      - 一件ずつ destroy すると低速な場合
+      - callback が不要な場合
+      - validation をスキップしても、不正な状況にならない場合
+    before:
+      - records.delete_all
+    after:
+      - records.each(&:destroy)
+  - id: com.ubiregi.net_http
+    pattern: Net::HTTP
+    message:
+      - Net::HTTP ではなく HTTPClient などのより安全で高機能なライブラリを使ってください
+    before:
+      - Net::HTTP.get(url)
+    after:
+      - HTTPClient.new.get(url)
+  - id: com.ubiregi.root_url_without_locale
+    pattern: "root_url(!locale: _)"
+    message:
+      - root_url には locale を指定してください
+    before: root_url()
+    after: "root_url(locale: I18n.locale)"
+  - id: com.ubiregi.transaction
+    pattern: transaction
+    message:
+      - トランザクションを開始する際には、レコードのロックが必要かどうか確認してください
+      - with_account_lock や with_menu_lock などのヘルパが利用できないか、検討してください
+    justification:
+      - ヘルパを定義する場合
+      - ロックが不要な場合
+    before:
+      - transaction
+    after:
+      - with_account_lock(account)
+  - id: com.sideci.oj
+    pattern: JSON
+    message: Oj を使ってください
+  - id: com.sideci.classify
+    pattern: classify
+    message: 本当にリフレクションが必要か、三回考え直してください
