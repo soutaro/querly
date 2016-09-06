@@ -1,7 +1,7 @@
 module Querly
   class Rule
     attr_reader :id
-    attr_reader :pattern
+    attr_reader :patterns
 
     attr_reader :messages
     attr_reader :justifications
@@ -10,11 +10,11 @@ module Querly
     attr_reader :tags
     attr_reader :scope
 
-    def initialize(id:, pattern:, scope: :nil)
+    def initialize(id:, scope: :nil)
       @id = id
-      @pattern = pattern
       @scope = scope
 
+      @patterns = []
       @messages = []
       @justifications = []
       @good_examples = []

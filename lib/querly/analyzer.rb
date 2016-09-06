@@ -15,7 +15,7 @@ module Querly
       scripts.each do |script|
         each_subnode script.root_pair do |node_pair|
           rules.each do |rule|
-            if rule.pattern =~ node_pair
+            if rule.patterns.any? {|pattern| pattern =~ node_pair }
               yield script, rule, node_pair
             end
           end

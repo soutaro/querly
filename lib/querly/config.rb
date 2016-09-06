@@ -17,11 +17,12 @@ module Querly
     def load_rules(yaml)
       yaml["rules"].each do |hash|
         id = hash["id"]
-        pattern = Pattern::Parser.parse(hash["pattern"])
+        patterns = Array(hash["pattern"]).map {|src| Pattern::Parser.parse(src) }
         messages = Array(hash["message"])
         justifications = Array(hash["justification"])
 
-        rule = Rule.new(id: id, pattern: pattern)
+        rule = Rule.new(id: id)
+        rule.patterns.concat patterns
         rule.messages.concat messages
         rule.justifications.concat justifications
 

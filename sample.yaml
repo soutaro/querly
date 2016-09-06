@@ -39,8 +39,13 @@ rules:
     after:
       - with_account_lock(account)
   - id: com.sideci.oj
-    pattern: JSON
+    pattern:
+      - JSON.load
+      - JSON.dump
     message: Oj を使ってください
-  - id: com.sideci.classify
-    pattern: classify
+  - id: com.sideci.reflection
+    pattern:
+      - classify
+      - eval
+      - instance_values
     message: 本当にリフレクションが必要か、三回考え直してください
