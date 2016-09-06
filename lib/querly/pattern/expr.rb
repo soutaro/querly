@@ -151,7 +151,7 @@ module Querly
             true
           when Argument::Expr
             if first_node
-              args.expr =~ nodes.first && test_args(nodes.drop(1), args.tail)
+              args.expr.test_node(nodes.first) && test_args(nodes.drop(1), args.tail)
             end
           when Argument::KeyValue
             if first_node
@@ -165,7 +165,7 @@ module Querly
               end
             end
           when nil
-            node.empty?
+            nodes.empty?
           end
         end
 
