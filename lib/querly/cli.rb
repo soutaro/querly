@@ -22,13 +22,12 @@ module Querly
 
       analyzer.run do |script, rule, pair|
         path = script.path.to_s
-        rule_id = rule.id
-        src = pair.node.loc.expression.source.split(/\n/).first
+        src = Rainbow(pair.node.loc.expression.source.split(/\n/).first).red
         line = pair.node.loc.first_line
         col = pair.node.loc.column
         message = rule.messages.first
 
-        puts "#{path}:#{line}:#{col}\t#{rule_id}\t#{src}\t#{message}"
+        puts "#{path}:#{line}:#{col}\t#{src}\t#{message}"
       end
     end
   end

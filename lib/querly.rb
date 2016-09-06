@@ -1,6 +1,7 @@
 require 'pathname'
 require 'parser/current'
 require "yaml"
+require "rainbow"
 
 require "querly/version"
 require 'querly/analyzer'
