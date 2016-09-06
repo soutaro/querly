@@ -10,14 +10,7 @@ rule
 target: expr
 
 expr: constant { result = Expr::Constant.new(path: val[0]) }
-  | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0]) }
-  | method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new,
-                                                             name: val[0],
-                                                             args: val[2]) }
-  | expr DOT method_name { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
-  | expr DOT method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
-                                                                      name: val[2],
-                                                                      args: val[4]) }
+  | send
   | EXCLAMATION expr { result = Expr::Not.new(pattern: val[1]) }
   | BOOL { result = Expr::Literal.new(type: :bool, value: val[0]) }
   | STRING { result = Expr::Literal.new(type: :string, value: val[0]) }
@@ -51,11 +44,26 @@ key_value: LIDENT COLON expr { result = { key: val[0].to_sym, value: val[2], neg
   | EXCLAMATION LIDENT COLON expr { result = { key: val[1].to_sym, value: val[3], negated: true } }
 
 method_name: LIDENT
-  | UIDENT
   | METHOD
 
 constant: UIDENT { result = [val[0]] }
   | UIDENT COLONCOLON constant { result = [val[0]] + val[2] }
+
+send: method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0]) }
+  | method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new,
+                                                             name: val[0],
+                                                             args: val[2]) }
+  | expr DOT method_name { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
+  | expr DOT method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
+                                                                      name: val[2],
+                                                                      args: val[4]) }
+  | UIDENT LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0], args: val[2]) }
+  | expr DOT UIDENT { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
+  | expr DOT UIDENT LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
+                                                                 name: val[2],
+                                                                 args: val[4]) }
+
+
 end
 
 ---- inner

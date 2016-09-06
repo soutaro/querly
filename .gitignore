@@ -10,3 +10,4 @@
 /.idea
 /parser.output
 /lib/querly/pattern/parser.rb
+parser.output

@@ -12,7 +12,7 @@ Rake::Task[:test].enhance([:racc])
 task :default => :test
 
 rule /\.rb/ => ".y" do |t|
-  sh "racc", "-o", "#{t.name}", "#{t.source}"
+  sh "racc", "-v", "-o", "#{t.name}", "#{t.source}"
 end
 
 task :racc => "lib/querly/pattern/parser.rb"
