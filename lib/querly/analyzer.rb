@@ -26,6 +26,8 @@ module Querly
     private
 
     def each_subnode(node_pair, &block)
+      return unless node_pair.node
+
       yield node_pair
 
       node_pair.children.each do |child|
