@@ -113,7 +113,7 @@ def next_token
     [:INT, input.matched.to_i]
   when input.scan(/[A-Z]\w+/)
     [:UIDENT, input.matched.to_sym]
-  when input.scan(/[a-z_](\w|=)+/)
+  when input.scan(/[a-z_](\w|=)+(\?|\!)?/)
     [:LIDENT, input.matched.to_sym]
   when input.scan(/\(/)
     [:LPAREN, input.matched]

@@ -12,6 +12,19 @@ rules:
       - records.delete_all
     after:
       - records.each(&:destroy)
+  - id: com.ubiregi.without_validation
+    pattern:
+      - "save(validate: false)"
+      - "save!(validate: false)"
+      - "update(validate: false)"
+      - "update!(validate: false)"
+      - "update_attributes(validate: false)"
+      - "update_attributes!(validate: false)"
+      - update_attribute
+    message:
+      - これらのメソッドは validation をスキップします
+    justification:
+      - validation をスキップしても、不正な状況にならない場合
   - id: com.ubiregi.net_http
     pattern: Net::HTTP
     message:
