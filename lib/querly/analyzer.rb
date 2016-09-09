@@ -23,6 +23,16 @@ module Querly
       end
     end
 
+    def find(pattern)
+      scripts.each do |script|
+        each_subnode script.root_pair do |node_pair|
+          if pattern =~ node_pair
+            yield script, node_pair
+          end
+        end
+      end
+    end
+
     private
 
     def each_subnode(node_pair, &block)

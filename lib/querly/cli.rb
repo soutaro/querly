@@ -40,5 +40,11 @@ Specify configuration file by --config option.
         puts "#{path}:#{line}:#{col}\t#{src}\t#{message}"
       end
     end
+
+    desc "console [paths]", "Start console for given paths"
+    def console(*paths)
+      require 'querly/cli/console'
+      Console.new(paths: paths.map {|path| Pathname(path) }).start
+    end
   end
 end
