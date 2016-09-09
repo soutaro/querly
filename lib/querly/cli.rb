@@ -4,8 +4,8 @@ module Querly
   class CLI < Thor
     option :config, default: "querly.yaml"
 
-    desc "query [paths]", "Run Querly on paths"
-    def query(*paths)
+    desc "check [paths]", "Check paths based on configuration"
+    def check(*paths)
       config_path = Pathname(options[:config])
 
       unless config_path.file?
