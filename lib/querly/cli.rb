@@ -2,10 +2,20 @@ require "thor"
 
 module Querly
   class CLI < Thor
-    option :config
+    option :config, default: "querly.yaml"
 
     desc "query [paths]", "Run Querly on paths"
     def query(*paths)
+      config_path = Pathname(options[:config])
+
+      unless config_path.file?
+        STDERR.puts <<-Message
+Configuration file #{config_path} does not look a file.
+Specify configuration file by --config option.
+        Message
+        exit 1
+      end
+
       config = Config.new
       config.add_file Pathname(options[:config])
 
