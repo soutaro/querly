@@ -193,7 +193,7 @@ module Querly
             if args.is_a?(Argument::KeyValue)
               node = hash[args.key]
 
-              if !args.negated == (node && args.value.test_node(node))
+              if !args.negated == !!(node && args.value.test_node(node))
                 hash.delete args.key
               else
                 return false
