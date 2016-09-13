@@ -74,4 +74,10 @@ class PatternParserTest < Minitest::Test
     assert_equal :F, parse("_.F()").name
     assert_equal :F, parse("_.F").name
   end
+
+  def test_method_name
+    assert_equal :f!, parse("f!()").name
+    assert_equal :f=, parse("f=(3)").name
+    assert_equal :f?, parse("f?()").name
+  end
 end
