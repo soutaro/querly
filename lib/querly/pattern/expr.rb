@@ -9,6 +9,16 @@ module Querly
         def test_node(node)
           false
         end
+
+        def ==(other)
+          other.class == self.class && other.attributes == attributes
+        end
+
+        def attributes
+          instance_variables.each.with_object({}) do |name, hash|
+            hash[name] = instance_variable_get(name)
+          end
+        end
       end
 
       class Any < Base
@@ -65,7 +75,7 @@ module Querly
 
       class Nil < Base
         def test_node(node)
-          node.type == :nil
+          node&.type == :nil
         end
       end
 
@@ -196,6 +206,20 @@ module Querly
           end
 
           args.is_a?(Argument::AnySeq) || hash.empty?
+        end
+      end
+
+      class Ivar < Base
+        attr_reader :name
+
+        def initialize(name:)
+          @name = name
+        end
+
+        def test_node(node)
+          if node&.type == :ivar
+            name.nil? || node.children.first == name
+          end
         end
       end
     end

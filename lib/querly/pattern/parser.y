@@ -21,6 +21,7 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
   | UNDERBAR { result = Expr::Any.new }
   | NIL { result = Expr::Nil.new }
   | LPAREN expr RPAREN { result = val[1] }
+  | IVAR { result = Expr::Ivar.new(name: val[0]) }
 
 args:  { result = nil }
   | expr { result = Argument::Expr.new(expr: val[0], tail: nil)}
@@ -139,5 +140,9 @@ def next_token
     [:COLON, input.matched]
   when input.scan(/\*/)
     [:STAR, "*"]
+  when input.scan(/@\w+/)
+    [:IVAR, input.matched.to_sym]
+  when input.scan(/@/)
+    [:IVAR, nil]
   end
 end

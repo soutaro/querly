@@ -1,8 +1,7 @@
 require_relative "test_helper"
 
 class PatternParserTest < Minitest::Test
-  E = Querly::Pattern::Expr
-  A = Querly::Pattern::Argument
+  include TestHelper
 
   def test_parser1
     pattern = Querly::Pattern::Parser.parse("foo.bar")
@@ -17,6 +16,16 @@ class PatternParserTest < Minitest::Test
   end
 
   def test_aaa
-    p Querly::Pattern::Parser.parse("foo(!foo: bar)")
+    # p Querly::Pattern::Parser.parse("foo(!foo: bar)")
+  end
+
+  def test_ivar
+    pat = parse("@")
+    assert_equal E::Ivar.new(name: nil), pat
+  end
+
+  def test_ivar_with_name
+    pat = parse("@x_123A")
+    assert_equal E::Ivar.new(name: :@x_123A), pat
   end
 end
