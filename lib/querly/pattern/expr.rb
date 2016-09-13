@@ -167,28 +167,29 @@ module Querly
             if first_node
               types = nodes.map(&:type)
               if types == [:hash]
-                test_hash_args(nodes.first, args)
+                hash = nodes.first.children.each.with_object({}) do |pair, h|
+                  key = pair.children[0]
+                  value = pair.children[1]
+
+                  if key.type == :sym
+                    h[key.children[0]] = value
+                  end
+                end
+                test_hash_args(hash, args)
               elsif types == [:hash, :kwsplat]
                 true
               else
                 false
               end
+            else
+              test_hash_args({}, args)
             end
           when nil
             nodes.empty?
           end
         end
 
-        def test_hash_args(node, args)
-          hash = node.children.each.with_object({}) do |pair, h|
-            key = pair.children[0]
-            value = pair.children[1]
-
-            if key.type == :sym
-              h[key.children[0]] = value
-            end
-          end
-
+        def test_hash_args(hash, args)
           while args
             if args.is_a?(Argument::KeyValue)
               node = hash[args.key]
