@@ -46,6 +46,7 @@ key_value: keyword COLON expr { result = { key: val[0], value: val[2], negated: 
 
 method_name: LIDENT
   | METHOD
+  | EXCLAMATION
 
 keyword: LIDENT | UIDENT
 
@@ -65,7 +66,6 @@ send: method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0
   | expr DOT UIDENT LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
                                                                  name: val[2],
                                                                  args: val[4]) }
-
 
 end
 
@@ -130,7 +130,7 @@ def next_token
   when input.scan(/\./)
     [:DOT, input.matched]
   when input.scan(/\!/)
-    [:EXCLAMATION, input.matched]
+    [:EXCLAMATION, input.matched.to_sym]
   when input.scan(/\[\]=/)
     [:METHOD, :"[]="]
   when input.scan(/\[\]/)
