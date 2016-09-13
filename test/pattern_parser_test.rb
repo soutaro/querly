@@ -33,4 +33,9 @@ class PatternParserTest < Minitest::Test
     pat = parse(":racc")
     assert_equal E::Literal.new(type: :symbol, value: :racc), pat
   end
+
+  def test_constant
+    pat = parse("E")
+    assert_equal E::Constant.new(path: [:E]), pat
+  end
 end
