@@ -179,7 +179,7 @@ module Querly
               elsif types == [:hash, :kwsplat]
                 true
               else
-                false
+                args.negated
               end
             else
               test_hash_args({}, args)

@@ -134,4 +134,10 @@ class PatternTestTest < Minitest::Test
     assert_equal 1, nodes.size
     assert_equal ruby("foo()"), nodes.first
   end
+
+  def test_call_with_negated_kw5
+    nodes = query_pattern("foo(!bar: _)", "foo(params)")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo(params)"), nodes.first
+  end
 end
