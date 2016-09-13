@@ -131,10 +131,10 @@ def next_token
     [:DOT, input.matched]
   when input.scan(/\!/)
     [:EXCLAMATION, input.matched]
-  when input.scan(/\[\]/)
-    [:METHOD, :"[]"]
   when input.scan(/\[\]=/)
     [:METHOD, :"[]="]
+  when input.scan(/\[\]/)
+    [:METHOD, :"[]"]
   when input.scan(/\_/)
     [:UNDERBAR, input.matched]
   when input.scan(/::/)

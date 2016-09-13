@@ -58,4 +58,9 @@ class PatternParserTest < Minitest::Test
                                                    negated: true,
                                                    tail: A::AnySeq.new)), pat
   end
+
+  def test_method_names
+    assert_equal :[], parse("[]()").name
+    assert_equal :[]=, parse("[]=()").name
+  end
 end
