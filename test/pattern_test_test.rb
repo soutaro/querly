@@ -48,4 +48,19 @@ class PatternTestTest < Minitest::Test
       assert_equal :C, name
     end
   end
+
+  def test_symbol
+    nodes = query_pattern(":symbol:", ":foo")
+    assert_node nodes.first, type: :sym do |name, *_|
+      assert_equal :foo, name
+    end
+  end
+
+  def test_symbol2
+    nodes = query_pattern(":foo", ":foo.bar(:baz)")
+    assert_equal 1, nodes.size
+    assert_node nodes.first, type: :sym do |name, *_|
+      assert_equal :foo, name
+    end
+  end
 end
