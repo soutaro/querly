@@ -36,16 +36,18 @@ kw_args: { result = nil }
                                                 value: val[0][:value],
                                                 tail: nil,
                                                 negated: val[0][:negated]) }
-  | key_value COLON kw_args { result = Argument::KeyValue.new(key: val[0][:key],
+  | key_value COMMA kw_args { result = Argument::KeyValue.new(key: val[0][:key],
                                                               value: val[0][:value],
                                                               tail: val[2],
                                                               negated: val[0][:negated]) }
 
-key_value: LIDENT COLON expr { result = { key: val[0].to_sym, value: val[2], negated: false } }
-  | EXCLAMATION LIDENT COLON expr { result = { key: val[1].to_sym, value: val[3], negated: true } }
+key_value: keyword COLON expr { result = { key: val[0], value: val[2], negated: false } }
+  | EXCLAMATION keyword COLON expr { result = { key: val[1], value: val[3], negated: true } }
 
 method_name: LIDENT
   | METHOD
+
+keyword: LIDENT | UIDENT
 
 constant: UIDENT { result = [val[0]] }
   | UIDENT COLONCOLON constant { result = [val[0]] + val[2] }
@@ -115,7 +117,7 @@ def next_token
     [:INT, input.matched.to_i]
   when input.scan(/[A-Z]\w*/)
     [:UIDENT, input.matched.to_sym]
-  when input.scan(/[a-z_](\w|=)+(\?|\!)?/)
+  when input.scan(/[a-z_](\w|=)*(\?|\!)?/)
     [:LIDENT, input.matched.to_sym]
   when input.scan(/\(/)
     [:LPAREN, input.matched]

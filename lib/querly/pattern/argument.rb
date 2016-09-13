@@ -7,6 +7,16 @@ module Querly
         def initialize(tail:)
           @tail = tail
         end
+
+        def ==(other)
+          other.class == self.class && other.attributes == attributes
+        end
+
+        def attributes
+          instance_variables.each.with_object({}) do |name, hash|
+            hash[name] = instance_variable_get(name)
+          end
+        end
       end
 
       class AnySeq < Base

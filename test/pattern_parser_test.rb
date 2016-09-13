@@ -38,4 +38,24 @@ class PatternParserTest < Minitest::Test
     pat = parse("E")
     assert_equal E::Constant.new(path: [:E]), pat
   end
+
+  def test_keyword_arg
+    pat = parse("foo(!x: 1, ...)")
+    assert_equal E::Send.new(receiver: E::Any.new,
+                             name: :foo,
+                             args: A::KeyValue.new(key: :x,
+                                                   value: E::Literal.new(type: :int, value: 1),
+                                                   negated: true,
+                                                   tail: A::AnySeq.new)), pat
+  end
+
+  def test_keyword_arg2
+    pat = parse("foo(!X: 1, ...)")
+    assert_equal E::Send.new(receiver: E::Any.new,
+                             name: :foo,
+                             args: A::KeyValue.new(key: :X,
+                                                   value: E::Literal.new(type: :int, value: 1),
+                                                   negated: true,
+                                                   tail: A::AnySeq.new)), pat
+  end
 end
