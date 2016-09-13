@@ -64,4 +64,14 @@ class PatternParserTest < Minitest::Test
     assert_equal :[]=, parse("[]=()").name
     assert_equal :!, parse("!()").name
   end
+
+  def test_send
+    assert_equal :f, parse("f").name
+    assert_equal :f, parse("f()").name
+    assert_equal :f, parse("_.f").name
+    assert_equal :f, parse("_.f()").name
+    assert_equal :F, parse("F()").name
+    assert_equal :F, parse("_.F()").name
+    assert_equal :F, parse("_.F").name
+  end
 end
