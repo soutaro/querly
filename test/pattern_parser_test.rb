@@ -28,4 +28,9 @@ class PatternParserTest < Minitest::Test
     pat = parse("@x_123A")
     assert_equal E::Ivar.new(name: :@x_123A), pat
   end
+
+  def test_pattern
+    pat = parse(":racc")
+    assert_equal E::Literal.new(type: :symbol, value: :racc), pat
+  end
 end

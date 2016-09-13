@@ -107,7 +107,8 @@ def next_token
   when input.scan(/:number:/)
     [:NUMBER, nil]
   when input.scan(/:\w+/)
-    [:SYMBOL, input.matched.to_sym]
+    s = input.matched
+    [:SYMBOL, s[1, s.size - 1].to_sym]
   when input.scan(/[+-]?[0-9]+\.[0-9]/)
     [:FLOAT, input.matched.to_f]
   when input.scan(/[+-]?[0-9]+/)
