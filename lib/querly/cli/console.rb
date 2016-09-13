@@ -87,6 +87,7 @@ Querly #{VERSION}, interactive console
               puts "#{count} results"
             rescue => exn
               STDOUT.puts exn.inspect
+              STDOUT.puts exn.backtrace
             end
           else
             puts_commands
