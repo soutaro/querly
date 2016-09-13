@@ -62,7 +62,7 @@ module Querly
               name = node.children[1]
 
               if name == path.last
-                test_constant parent, path.take(path.count - 1)
+                path.count == 1 || test_constant(parent, path.take(path.count - 1))
               end
             when :cbase
               path.empty?

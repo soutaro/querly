@@ -24,4 +24,28 @@ class PatternTestTest < Minitest::Test
       assert_equal :@x, name
     end
   end
+
+  def test_constant
+    nodes = query_pattern("C", "C.f")
+    assert_equal 1, nodes.size
+
+    assert_node nodes.first, type: :const do |parent, name|
+      assert_nil parent
+      assert_equal :C, name
+    end
+  end
+
+  def test_constant_with_parent
+    nodes = query_pattern("A::B", "A::B::C")
+    assert_node nodes.first, type: :const do |parent, name|
+      assert_equal :B, name
+    end
+  end
+
+  def test_constant_with_parent2
+    nodes = query_pattern("B::C", "A::B::C")
+    assert_node nodes.first, type: :const do |parent, name|
+      assert_equal :C, name
+    end
+  end
 end
