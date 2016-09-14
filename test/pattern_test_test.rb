@@ -136,4 +136,10 @@ class PatternTestTest < Minitest::Test
     assert_equal 1, nodes.size
     assert_equal ruby("foo(params)"), nodes.first
   end
+
+  def test_call_with_block_pass
+    nodes = query_pattern("map(&:id)", "foo.map(&:id)")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo.map(&:id)"), nodes.first
+  end
 end

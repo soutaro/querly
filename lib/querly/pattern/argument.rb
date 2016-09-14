@@ -47,6 +47,15 @@ module Querly
           super(tail: tail)
         end
       end
+
+      class BlockPass < Base
+        attr_reader :expr
+
+        def initialize(expr:)
+          @expr = expr
+          super(tail: nil)
+        end
+      end
     end
   end
 end

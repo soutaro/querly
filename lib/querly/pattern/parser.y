@@ -26,11 +26,13 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
 args:  { result = nil }
   | expr { result = Argument::Expr.new(expr: val[0], tail: nil)}
   | expr COMMA args { result = Argument::Expr.new(expr: val[0], tail: val[2]) }
+  | AMP expr { result = Argument::BlockPass.new(expr: val[1]) }
   | kw_args
   | DOTDOTDOT { result = Argument::AnySeq.new }
   | DOTDOTDOT COMMA kw_args { result = Argument::AnySeq.new(tail: val[2]) }
 
 kw_args: { result = nil }
+  | AMP expr { result = Argument::BlockPass.new(expr: val[1]) }
   | DOTDOTDOT { result = Argument::AnySeq.new }
   | key_value { result = Argument::KeyValue.new(key: val[0][:key],
                                                 value: val[0][:value],
@@ -147,5 +149,7 @@ def next_token
     [:IVAR, input.matched.to_sym]
   when input.scan(/@/)
     [:IVAR, nil]
+  when input.scan(/&/)
+    [:AMP, nil]
   end
 end

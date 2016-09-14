@@ -199,6 +199,8 @@ module Querly
             else
               test_hash_args({}, args)
             end
+          when Argument::BlockPass
+            first_node&.type == :block_pass && args.expr.test_node(first_node.children.first)
           when nil
             nodes.empty?
           end

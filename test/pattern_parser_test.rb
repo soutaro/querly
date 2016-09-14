@@ -80,4 +80,12 @@ class PatternParserTest < Minitest::Test
     assert_equal :f=, parse("f=(3)").name
     assert_equal :f?, parse("f?()").name
   end
+
+  def test_block_pass
+    pat = parse("map(&:id)")
+    args = pat.args
+
+    assert_instance_of A::BlockPass, args
+    assert_equal E::Literal.new(type: :symbol, value: :id), args.expr
+  end
 end
