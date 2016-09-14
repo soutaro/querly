@@ -143,9 +143,24 @@ module Querly
           @args = args
         end
 
+        def =~(pair)
+          # Skip send node with block
+          if pair.node.type == :send && pair.parent
+            if pair.parent.node.type == :block
+              if pair.parent.node.children.first == pair.node
+                return false
+              end
+            end
+          end
+
+          test_node pair.node
+        end
+
         def test_node(node)
+          node = node.children.first if node&.type == :block
+
           case node&.type
-          when :send, :csend
+          when :send
             return false unless name == node.children[1]
             return false unless receiver.test_node(node.children[0])
             return false unless test_args(node.children.drop(2), args)
