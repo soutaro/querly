@@ -2,7 +2,7 @@ rules:
   - id: com.ubiregi.delete_all
     pattern:
       - delete_all
-      - updtae_all
+      - update_all
     message:
       - delete_all や update_all は callback や validation をスキップします
       - レコードを一つずつ destroy/update するよりも高速ですが、危険なことがあります
