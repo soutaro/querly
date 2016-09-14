@@ -23,4 +23,8 @@ module TestHelper
       end
     end
   end
+
+  def ruby(src)
+    Parser::CurrentRuby.parse(src)
+  end
 end

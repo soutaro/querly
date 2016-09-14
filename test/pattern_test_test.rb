@@ -9,10 +9,6 @@ class PatternTestTest < Minitest::Test
     yield node.children if block_given?
   end
 
-  def ruby(src)
-    Parser::CurrentRuby.parse(src)
-  end
-
   def test_ivar_without_name
     nodes = query_pattern("@", "@x.foo")
     assert_equal 1, nodes.size
