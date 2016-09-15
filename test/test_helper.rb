@@ -6,13 +6,18 @@ require 'minitest/autorun'
 module TestHelper
   E = Querly::Pattern::Expr
   A = Querly::Pattern::Argument
+  K = Querly::Pattern::Kind
 
   def parse_expr(src)
+    Querly::Pattern::Parser.parse(src).expr
+  end
+
+  def parse_kinded(src)
     Querly::Pattern::Parser.parse(src)
   end
 
   def query_pattern(pattern, src)
-    pat = parse_expr(pattern)
+    pat = parse_kinded(pattern)
 
     analyzer = Querly::Analyzer.new()
     analyzer.scripts << Querly::Script.from_source(src, "(input)")

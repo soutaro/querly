@@ -7,7 +7,11 @@ preclow
 
 rule
 
-target: expr
+target: kinded_expr
+
+kinded_expr: expr { result = Kind::Any.new(expr: val[0]) }
+  | expr CONDITIONAL_KIND { result = Kind::Conditional.new(expr: val[0], negated: val[1]) }
+  | expr DISCARDED_KIND { result = Kind::Discarded.new(expr: val[0], negated: val[1]) }
 
 expr: constant { result = Expr::Constant.new(path: val[0]) }
   | send
@@ -137,6 +141,14 @@ def next_token
     [:DOT, input.matched]
   when input.scan(/\!/)
     [:EXCLAMATION, input.matched.to_sym]
+  when input.scan(/\[conditional\]/)
+    [:CONDITIONAL_KIND, false]
+  when input.scan(/\[!conditional\]/)
+    [:CONDITIONAL_KIND, true]
+  when input.scan(/\[discarded\]/)
+    [:DISCARDED_KIND, false]
+  when input.scan(/\[!discarded\]/)
+    [:DISCARDED_KIND, true]
   when input.scan(/\[\]=/)
     [:METHOD, :"[]="]
   when input.scan(/\[\]/)

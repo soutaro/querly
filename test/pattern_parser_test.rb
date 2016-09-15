@@ -100,4 +100,33 @@ class PatternParserTest < Minitest::Test
     pat = parse_expr(":dstr:")
     assert_instance_of E::Dstr, pat
   end
+
+  def test_any_kinded
+    pat = parse_kinded("foo")
+    assert_instance_of K::Any, pat
+  end
+
+  def test_conditonal_kinded
+    pat = parse_kinded("foo [conditional]")
+    assert_instance_of K::Conditional, pat
+    refute pat.negated
+  end
+
+  def test_conditional_kinded2
+    pat = parse_kinded("foo [!conditional]")
+    assert_instance_of K::Conditional, pat
+    assert pat.negated
+  end
+
+  def test_discarded_kinded
+    pat = parse_kinded("foo [discarded]")
+    assert_instance_of K::Discarded, pat
+    refute pat.negated
+  end
+
+  def test_discarded_kinded2
+    pat = parse_kinded("foo [!discarded]")
+    assert_instance_of K::Discarded, pat
+    assert pat.negated
+  end
 end

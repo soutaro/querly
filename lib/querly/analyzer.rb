@@ -15,7 +15,7 @@ module Querly
       scripts.each do |script|
         each_subnode script.root_pair do |node_pair|
           rules.each do |rule|
-            if rule.patterns.any? {|pattern| pattern =~ node_pair }
+            if rule.patterns.any? {|pattern| test_pair(node_pair, pattern) }
               yield script, rule, node_pair
             end
           end
@@ -26,11 +26,15 @@ module Querly
     def find(pattern)
       scripts.each do |script|
         each_subnode script.root_pair do |node_pair|
-          if pattern =~ node_pair
+          if test_pair(node_pair, pattern)
             yield script, node_pair
           end
         end
       end
+    end
+
+    def test_pair(node_pair, pattern)
+      pattern.expr =~ node_pair && pattern.test_kind(node_pair)
     end
 
     private

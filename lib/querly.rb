@@ -12,6 +12,7 @@ require 'querly/script'
 require 'querly/script_enumerator'
 require 'querly/node_pair'
 require "querly/pattern/parser"
+require 'querly/pattern/kind'
 require "querly/config"
 
 Parser::Builders::Default.emit_lambda = true
