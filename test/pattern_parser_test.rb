@@ -95,5 +95,10 @@ class PatternParserTest < Minitest::Test
     assert_instance_of E::Vcall, pat
     assert_equal :foo, pat.name
   end
+
+  def test_dstr
+    pat = parse(":dstr:")
+    assert_instance_of E::Dstr, pat
+  end
 end
 

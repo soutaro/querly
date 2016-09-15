@@ -18,6 +18,7 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
   | FLOAT { result = Expr::Literal.new(type: :float, value: val[0]) }
   | SYMBOL { result = Expr::Literal.new(type: :symbol, value: val[0]) }
   | NUMBER { result = Expr::Literal.new(type: :number, value: val[0]) }
+  | DSTR { result = Expr::Dstr.new() }
   | UNDERBAR { result = Expr::Any.new }
   | NIL { result = Expr::Nil.new }
   | LPAREN expr RPAREN { result = val[1] }
@@ -86,7 +87,7 @@ def self.parse(str)
 end
 
 def next_token
-  input.scan /\s+/
+  input.scan(/\s+/)
 
   case
   when input.eos?
@@ -99,6 +100,8 @@ def next_token
     [:NIL, false]
   when input.scan(/:string:/)
     [:STRING, nil]
+  when input.scan(/:dstr:/)
+    [:DSTR, nil]
   when input.scan(/:int:/)
     [:INT, nil]
   when input.scan(/:float:/)

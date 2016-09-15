@@ -253,6 +253,12 @@ module Querly
         end
       end
 
+      class Dstr < Base
+        def test_node(node)
+          node&.type == :dstr
+        end
+      end
+
       class Ivar < Base
         attr_reader :name
 
