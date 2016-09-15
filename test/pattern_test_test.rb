@@ -142,4 +142,39 @@ class PatternTestTest < Minitest::Test
     assert_equal 1, nodes.size
     assert_equal ruby("foo.map(&:id)"), nodes.first
   end
+
+  def test_vcall
+    # Vcall pattern matches with local variable
+    nodes = query_pattern("foo", "foo = 1; foo.bar")
+    assert_equal 1, nodes.size
+    assert_equal :lvar, nodes.first.type
+    assert_equal :foo, nodes.first.children.first
+  end
+
+  def test_vcall2
+    # Vcall pattern matches with method call
+    nodes = query_pattern("foo", "foo(1,2,3)")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo(1,2,3)"), nodes.first
+  end
+
+  def test_vcall3
+    # If lvar is receiver, it matches
+    nodes = query_pattern("foo", "foo = 1; foo.bar()")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo = 1; foo").children.last, nodes.first
+  end
+
+  def test_vcall4
+    # If lvar is not a receiver, it doesn't match
+    nodes = query_pattern("foo", "foo = 1; f.bar(foo)")
+    assert_empty nodes
+  end
+
+  def test_self
+    # Vcall matches with self
+    nodes = query_pattern("self", "foo(self)")
+    assert_equal 1, nodes.size
+    assert_equal ruby("self"), nodes.first
+  end
 end

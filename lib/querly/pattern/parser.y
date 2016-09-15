@@ -46,28 +46,27 @@ kw_args: { result = nil }
 key_value: keyword COLON expr { result = { key: val[0], value: val[2], negated: false } }
   | EXCLAMATION keyword COLON expr { result = { key: val[1], value: val[3], negated: true } }
 
-method_name: LIDENT
-  | METHOD
+method_name: METHOD
   | EXCLAMATION
+
+method_name_or_ident: method_name
+  | LIDENT
+  | UIDENT
 
 keyword: LIDENT | UIDENT
 
 constant: UIDENT { result = [val[0]] }
   | UIDENT COLONCOLON constant { result = [val[0]] + val[2] }
 
-send: method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0]) }
-  | method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new,
+send: LIDENT { result = Expr::Vcall.new(name: val[0]) }
+  | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0]) }
+  | method_name_or_ident LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new,
                                                              name: val[0],
                                                              args: val[2]) }
-  | expr DOT method_name { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
-  | expr DOT method_name LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
+  | expr DOT method_name_or_ident { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
+  | expr DOT method_name_or_ident LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
                                                                       name: val[2],
                                                                       args: val[4]) }
-  | UIDENT LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0], args: val[2]) }
-  | expr DOT UIDENT { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
-  | expr DOT UIDENT LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
-                                                                 name: val[2],
-                                                                 args: val[4]) }
 
 end
 

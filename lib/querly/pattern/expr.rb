@@ -227,6 +227,32 @@ module Querly
         end
       end
 
+      class Vcall < Base
+        attr_reader :name
+
+        def initialize(name:)
+          @name = name
+        end
+
+        def =~(pair)
+          node = pair.node
+
+          case node.type
+          when :send
+            node.children[0] == nil && node.children[1] == name
+          when :lvar
+            # We don't want lvar without method call
+            # Skips when the node is not receiver of :send
+            parent_node = pair.parent&.node
+            if parent_node
+              node.children.first == name && parent_node.type == :send && parent_node.children.first.equal?(node)
+            end
+          when :self
+            name == :self
+          end
+        end
+      end
+
       class Ivar < Base
         attr_reader :name
 

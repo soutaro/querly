@@ -4,7 +4,7 @@ class PatternParserTest < Minitest::Test
   include TestHelper
 
   def test_parser1
-    pattern = Querly::Pattern::Parser.parse("foo.bar")
+    pattern = Querly::Pattern::Parser.parse("foo().bar")
 
     assert_instance_of E::Send, pattern
     assert_equal :bar, pattern.name
@@ -12,7 +12,7 @@ class PatternParserTest < Minitest::Test
 
     assert_instance_of E::Send, pattern.receiver
     assert_equal :foo, pattern.receiver.name
-    assert_instance_of A::AnySeq, pattern.receiver.args
+    assert_nil pattern.receiver.args
   end
 
   def test_aaa
@@ -88,4 +88,12 @@ class PatternParserTest < Minitest::Test
     assert_instance_of A::BlockPass, args
     assert_equal E::Literal.new(type: :symbol, value: :id), args.expr
   end
+
+  def test_vcall
+    pat = parse("foo")
+
+    assert_instance_of E::Vcall, pat
+    assert_equal :foo, pat.name
+  end
 end
+
