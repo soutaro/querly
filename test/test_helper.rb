@@ -7,12 +7,12 @@ module TestHelper
   E = Querly::Pattern::Expr
   A = Querly::Pattern::Argument
 
-  def parse(src)
+  def parse_expr(src)
     Querly::Pattern::Parser.parse(src)
   end
 
   def query_pattern(pattern, src)
-    pat = Querly::Pattern::Parser.parse(pattern)
+    pat = parse_expr(pattern)
 
     analyzer = Querly::Analyzer.new()
     analyzer.scripts << Querly::Script.from_source(src, "(input)")
