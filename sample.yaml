@@ -15,6 +15,16 @@ rules:
       - "records.update_all(people_id: nil)"
     after:
       - records.each(&:destroy)
+  - id: com.ubiregi.save_not_conditional
+    pattern:
+      - "save() [!conditional]"
+      - "update(!validate: false) [!conditional]"
+      - "update_attributes(!validate: false) [!conditional]"
+    message:
+      save や update は失敗した場合に false を返します。
+      失敗したかどうかテストして、失敗した場合の処理を実装してください。
+    justification:
+      - 失敗から回復する方法がない場合
   - id: com.ubiregi.without_validation
     pattern:
       - "save(validate: false)"
@@ -65,6 +75,20 @@ rules:
       - constantize
       - eval
       - instance_values
+      - safe_constantize
     message:
       - 本当にメタプログラミングが必要か、三回考え直してください
       - ほとんどの場合は、より読みやすいコードで記述することができます
+  - id: activesupport.try
+    pattern: "try(:symbol:, ...)"
+    message:
+      try はメソッドが定義されていない場合に nil を返します。
+      try! を使う必要がないか検討してください。
+  - id: activesupport.try_with_block_pass
+    pattern: "try(&:symbol:)"
+    message:
+      シンボルを渡した場合と、同じ結果になります（しかも、シンボルを渡したほうが速い）
+  - id: rails.transaction_renew
+    pattern: "transaction(requires_new: true)"
+    message:
+      使っている RDBMS はトランザクションのネストをサポートしていません
