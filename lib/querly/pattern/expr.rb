@@ -237,16 +237,24 @@ module Querly
         def =~(pair)
           node = pair.node
 
-          case node.type
-          when :send
-            node.children[0] == nil && node.children[1] == name
-          when :lvar
+          if node.type == :lvar
             # We don't want lvar without method call
             # Skips when the node is not receiver of :send
             parent_node = pair.parent&.node
-            if parent_node
-              node.children.first == name && parent_node.type == :send && parent_node.children.first.equal?(node)
+            if parent_node && parent_node.type == :send && parent_node.children.first.equal?(node)
+              test_node(node)
             end
+          else
+            test_node(node)
+          end
+        end
+
+        def test_node(node)
+          case node&.type
+          when :send
+            node.children[1] == name
+          when :lvar
+            node.children.first == name
           when :self
             name == :self
           end

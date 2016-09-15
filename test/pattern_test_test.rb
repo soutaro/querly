@@ -178,6 +178,12 @@ class PatternTestTest < Minitest::Test
     assert_equal ruby("self"), nodes.first
   end
 
+  def test_self2
+    nodes = query_pattern("self.foo", "self.foo()")
+    assert_equal 1, nodes.size
+    assert_equal ruby("self.foo"), nodes.first
+  end
+
   def test_dstr
     nodes = query_pattern(":dstr:", 'foo("#{1+2}")')
     assert_equal 1, nodes.size
