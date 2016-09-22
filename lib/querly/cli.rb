@@ -25,7 +25,7 @@ module Querly
 Configuration file #{config_path} does not look a file.
 Specify configuration file by --config option.
           Message
-          return -1
+          exit 1
         end
 
         config = Config.new
@@ -33,7 +33,7 @@ Specify configuration file by --config option.
           config.add_file Pathname(options[:config])
         rescue => exn
           formatter.config_error Pathname(options[:config]), exn
-          return
+          exit
         end
 
         analyzer = Analyzer.new
@@ -55,7 +55,7 @@ Specify configuration file by --config option.
         end
       rescue => exn
         formatter.fatal_error exn
-        return -1
+        exit 1
       ensure
         formatter.finish
       end
