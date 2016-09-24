@@ -18,6 +18,7 @@ require 'querly/pattern/kind'
 require "querly/config"
 
 require "querly/loader/ruby"
+require "querly/loader/haml"
 
 module Querly
   # Your code goes here...
