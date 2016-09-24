@@ -1,7 +1,9 @@
 require 'pathname'
-require 'parser/current'
 require "yaml"
 require "rainbow"
+require "parser/current"
+
+Parser::Builders::Default.emit_lambda = true
 
 require "querly/version"
 require 'querly/analyzer'
@@ -15,7 +17,7 @@ require "querly/pattern/parser"
 require 'querly/pattern/kind'
 require "querly/config"
 
-Parser::Builders::Default.emit_lambda = true
+require "querly/loader/ruby"
 
 module Querly
   # Your code goes here...

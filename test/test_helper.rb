@@ -20,7 +20,8 @@ module TestHelper
     pat = parse_kinded(pattern)
 
     analyzer = Querly::Analyzer.new()
-    analyzer.scripts << Querly::Script.from_source(src, "(input)")
+    analyzer.scripts << Querly::Script.new(path: Pathname("(input)"),
+                                           node: Parser::CurrentRuby.parse(src, "(input)"))
 
     [].tap do |result|
       analyzer.find(pat) do |script, pair|

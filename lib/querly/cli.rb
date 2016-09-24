@@ -39,14 +39,13 @@ Specify configuration file by --config option.
         analyzer = Analyzer.new
         analyzer.rules.concat config.rules
 
-        ScriptEnumerator.new(paths: paths.map {|path| Pathname(path) }).each do |path|
-          begin
-            script = Script.from_path(path)
+        ScriptEnumerator.new(paths: paths.map {|path| Pathname(path) }).each do |path, script|
+          case script
+          when Script
             analyzer.scripts << script
-
             formatter.script_load script
-          rescue => exn
-            formatter.script_error path, exn
+          when StandardError
+            formatter.script_error path, script
           end
         end
 

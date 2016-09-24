@@ -35,11 +35,12 @@ Querly #{VERSION}, interactive console
 
         @analyzer = Analyzer.new
 
-        ScriptEnumerator.new(paths: paths).each do |path|
-          begin
-            @analyzer.scripts << Script.from_path(path)
-          rescue => exn
-            p exn
+        ScriptEnumerator.new(paths: paths).each do |path, script|
+          case script
+          when Script
+            @analyzer.scripts << script
+          when StandardError
+            p script
           end
         end
 
