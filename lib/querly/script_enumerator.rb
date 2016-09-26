@@ -11,7 +11,7 @@ module Querly
         paths.each do |path|
           case
           when path.file?
-            yield path
+            load_script_from_path path, default_loader: Loader::Ruby, &block
           when path.directory?
             enumerate_files_in_dir(path, &block)
           end
@@ -34,6 +34,23 @@ module Querly
 
     private
 
+    def load_script_from_path(path, default_loader: nil, &block)
+      loader = self.class.find_loader(path) || default_loader
+
+      if loader
+        script = nil
+
+        begin
+          source = loader.load(path, path.read)
+          script = Script.new(path: path, node: Parser::CurrentRuby.parse(source, path.to_s))
+        rescue => exn
+          script = exn
+        end
+
+        yield(path, script)
+      end
+    end
+
     def enumerate_files_in_dir(path, &block)
       if path.basename.to_s =~ /\A\.[^\.]+/
         # skip hidden paths
@@ -46,20 +63,7 @@ module Querly
           enumerate_files_in_dir child, &block
         end
       when path.file?
-        loader = self.class.find_loader(path)
-
-        if loader
-          script = nil
-
-          begin
-            source = loader.load(path, path.read)
-            script = Script.new(path: path, node: Parser::CurrentRuby.parse(source, path.to_s))
-          rescue => exn
-            script = exn
-          end
-
-          yield(path, script)
-        end
+        load_script_from_path(path, &block)
       end
     end
   end
