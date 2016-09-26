@@ -43,7 +43,7 @@ module Querly
         begin
           source = loader.load(path, path.read)
           script = Script.new(path: path, node: Parser::CurrentRuby.parse(source, path.to_s))
-        rescue => exn
+        rescue StandardError, LoadError => exn
           script = exn
         end
 

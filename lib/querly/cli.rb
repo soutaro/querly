@@ -44,7 +44,7 @@ Specify configuration file by --config option.
           when Script
             analyzer.scripts << script
             formatter.script_load script
-          when StandardError
+          when StandardError, LoadError
             formatter.script_error path, script
           end
         end
