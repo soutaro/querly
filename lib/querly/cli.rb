@@ -34,7 +34,7 @@ Specify configuration file by --config option.
           exit
         end
 
-        analyzer = Analyzer.new
+        analyzer = Analyzer.new(taggings: config.taggings)
         analyzer.rules.concat config.rules
 
         ScriptEnumerator.new(paths: paths.map {|path| Pathname(path) }).each do |path, script|

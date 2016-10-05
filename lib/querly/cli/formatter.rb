@@ -35,7 +35,9 @@ module Querly
 
       class Text < Base
         def config_error(path, error)
-          STDERR.puts Rainbow
+          STDERR.puts Rainbow("Failed to load configuration: #{path}").red
+          STDERR.puts error
+          STDERR.puts error.backtrace.inspect
         end
 
         def script_error(path, error)
@@ -48,7 +50,7 @@ module Querly
           src = Rainbow(pair.node.loc.expression.source.split(/\n/).first).red
           line = pair.node.loc.first_line
           col = pair.node.loc.column
-          message = rule.messages.first
+          message = rule.messages.first.split(/\n/).first
 
           STDOUT.puts "#{path}:#{line}:#{col}\t#{src}\t#{message}"
         end

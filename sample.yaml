@@ -92,3 +92,41 @@ rules:
     pattern: "transaction(requires_new: true)"
     message:
       使っている RDBMS はトランザクションのネストをサポートしていません
+  - id: com.ubiregi.capybara.assertion
+    pattern:
+      - assert_equal
+      - assert
+    message:
+      assert_equal や assert を Capybara と組み合わせて使う場合には注意が必要です
+
+      assert_selector などの安定した表明を利用できないか考えて見てください
+    justification:
+      - first や all などの不安定な Capybara メソッドを使っていない場合
+      - Capybara と関係ない値をテストする場合
+    tags:
+      - test
+      - capybara
+  - id: com.ubiregi.capybara.negated
+    pattern:
+      - refute
+      - assert_nil
+    message:
+      Capybara に関する値を否定する場合には、注意が必要です
+
+      has_no_css? などの否定系のためのメソッドを使得ないか検討するか、テストに成功するまで繰り返すなどの工夫をしてください。
+    justification:
+      - Capybara と関係ない値をテストする場合
+      - 繰り返しの処理を正しく実装している場合
+    tags:
+      - test
+      - capybara
+filtering:
+  - ext: .haml
+    filter: haml
+  - ext: .slim
+    filter: slim
+tagging:
+  - path: test
+    tags:
+  - path: features/step_definitions
+    tags: test capybara

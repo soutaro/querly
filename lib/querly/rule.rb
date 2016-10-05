@@ -19,7 +19,7 @@ module Querly
       @justifications = []
       @good_examples = []
       @bad_examples = []
-      @tags = []
+      @tags = Set.new
       @scope = scope
     end
   end
