@@ -16,7 +16,7 @@ module Querly
       script_path = if script.path.absolute?
                       script.path
                     else
-                      script.realpath
+                      script.path.realpath
                     end
       path_components = script_path.to_s.split(File::Separator)
 
