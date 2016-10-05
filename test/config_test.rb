@@ -5,7 +5,7 @@ class ConfigTest < Minitest::Test
 
   def test_load_taggings
     config = Config.new
-    config.load_taggings({ "taggings" => [
+    config.load_taggings({ "tagging" => [
       { "path" => "test", "tags" => "test" },
       { "path" => "test/models", "tags" => "test model" },
       { "path" => "app/models", "tags" => ["rails model", "ruby"] },
