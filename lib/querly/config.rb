@@ -33,6 +33,8 @@ module Querly
         rule.messages.concat messages
         rule.justifications.concat justifications
         Array(hash["tags"]).each {|tag| rule.tags << tag }
+        rule.before_examples.concat Array(hash["before"])
+        rule.after_examples.concat Array(hash["after"])
 
         rules << rule
       end

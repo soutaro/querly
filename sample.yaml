@@ -15,29 +15,36 @@ rules:
       - "records.update_all(people_id: nil)"
     after:
       - records.each(&:destroy)
+      - |
+        records.each do |record|
+          record.update(people_id: nil)
+        end
   - id: com.ubiregi.save_not_conditional
     pattern:
-      - "save() [!conditional]"
-      - "update(!validate: false) [!conditional]"
-      - "update_attributes(!validate: false) [!conditional]"
+      - "save(!validate: false, ...) [!conditional]"
+      - "update(...) [!conditional]"
+      - "update_attributes(...) [!conditional]"
     message:
       save や update は失敗した場合に false を返します。
       失敗したかどうかテストして、失敗した場合の処理を実装してください。
     justification:
       - 失敗から回復する方法がない場合
+    before:
+      - record.save()
+      - "record.update(foo: bar)"
+      - "record.update(attrs)"
+    after:
+      - if record.save() then do_something end
+      - "record.save(validate: false)"
+      - "record.update(foo: 1) or fail"
   - id: com.ubiregi.without_validation
     pattern:
       - "save(validate: false)"
       - "save!(validate: false)"
-      - "update(validate: false)"
-      - "update!(validate: false)"
-      - "update_attributes(validate: false)"
-      - "update_attributes!(validate: false)"
-      - update_attribute
-    message:
-      - これらのメソッドは validation をスキップします
+    message: これらのメソッドは validation をスキップします
     justification:
       - validation をスキップしても、不正な状況にならない場合
+      - ActiveRecord の validation 以外の方法でレコードの状況を確認している場合
   - id: com.ubiregi.net_http
     pattern: Net::HTTP
     message:
@@ -45,7 +52,7 @@ rules:
     before:
       - Net::HTTP.get(url)
     after:
-      - HTTPClient.new.get(url)
+      - HTTPClient.new.get_content(url)
   - id: com.ubiregi.root_url_without_locale
     pattern: "root_url(!locale: _)"
     message:
@@ -106,7 +113,7 @@ rules:
     tags:
       - test
       - capybara
-  - id: com.ubiregi.capybara.negated
+  - id: com.ubiregi.capybara.refute
     pattern:
       - refute
       - assert_nil

@@ -5,8 +5,8 @@ module Querly
 
     attr_reader :messages
     attr_reader :justifications
-    attr_reader :good_examples
-    attr_reader :bad_examples
+    attr_reader :before_examples
+    attr_reader :after_examples
     attr_reader :tags
     attr_reader :scope
 
@@ -17,8 +17,8 @@ module Querly
       @patterns = []
       @messages = []
       @justifications = []
-      @good_examples = []
-      @bad_examples = []
+      @before_examples = []
+      @after_examples = []
       @tags = Set.new
       @scope = scope
     end

@@ -51,8 +51,6 @@ module Querly
       end
     end
 
-    private
-
     def each_subnode(node_pair, &block)
       return unless node_pair.node
 

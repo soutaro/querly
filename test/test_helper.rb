@@ -1,5 +1,7 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'querly'
+require "querly/cli"
+require "querly/cli/test"
 
 require 'minitest/autorun'
 

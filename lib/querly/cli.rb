@@ -64,6 +64,13 @@ Specify configuration file by --config option.
       Console.new(paths: paths.map {|path| Pathname(path) }).start
     end
 
+    desc "test", "Check configuration"
+    option :config, default: "querly.yml"
+    def test()
+      require "querly/cli/test"
+      Test.new(config_path: config_path).run
+    end
+
     private
 
     def config_path
