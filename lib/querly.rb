@@ -3,6 +3,7 @@ require "yaml"
 require "rainbow"
 require "parser/current"
 require "set"
+require "open3"
 
 Parser::Builders::Default.emit_lambda = true
 
@@ -18,6 +19,7 @@ require "querly/pattern/parser"
 require 'querly/pattern/kind'
 require "querly/config"
 require "querly/tagging"
+require "querly/preprocessor"
 
 require "querly/loader/ruby"
 require "querly/loader/haml"

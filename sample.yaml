@@ -120,11 +120,8 @@ rules:
     tags:
       - test
       - capybara
-filtering:
-  - ext: .haml
-    filter: haml
-  - ext: .slim
-    filter: slim
+preprocessor:
+  .slim: slimrb --compile
 tagging:
   - path: test
     tags:

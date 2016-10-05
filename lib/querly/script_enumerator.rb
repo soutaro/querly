@@ -1,9 +1,11 @@
 module Querly
   class ScriptEnumerator
     attr_reader :paths
+    attr_reader :preprocessors
 
-    def initialize(paths:)
+    def initialize(paths:, preprocessors: {})
       @paths = paths
+      @preprocessors = preprocessors
     end
 
     def each(&block)
@@ -11,7 +13,7 @@ module Querly
         paths.each do |path|
           case
           when path.file?
-            load_script_from_path path, default_loader: Loader::Ruby, &block
+            load_script_from_path path, &block
           when path.directory?
             enumerate_files_in_dir(path, &block)
           end
@@ -34,21 +36,22 @@ module Querly
 
     private
 
-    def load_script_from_path(path, default_loader: nil, &block)
-      loader = self.class.find_loader(path) || default_loader
+    def load_script_from_path(path, &block)
+      preprocessor = preprocessors[path.extname]
 
-      if loader
-        script = nil
+      begin
+        source = if preprocessor
+                   preprocessor.run!(path.read)
+                 else
+                   path.read
+                 end
 
-        begin
-          source = loader.load(path, path.read)
-          script = Script.new(path: path, node: Parser::CurrentRuby.parse(source, path.to_s))
-        rescue StandardError, LoadError => exn
-          script = exn
-        end
-
-        yield(path, script)
+        script = Script.new(path: path, node: Parser::CurrentRuby.parse(source, path.to_s))
+      rescue StandardError, LoadError, Preprocessor::Error => exn
+        script = exn
       end
+
+      yield(path, script)
     end
 
     def enumerate_files_in_dir(path, &block)
@@ -63,7 +66,18 @@ module Querly
           enumerate_files_in_dir child, &block
         end
       when path.file?
-        load_script_from_path(path, &block)
+        should_load_file = case
+                           when path.extname == ".rb"
+                             true
+                           when path.extname == ".gemspec"
+                             true
+                           when path.basename.to_s == "Rakefile"
+                             true
+                           else
+                             preprocessors.key?(path.extname)
+                           end
+
+        load_script_from_path(path, &block) if should_load_file
       end
     end
   end
