@@ -21,10 +21,6 @@ require "querly/config"
 require "querly/tagging"
 require "querly/preprocessor"
 
-require "querly/loader/ruby"
-require "querly/loader/haml"
-require "querly/loader/slim"
-
 module Querly
   # Your code goes here...
 end
