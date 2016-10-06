@@ -95,16 +95,48 @@ class PatternTestTest < Minitest::Test
     assert_equal ruby("foo(2)"), nodes.first
   end
 
-  def test_call_with_kw_args
+  def test_call_with_kw_args1
     nodes = query_pattern("foo(bar: _)", "foo(bar: true)")
     assert_equal 1, nodes.size
     assert_equal ruby("foo(bar: true)"), nodes.first
   end
 
-  def test_call_with_kw_args_splat
+  def test_call_with_kw_args2
+    nodes = query_pattern("foo(bar: _)", "foo(bar: true, baz: 1)")
+    assert_empty nodes
+  end
+
+  def test_call_with_kw_args3
+    nodes = query_pattern("foo(bar: _)", "foo({ bar: true }, baz: 1)")
+    assert_empty nodes
+  end
+
+  def test_call_with_kw_args4
+    nodes = query_pattern("foo(_, baz: 1)", "foo({ bar: true }, baz: 1)")
+    assert nodes.one?
+    assert_equal ruby("foo({ bar: true }, baz: 1)"), nodes.first
+  end
+
+  def test_call_with_kw_args5
+    nodes = query_pattern("foo(..., baz: 1)", "foo(0, baz: 1)")
+    assert nodes.one?
+    assert_equal ruby("foo(0, baz: 1)"), nodes.first
+  end
+
+  def test_call_with_kw_args6
+    nodes = query_pattern("foo(..., baz: 1)", "foo(1, baz: 2)")
+    assert_empty nodes
+  end
+
+  def test_call_with_kw_args_rest1
     nodes = query_pattern("foo(bar: _, ...)", "foo(bar: true, baz: false)")
     assert_equal 1, nodes.size
     assert_equal ruby("foo(bar: true, baz: false)"), nodes.first
+  end
+
+  def test_call_with_kw_args_rest2
+    nodes = query_pattern("foo(bar: _, ...)", "foo(baz: false)")
+    assert_empty nodes
   end
 
   def test_call_with_negated_kw1

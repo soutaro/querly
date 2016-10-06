@@ -173,7 +173,19 @@ module Querly
 
           case args
           when Argument::AnySeq
-            true
+            if args.tail && first_node
+              case
+              when nodes.last.type == :kwsplat
+                true
+              when nodes.last.type == :hash && args.tail.is_a?(Argument::KeyValue)
+                hash = hash_node_to_hash(nodes.last)
+                test_hash_args(hash, args.tail)
+              else
+                true
+              end
+            else
+              true
+            end
           when Argument::Expr
             if first_node
               args.expr.test_node(nodes.first) && test_args(nodes.drop(1), args.tail)
@@ -182,14 +194,7 @@ module Querly
             if first_node
               types = nodes.map(&:type)
               if types == [:hash]
-                hash = nodes.first.children.each.with_object({}) do |pair, h|
-                  key = pair.children[0]
-                  value = pair.children[1]
-
-                  if key.type == :sym
-                    h[key.children[0]] = value
-                  end
-                end
+                hash = hash_node_to_hash(nodes.first)
                 test_hash_args(hash, args)
               elsif types == [:hash, :kwsplat]
                 true
@@ -203,6 +208,17 @@ module Querly
             first_node&.type == :block_pass && args.expr.test_node(first_node.children.first)
           when nil
             nodes.empty?
+          end
+        end
+
+        def hash_node_to_hash(node)
+          node.children.each.with_object({}) do |pair, h|
+            key = pair.children[0]
+            value = pair.children[1]
+
+            if key.type == :sym
+              h[key.children[0]] = value
+            end
           end
         end
 
