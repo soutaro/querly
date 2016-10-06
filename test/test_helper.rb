@@ -5,6 +5,8 @@ require "querly/cli/test"
 
 require 'minitest/autorun'
 
+Rainbow.enabled = false
+
 module TestHelper
   E = Querly::Pattern::Expr
   A = Querly::Pattern::Argument

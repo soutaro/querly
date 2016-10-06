@@ -87,8 +87,8 @@ class TestTest < Minitest::Test
 
     test.run
 
-    assert_match /id1.*0th \*before\* example didn't match with any pattern/, stdout.string
-    assert_match /id1.*0th \*after\* example matched with some of patterns/, stdout.string
+    assert_match /id1:\t0th \*before\* example didn't match with any pattern/, stdout.string
+    assert_match /id1:\t0th \*after\* example matched with some of patterns/, stdout.string
     assert_match /1 examples found which should not match, but matched/, stdout.string
     assert_match /1 examples found which should match, but didn't/, stdout.string
   end
