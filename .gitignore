@@ -10,3 +10,4 @@
 /parser.output
 /lib/querly/pattern/parser.rb
 parser.output
+/Gemfile.lock
