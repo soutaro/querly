@@ -1,15 +1,15 @@
 rules:
-  - id: com.ubiregi.delete_all
+  - id: sample.delete_all
     pattern:
       - delete_all
       - update_all
-    message:
-      - delete_all や update_all は callback や validation をスキップします
-      - レコードを一つずつ destroy/update するよりも高速ですが、危険なことがあります
+    message: |
+      Validations and callbacks will be skipped
+
+      It's faster than calling destroy or update each record, but may be dangerous.
     justification:
-      - 一件ずつ destroy/update すると時間がかかりすぎる場合
-      - callback が不要な場合
-      - validation をスキップしても、不正な状況にならない場合
+      - You have too much record to update/destroy one by one
+      - When you are sure skipping callbacks/validations is okay
     before:
       - records.delete_all
       - "records.update_all(people_id: nil)"
@@ -19,16 +19,17 @@ rules:
         records.each do |record|
           record.update(people_id: nil)
         end
-  - id: com.ubiregi.save_not_conditional
+  - id: sample.save_not_conditional
     pattern:
       - "save(!validate: false, ...) [!conditional]"
       - "update(...) [!conditional]"
       - "update_attributes(...) [!conditional]"
-    message:
-      save や update は失敗した場合に false を返します。
-      失敗したかどうかテストして、失敗した場合の処理を実装してください。
+    message: |
+      save or update returns false when it fails.
+
+      Check the return value and try error recovery.
     justification:
-      - 失敗から回復する方法がない場合
+      - When there is no way to recover from error.
     before:
       - record.save()
       - "record.update(foo: bar)"
@@ -37,93 +38,83 @@ rules:
       - if record.save() then do_something end
       - "record.save(validate: false)"
       - "record.update(foo: 1) or fail"
-  - id: com.ubiregi.without_validation
+  - id: sample.skip_validation
     pattern:
       - "save(validate: false)"
       - "save!(validate: false)"
-    message: これらのメソッドは validation をスキップします
+    message: These calls will skip validation
     justification:
-      - validation をスキップしても、不正な状況にならない場合
-      - ActiveRecord の validation 以外の方法でレコードの状況を確認している場合
-  - id: com.ubiregi.net_http
+      - When you want to skip validation
+      - When you have done validation code in other than ActiveRecord's validation mechanism
+  - id: sample.net_http
     pattern: Net::HTTP
-    message:
-      - Net::HTTP ではなく HTTPClient などのより安全で高機能なライブラリを使ってください
+    message: Use HTTPClient to make Web api calls
     before:
       - Net::HTTP.get(url)
     after:
       - HTTPClient.new.get_content(url)
-  - id: com.ubiregi.root_url_without_locale
+  - id: sample.root_url_without_locale
     pattern: "root_url(!locale: _)"
-    message:
-      - root_url には locale を指定してください
+    message: Put locale parameter in the link to top page
     before: root_url()
     after: "root_url(locale: I18n.locale)"
-  - id: com.ubiregi.transaction
+  - id: sample.transaction
     pattern: transaction
-    message:
-      - トランザクションを開始する際には、レコードのロックが必要かどうか確認してください
-      - with_account_lock や with_menu_lock などのヘルパが利用できないか、検討してください
+    message: Use with_account_lock helper, generally
     justification:
-      - ヘルパを定義する場合
-      - ロックが不要な場合
+      - It does not need lock over account
+      - It does not access accounts table
     before:
       - transaction do something end
     after:
       - with_account_lock(account) do something end
-  - id: com.sideci.oj
+  - id: sample.oj
     pattern:
       - JSON.load
       - JSON.dump
-    message: Oj を使ってください
-  - id: com.sideci.meta
+    message: Use Oj for JSON load and dump
+  - id: sample.metaprogramming_abuse
     pattern:
       - classify
       - constantize
       - eval
       - instance_values
       - safe_constantize
-    message:
-      - 本当にメタプログラミングが必要か、三回考え直してください
-      - ほとんどの場合は、より読みやすいコードで記述することができます
-  - id: activesupport.try
+    message: Consider three times before using meta-programming
+  - id: sample.activesupport.try
     pattern: "try(:symbol:, ...)"
-    message:
-      try はメソッドが定義されていない場合に nil を返します。
-      try! を使う必要がないか検討してください。
-  - id: activesupport.try_with_block_pass
+    message: try returns nil if the method is not defined, try! instead?
+  - id: sample.try_with_block_pass
     pattern: "try(&:symbol:)"
-    message:
-      シンボルを渡した場合と、同じ結果になります（しかも、シンボルを渡したほうが速い）
-  - id: rails.transaction_renew
+    message: It's same as just passing symbol, and slower
+  - id: sample.transaction_renew
     pattern: "transaction(requires_new: true)"
-    message:
-      使っている RDBMS はトランザクションのネストをサポートしていません
-  - id: com.ubiregi.capybara.assertion
+    message: Our RDBMS does not support nested transaction
+  - id: sample.capybara.assertion
     pattern:
       - assert_equal
       - assert
-    message:
-      assert_equal や assert を Capybara と組み合わせて使う場合には注意が必要です
+    message: |
+      Using minitest assertions with Capybara may make test unstable
 
-      assert_selector などの安定した表明を利用できないか考えて見てください
+      Use Capybara assertions like assert_selector
     justification:
-      - first や all などの不安定な Capybara メソッドを使っていない場合
-      - Capybara と関係ない値をテストする場合
+      - There is no access to Capybara in that test
+      - You have using retrying in test
     tags:
       - test
       - capybara
-  - id: com.ubiregi.capybara.refute
+  - id: sample.capybara.negations
     pattern:
       - refute
       - assert_nil
-    message:
-      Capybara に関する値を否定する場合には、注意が必要です
+    message: |
+      Negating capybara assertions would make test unstable
 
-      has_no_css? などの否定系のためのメソッドを使得ないか検討するか、テストに成功するまで繰り返すなどの工夫をしてください。
+      Maybe you can use Capybara helpers like has_no_css?
     justification:
-      - Capybara と関係ない値をテストする場合
-      - 繰り返しの処理を正しく実装している場合
+      - There is no access to Capybara in the test
+      - You have implemented retrying in test
     tags:
       - test
       - capybara
