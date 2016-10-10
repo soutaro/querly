@@ -1,10 +1,9 @@
-# Querly - Quely API Calls from Ruby Programs
+# Querly - Query Method Calls from Ruby Programs
 
 [![Build Status](https://travis-ci.org/soutaro/querly.svg?branch=master)](https://travis-ci.org/soutaro/querly)
 
-Querly is a query language and tools for Ruby programs, especially on method calls.
-You can write simple query for method calls, and warn for the *wrong* pieces in your program.
-That should make your code review much faster!
+Querly is a query language and tool to find out method calls from Ruby programs.
+You write simple query for method calls, and Querly finds out *wrong* pieces from your program.
 
 ## Overview
 
@@ -12,16 +11,16 @@ Your project should have many local rules:
 
 * Should not use `Customer#update_mail` but 30x faster `Customer.update_all_email` (Slower `#update_mail` is left just for existing code, but new code should not use it)
 * Should not use `root_url` without `locale:` parameter
-* Should not `Net::HTTP` for Web API calls, but use `HTTPClient`
+* Should not use `Net::HTTP` for Web API calls, but use `HTTPClient`
 
 These local rule violations will be found during code review.
 Reviewers will ask commiter to revise, commiter will fix, fine.
 Really?
-It should be boring and time consuming.
+It is boring and time consuming.
 We need some automation!
 
-However, that rules cannot be standard.
-They only make sense in your project.
+However, that rules cannot be the standard.
+They make sense only in your project.
 Okay, start writing a plug-in for RuboCop? (or other checking tools)
 
 Instead of writing RuboCop plug-in, just define a Querly rule in a few lines of YAML.
@@ -44,8 +43,8 @@ rules:
     message: Use HTTPClient to make HTTP request
 ```
 
-Write rules once, and let Querly do boring checks.
-Focus on spec, design, UX, and more important things during review!
+Write down your local rules, and let Querly do boring checks.
+Focus on spec, design, UX, and other important things during code review!
 
 ## Installation
 
