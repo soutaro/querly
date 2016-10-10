@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Soutaro Matsumoto"]
   spec.email         = ["matsumoto@soutaro.com"]
 
-  spec.summary       = %q{Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{Write a longer description or delete this line.}
+  spec.summary       = %q{Query Method Calls from Ruby Programs}
+  spec.description   = %q{Querly is a query language and tool to find out method calls from Ruby programs. You write simple query, and Querly finds out wrong pieces in your program.}
   spec.homepage      = "https://github.com/soutaro/querly"
 
   spec.files         = `git ls-files -z`
