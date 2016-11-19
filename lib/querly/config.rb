@@ -25,20 +25,7 @@ module Querly
 
     def load_rules(yaml)
       yaml["rules"].each do |hash|
-        id = hash["id"]
-        patterns = Array(hash["pattern"]).map {|src| Pattern::Parser.parse(src) }
-        messages = Array(hash["message"])
-        justifications = Array(hash["justification"])
-
-        rule = Rule.new(id: id)
-        rule.patterns.concat patterns
-        rule.messages.concat messages
-        rule.justifications.concat justifications
-        Array(hash["tags"]).each {|tag| rule.tags << tag }
-        rule.before_examples.concat Array(hash["before"])
-        rule.after_examples.concat Array(hash["after"])
-
-        rules << rule
+        rules << Rule.load(hash)
       end
     end
 

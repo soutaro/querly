@@ -29,9 +29,9 @@ class TestTest < Minitest::Test
     def test.load_config
       Config.new.tap do |config|
         config.load_rules("rules" =>[
-          { "id" => "id1", "pattern" => "_" },
-          { "id" => "id1", "pattern" => "_" },
-          { "id" => "id2", "pattern" => "_" }
+          { "id" => "id1", "pattern" => "_", "message" => "hello" },
+          { "id" => "id1", "pattern" => "_", "message" => "hello" },
+          { "id" => "id2", "pattern" => "_", "message" => "hello" }
         ])
       end
     end
@@ -54,6 +54,7 @@ class TestTest < Minitest::Test
               "foo()",
               "foo(1)"
             ],
+            "message" => "hello",
             "before" => ["self.foo()", "foo(1)"],
             "after" => ["self.foo(x)", "bar()"]
           },
@@ -78,6 +79,7 @@ class TestTest < Minitest::Test
               "foo()",
               "foo(1)"
             ],
+            "message" => "hello",
             "before" => ["self.foo(x)", "foo(1)"],
             "after" => ["self.foo()", "bar(1)"]
           },
@@ -102,6 +104,7 @@ class TestTest < Minitest::Test
           {
             "id" => "id1",
             "pattern" => "_",
+            "message" => "hello",
             "before" => ["self.foo("],
             "after" => ["1)"]
           },
