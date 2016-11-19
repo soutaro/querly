@@ -4,49 +4,44 @@ class ConfigTest < Minitest::Test
   Config = Querly::Config
   Preprocessor = Querly::Preprocessor
 
-  def test_load_rules
-    config = Config.new
-    config.load_rules({ "rules" => [
-      {
-        "id" => "test1",
-        "pattern" => "foo",
-        "message" => "message1"
-      },
-      {
-        "id" => "test2",
-        "pattern" => "foo.bar",
-        "message" => "message2",
-        "tags" => "foo"
-      },
-      {
-        "id" => "test3",
-        "pattern" => "foo.bar.baz",
-        "message" => "message3",
-        "tags" => ["foo", "bar"]
-      }
-    ]})
-
-    # Load tags
-    assert_equal Set.new(), config.rules[0].tags
-    assert_equal Set.new(["foo"]), config.rules[1].tags
-    assert_equal Set.new(["foo", "bar"]), config.rules[2].tags
+  def stderr
+    @stderr ||= StringIO.new
   end
 
-  def test_load_preprocessors
-    config = Config.new
-    config.load_preprocessors({
-                                ".haml" => "haml -I lib -r foo_plugin",
-                                ".slim" => "slim"
-                              })
+  def test_factory_config_returns_empty_config
+    config = Config::Factory.new({}, root_dir: Pathname("/foo/bar"), stderr: stderr).config
 
-    haml_preprocessor = config.preprocessors[".haml"]
-    assert_instance_of Preprocessor, haml_preprocessor
-    assert_equal ".haml", haml_preprocessor.ext
-    assert_equal "haml -I lib -r foo_plugin", haml_preprocessor.command
+    assert_instance_of Config, config
+    assert_empty config.rules
+    assert_empty config.preprocessors
+    assert_equal Pathname("/foo/bar"), config.root_dir
+  end
 
-    slim_preprocessor = config.preprocessors[".slim"]
-    assert_instance_of Preprocessor, slim_preprocessor
-    assert_equal ".slim", slim_preprocessor.ext
-    assert_equal "slim", slim_preprocessor.command
+  def test_factory_config_resturns_config_with_rules
+    config = Config::Factory.new(
+      {
+        "rules" => [
+          {
+            "id" => "rule.id",
+            "pattern" => "_",
+            "message" => "Hello world"
+          }
+        ],
+        "preprocessor" => {
+          ".slim" => "slimrb --compile"
+        }
+      }, root_dir: Pathname("/foo/bar"), stderr: stderr
+    ).config
+
+    assert_instance_of Config, config
+    assert_equal ["rule.id"], config.rules.map(&:id)
+    assert_equal [".slim"], config.preprocessors.keys
+    assert_equal Pathname("/foo/bar"), config.root_dir
+  end
+
+  def test_factory_config_prints_warning_on_tagging
+    Config::Factory.new({ "tagging" => [] }, root_dir: Pathname("/foo/bar"), stderr: stderr).config
+
+    assert_match /tagging is deprecated and ignored/, stderr.string
   end
 end

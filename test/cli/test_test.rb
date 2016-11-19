@@ -27,13 +27,18 @@ class TestTest < Minitest::Test
     test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
 
     def test.load_config
-      Config.new.tap do |config|
-        config.load_rules("rules" =>[
-          { "id" => "id1", "pattern" => "_", "message" => "hello" },
-          { "id" => "id1", "pattern" => "_", "message" => "hello" },
-          { "id" => "id2", "pattern" => "_", "message" => "hello" }
-        ])
-      end
+      Config.load(
+        {
+          "rules" =>
+            [
+              { "id" => "id1", "pattern" => "_", "message" => "hello" },
+              { "id" => "id1", "pattern" => "_", "message" => "hello" },
+              { "id" => "id2", "pattern" => "_", "message" => "hello" }
+            ]
+        },
+        root_dir: Pathname.pwd,
+        stderr: stderr
+      )
     end
 
     test.run
@@ -46,20 +51,24 @@ class TestTest < Minitest::Test
     test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
 
     def test.load_config
-      Config.new.tap do |config|
-        config.load_rules("rules" =>[
-          {
-            "id" => "id1",
-            "pattern" => [
-              "foo()",
-              "foo(1)"
-            ],
-            "message" => "hello",
-            "before" => ["self.foo()", "foo(1)"],
-            "after" => ["self.foo(x)", "bar()"]
-          },
-        ])
-      end
+      Config.load(
+        {
+          "rules" => [
+            {
+              "id" => "id1",
+              "pattern" => [
+                "foo()",
+                "foo(1)"
+              ],
+              "message" => "hello",
+              "before" => ["self.foo()", "foo(1)"],
+              "after" => ["self.foo(x)", "bar()"]
+            },
+          ]
+        },
+        root_dir: Pathname.pwd,
+        stderr: stderr
+      )
     end
 
     test.run
@@ -71,20 +80,24 @@ class TestTest < Minitest::Test
     test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
 
     def test.load_config
-      Config.new.tap do |config|
-        config.load_rules("rules" =>[
-          {
-            "id" => "id1",
-            "pattern" => [
-              "foo()",
-              "foo(1)"
-            ],
-            "message" => "hello",
-            "before" => ["self.foo(x)", "foo(1)"],
-            "after" => ["self.foo()", "bar(1)"]
-          },
-        ])
-      end
+      Config.load(
+        {
+          "rules" => [
+            {
+              "id" => "id1",
+              "pattern" => [
+                "foo()",
+                "foo(1)"
+              ],
+              "message" => "hello",
+              "before" => ["self.foo(x)", "foo(1)"],
+              "after" => ["self.foo()", "bar(1)"]
+            },
+          ]
+        },
+        root_dir: Pathname.pwd,
+        stderr: stderr
+      )
     end
 
     test.run
@@ -99,17 +112,21 @@ class TestTest < Minitest::Test
     test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
 
     def test.load_config
-      Config.new.tap do |config|
-        config.load_rules("rules" =>[
-          {
-            "id" => "id1",
-            "pattern" => "_",
-            "message" => "hello",
-            "before" => ["self.foo("],
-            "after" => ["1)"]
-          },
-        ])
-      end
+      Config.load(
+        {
+          "rules" =>[
+            {
+              "id" => "id1",
+              "pattern" => "_",
+              "message" => "hello",
+              "before" => ["self.foo("],
+              "after" => ["1)"]
+            },
+          ]
+        },
+        root_dir: Pathname.pwd,
+        stderr: stderr
+      )
     end
 
     test.run

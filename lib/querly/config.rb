@@ -1,37 +1,41 @@
 module Querly
   class Config
     attr_reader :rules
-    attr_reader :paths
     attr_reader :preprocessors
+    attr_reader :root_dir
 
-    def initialize()
-      @rules = []
-      @paths = []
-      @preprocessors = {}
+    def initialize(rules:, preprocessors:, root_dir:)
+      @rules = rules
+      @root_dir = root_dir
+      @preprocessors = preprocessors
     end
 
-    def add_file(path)
-      paths << path
+    def self.load(hash, root_dir:, stderr: STDERR)
+      Factory.new(hash, root_dir: root_dir, stderr: stderr).config
+    end
 
-      content = YAML.load(path.read)
-      load_rules(content)
+    class Factory
+      attr_reader :yaml
+      attr_reader :root_dir
+      attr_reader :stderr
 
-      if content["tagging"]
-        STDERR.puts "tagging key is deprecated and just ignroed."
+      def initialize(yaml, root_dir:, stderr: STDERR)
+        @yaml = yaml
+        @root_dir = root_dir
+        @stderr = stderr
       end
 
-      load_preprocessors(content["preprocessor"] || {})
-    end
+      def config
+        if yaml["tagging"]
+          stderr.puts "tagging is deprecated and ignored"
+        end
 
-    def load_rules(yaml)
-      yaml["rules"].each do |hash|
-        rules << Rule.load(hash)
-      end
-    end
+        rules = Array(yaml["rules"]).map {|hash| Rule.load(hash) }
+        preprocessors = (yaml["preprocessor"] || {}).each.with_object({}) do |(key, value), hash|
+          hash[key] = Preprocessor.new(ext: key, command: value)
+        end
 
-    def load_preprocessors(preprocessors)
-      @preprocessors = preprocessors.each.with_object({}) do |(key, value), hash|
-        hash[key] = Preprocessor.new(ext: key, command: value)
+        Config.new(rules: rules, preprocessors: preprocessors, root_dir: root_dir)
       end
     end
   end

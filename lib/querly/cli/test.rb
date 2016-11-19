@@ -108,9 +108,8 @@ module Querly
 
       def load_config
         if config_path.file?
-          config = Config.new
-          config.add_file config_path
-          config
+          yaml = YAML.load(config_path.read)
+          Config.load(yaml, root_dir: Pathname.pwd, stderr: STDERR)
         end
       end
     end

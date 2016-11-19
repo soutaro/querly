@@ -26,9 +26,9 @@ Specify configuration file by --config option.
           exit 1
         end
 
-        config = Config.new
-        begin
-          config.add_file config_path
+        config = begin
+          yaml = YAML.load(config_path.read)
+          Config.load(yaml, root_dir: Pathname.pwd, stderr: STDERR)
         rescue => exn
           formatter.config_error config_path, exn
           exit
