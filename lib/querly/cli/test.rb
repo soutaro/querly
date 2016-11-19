@@ -92,7 +92,7 @@ module Querly
       end
 
       def test_pattern(pattern, example, expected:)
-        analyzer = Analyzer.new(taggings: [])
+        analyzer = Analyzer.new()
 
         found = false
 

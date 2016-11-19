@@ -120,8 +120,3 @@ rules:
       - capybara
 preprocessor:
   .slim: slimrb --compile
-tagging:
-  - path: test
-    tags:
-  - path: features/step_definitions
-    tags: test capybara

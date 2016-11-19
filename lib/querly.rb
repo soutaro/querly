@@ -18,7 +18,6 @@ require 'querly/node_pair'
 require "querly/pattern/parser"
 require 'querly/pattern/kind'
 require "querly/config"
-require "querly/tagging"
 require "querly/preprocessor"
 
 module Querly

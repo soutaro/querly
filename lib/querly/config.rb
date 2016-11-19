@@ -2,13 +2,11 @@ module Querly
   class Config
     attr_reader :rules
     attr_reader :paths
-    attr_reader :taggings
     attr_reader :preprocessors
 
     def initialize()
       @rules = []
       @paths = []
-      @taggings = []
       @preprocessors = {}
     end
 
@@ -17,7 +15,11 @@ module Querly
 
       content = YAML.load(path.read)
       load_rules(content)
-      load_taggings(content)
+
+      if content["tagging"]
+        STDERR.puts "tagging key is deprecated and just ignroed."
+      end
+
       load_preprocessors(content["preprocessor"] || {})
     end
 
@@ -38,13 +40,6 @@ module Querly
 
         rules << rule
       end
-    end
-
-    def load_taggings(yaml)
-      @taggings = Array(yaml["tagging"]).map {|hash|
-        Tagging.new(path_pattern: hash["path"],
-                    tags_set: Array(hash["tags"]).map {|string| Set.new(string.split) })
-      }.sort_by {|tagging| -tagging.path_pattern.size }
     end
 
     def load_preprocessors(preprocessors)
