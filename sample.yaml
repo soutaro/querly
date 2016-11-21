@@ -120,3 +120,21 @@ rules:
       - capybara
 preprocessor:
   .slim: slimrb --compile
+
+check:
+  - path: /
+    rules:
+      - except: minitest
+  - path: /test
+    rules:
+      - minitest
+      - except:
+          tags: capybara minitest
+  - path: /test/integration
+    rules:
+      - append:
+          tags: capybara minitest
+  - path: /features/step_definitions
+    rules:
+      - append:
+          tags: capybara minitest

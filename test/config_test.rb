@@ -54,4 +54,17 @@ class ConfigTest < Minitest::Test
 
     assert_match /tagging is deprecated and ignored/, stderr.string
   end
+
+  def test_relative_path_from_root
+    config = Config::Factory.new({}, root_dir: Pathname("/foo/bar"), stderr: stderr).config
+
+    # Relative path from root_dir
+    assert_equal Pathname("a/b/c.rb"), config.relative_path_from_root(Pathname("a/b/c.rb"))
+    assert_equal Pathname("a/b/c.rb"), config.relative_path_from_root(Pathname("a/b/../b/c.rb"))
+    assert_equal Pathname("baz/Rakefile"), config.relative_path_from_root(Pathname("/foo/bar/baz/Rakefile"))
+
+    # Nonsense...
+    assert_equal Pathname("../x.rb"), config.relative_path_from_root(Pathname("../x.rb"))
+    assert_equal Pathname("../../a/b/c.rb"), config.relative_path_from_root(Pathname("/a/b/c.rb"))
+  end
 end

@@ -20,6 +20,10 @@ module Querly
       @all_rules ||= Set.new(rules)
     end
 
+    def relative_path_from_root(path)
+      path.absolute? ? path.relative_path_from(root_dir) : path.cleanpath
+    end
+
     class Factory
       attr_reader :yaml
       attr_reader :root_dir
