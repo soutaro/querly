@@ -35,7 +35,7 @@ Querly #{VERSION}, interactive console
 
         @analyzer = Analyzer.new(config: nil)
 
-        ScriptEnumerator.new(paths: paths).each do |path, script|
+        ScriptEnumerator.new(paths: paths, config: nil).each do |path, script|
           case script
           when Script
             @analyzer.scripts << script

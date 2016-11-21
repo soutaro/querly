@@ -1,11 +1,11 @@
 module Querly
   class ScriptEnumerator
     attr_reader :paths
-    attr_reader :preprocessors
+    attr_reader :config
 
-    def initialize(paths:, preprocessors: {})
+    def initialize(paths:, config:)
       @paths = paths
-      @preprocessors = preprocessors
+      @config = config
     end
 
     def each(&block)
@@ -52,6 +52,10 @@ module Querly
       end
 
       yield(path, script)
+    end
+
+    def preprocessors
+      config&.preprocessors || {}
     end
 
     def enumerate_files_in_dir(path, &block)

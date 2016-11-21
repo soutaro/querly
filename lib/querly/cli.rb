@@ -36,7 +36,7 @@ Specify configuration file by --config option.
 
         analyzer = Analyzer.new(config: config)
 
-        ScriptEnumerator.new(paths: paths.map {|path| Pathname(path) }, preprocessors: config.preprocessors).each do |path, script|
+        ScriptEnumerator.new(paths: paths.map {|path| Pathname(path) }, config: config).each do |path, script|
           case script
           when Script
             analyzer.scripts << script
