@@ -147,7 +147,7 @@ module Querly
           # Skip send node with block
           if pair.node.type == :send && pair.parent
             if pair.parent.node.type == :block
-              if pair.parent.node.children.first == pair.node
+              if pair.parent.node.children.first.equal? pair.node
                 return false
               end
             end
