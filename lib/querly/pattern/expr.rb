@@ -136,11 +136,13 @@ module Querly
         attr_reader :name
         attr_reader :receiver
         attr_reader :args
+        attr_reader :block
 
-        def initialize(receiver:, name:, args: Argument::AnySeq.new)
+        def initialize(receiver:, name:, block:, args: Argument::AnySeq.new)
           @name = name
           @receiver = receiver
           @args = args
+          @block = block
         end
 
         def =~(pair)
@@ -157,6 +159,9 @@ module Querly
         end
 
         def test_node(node)
+          return false if block == true && node.type != :block
+          return false if block == false && node.type == :block
+
           node = node.children.first if node&.type == :block
 
           case node&.type

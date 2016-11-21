@@ -64,14 +64,23 @@ constant: UIDENT { result = [val[0]] }
   | UIDENT COLONCOLON constant { result = [val[0]] + val[2] }
 
 send: LIDENT { result = Expr::Vcall.new(name: val[0]) }
-  | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0]) }
-  | method_name_or_ident LPAREN args RPAREN { result = Expr::Send.new(receiver: Expr::Any.new,
+  | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0], block: nil) }
+  | method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: Expr::Any.new,
                                                              name: val[0],
-                                                             args: val[2]) }
-  | expr DOT method_name_or_ident { result = Expr::Send.new(receiver: val[0], name: val[2], args: Argument::AnySeq.new) }
-  | expr DOT method_name_or_ident LPAREN args RPAREN { result = Expr::Send.new(receiver: val[0],
-                                                                      name: val[2],
-                                                                      args: val[4]) }
+                                                             args: val[2],
+                                                             block: val[4]) }
+  | expr DOT method_name_or_ident block { result = Expr::Send.new(receiver: val[0],
+                                                                  name: val[2],
+                                                                  args: Argument::AnySeq.new,
+                                                                  block: val[3]) }
+  | expr DOT method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: val[0],
+                                                                                     name: val[2],
+                                                                                     args: val[4],
+                                                                                     block: val[6]) }
+
+block: { result = nil }
+  | WITH_BLOCK { result = true }
+  | WITHOUT_BLOCK { result = false }
 
 end
 
@@ -119,6 +128,10 @@ def next_token
   when input.scan(/:\w+/)
     s = input.matched
     [:SYMBOL, s[1, s.size - 1].to_sym]
+  when input.scan(/{}/)
+    [:WITH_BLOCK, nil]
+  when input.scan(/!{}/)
+    [:WITHOUT_BLOCK, nil]
   when input.scan(/[+-]?[0-9]+\.[0-9]/)
     [:FLOAT, input.matched.to_f]
   when input.scan(/[+-]?[0-9]+/)

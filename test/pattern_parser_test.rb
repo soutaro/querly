@@ -46,7 +46,8 @@ class PatternParserTest < Minitest::Test
                              args: A::KeyValue.new(key: :x,
                                                    value: E::Literal.new(type: :int, value: 1),
                                                    negated: true,
-                                                   tail: A::AnySeq.new)), pat
+                                                   tail: A::AnySeq.new),
+                             block: nil), pat
   end
 
   def test_keyword_arg2
@@ -56,7 +57,24 @@ class PatternParserTest < Minitest::Test
                              args: A::KeyValue.new(key: :X,
                                                    value: E::Literal.new(type: :int, value: 1),
                                                    negated: true,
-                                                   tail: A::AnySeq.new)), pat
+                                                   tail: A::AnySeq.new),
+                             block: nil), pat
+  end
+
+  def test_send_with_block
+    pat = parse_expr("foo() {}")
+    assert_equal E::Send.new(receiver: E::Any.new,
+                             name: :foo,
+                             args: nil,
+                             block: true), pat
+  end
+
+  def test_send_without_block
+    pat = parse_expr("foo() !{}")
+    assert_equal E::Send.new(receiver: E::Any.new,
+                             name: :foo,
+                             args: nil,
+                             block: false), pat
   end
 
   def test_method_names

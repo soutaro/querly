@@ -221,4 +221,21 @@ class PatternTestTest < Minitest::Test
     assert_equal 1, nodes.size
     assert_equal ruby('"#{1+2}"'), nodes.first
   end
+
+  def test_without_block_option
+    nodes = query_pattern("foo()", "foo() { foo() }")
+    assert_equal 2, nodes.size
+  end
+
+  def test_with_block
+    nodes = query_pattern("foo() {}", "foo do foo() end")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo() do foo() end"), nodes.first
+  end
+
+  def test_without_block
+    nodes = query_pattern("foo() !{}", "foo do foo() end")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo()"), nodes.first
+  end
 end
