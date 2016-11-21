@@ -4,6 +4,7 @@
 
 ## 0.3.0
 
+* Allow `require` rules from config file
 * Add `version` command
 * Fix *with block* and *without block* pattern parsing
 * Prettier backtrace printing
