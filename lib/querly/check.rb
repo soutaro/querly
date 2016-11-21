@@ -13,19 +13,7 @@ module Querly
       end
 
       def match?(rule)
-        if identifier
-          unless rule.id == identifier || rule.id.start_with?(identifier + ".")
-            return false
-          end
-        end
-
-        if tags
-          unless tags.subset?(rule.tags)
-            return false
-          end
-        end
-
-        true
+        rule.match?(identifier: identifier, tags: tags)
       end
     end
 

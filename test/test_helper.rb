@@ -4,6 +4,7 @@ require "querly/cli"
 require "querly/cli/test"
 
 require 'minitest/autorun'
+require "tmpdir"
 
 Rainbow.enabled = false
 
@@ -36,5 +37,17 @@ module TestHelper
 
   def ruby(src)
     Parser::CurrentRuby.parse(src)
+  end
+
+  def with_config(hash)
+    Dir.mktmpdir do |dir|
+      path = Pathname(dir) + "querly.yml"
+      path.write(YAML.dump(hash))
+      yield path
+    end
+  end
+
+  def stdout
+    @stdout ||= StringIO.new
   end
 end

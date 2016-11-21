@@ -85,7 +85,7 @@ class CheckTest < Minitest::Test
   end
 
   def test_query_match
-    rule = Rule.new(id: "ruby.pathname", messages: nil, patterns: nil, tags: Set.new(["tag1", "tag2"]), before_examples: [], after_examples: [], justifications: [])
+    rule = Rule.new(id: "ruby.pathname", messages: nil, patterns: nil, sources: nil, tags: Set.new(["tag1", "tag2"]), before_examples: [], after_examples: [], justifications: [])
 
     assert Check::Query.new(:append, nil, "ruby.pathname").match?(rule)
     assert Check::Query.new(:append, nil, "ruby").match?(rule)
@@ -101,8 +101,8 @@ class CheckTest < Minitest::Test
   end
 
   def test_query_apply
-    r1 = Rule.new(id: "ruby.pathname", messages: nil, patterns: nil, tags: Set.new(), before_examples: [], after_examples: [], justifications: [])
-    r2 = Rule.new(id: "minitest.assert", messages: nil, patterns: nil, tags: Set.new(), before_examples: [], after_examples: [], justifications: [])
+    r1 = Rule.new(id: "ruby.pathname", messages: nil, patterns: nil, sources: nil, tags: Set.new(), before_examples: [], after_examples: [], justifications: [])
+    r2 = Rule.new(id: "minitest.assert", messages: nil, patterns: nil, sources: nil, tags: Set.new(), before_examples: [], after_examples: [], justifications: [])
     all_rules = Set.new([r1, r2])
 
     assert_equal Set.new([r1, r2]), Check::Query.new(:append, nil, "ruby").apply(current: Set.new([r2]), all: all_rules)
