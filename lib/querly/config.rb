@@ -46,6 +46,22 @@ module Querly
         preprocessors = (yaml["preprocessor"] || {}).each.with_object({}) do |(key, value), hash|
           hash[key] = Preprocessor.new(ext: key, command: value)
         end
+
+        imports = Array(yaml["import"])
+        imports.each do |import|
+          if import["load"]
+            load_pattern = Pathname(import["load"])
+            load_pattern = config_path.parent + load_pattern if load_pattern.relative?
+
+            Pathname.glob(load_pattern.to_s) do |path|
+              stderr.puts "Loading rules from #{path}..."
+              YAML.load(path.read).each do |hash|
+                rules << Rule.load(hash)
+              end
+            end
+          end
+        end
+
         checks = Array(yaml["check"]).map {|hash| Check.load(hash) }
 
         Config.new(rules: rules, preprocessors: preprocessors, checks: checks, root_dir: root_dir)

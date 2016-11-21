@@ -118,8 +118,12 @@ rules:
     tags:
       - test
       - capybara
+
 preprocessor:
   .slim: slimrb --compile
+
+import:
+  - load: rules/*.yml
 
 check:
   - path: /

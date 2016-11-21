@@ -1,6 +1,8 @@
 require_relative "test_helper"
 
 class ConfigTest < Minitest::Test
+  include TestHelper
+
   Config = Querly::Config
   Preprocessor = Querly::Preprocessor
 
@@ -69,5 +71,28 @@ class ConfigTest < Minitest::Test
     # Nonsense...
     assert_equal Pathname("../x.rb"), config.relative_path_from_root(Pathname("../x.rb"))
     assert_equal Pathname("../../a/b/c.rb"), config.relative_path_from_root(Pathname("/a/b/c.rb"))
+  end
+
+  def test_loading_rules_from_file
+    hash = { "import" => [
+      { "load" => "foo.yml" },
+      { "load" => "rules/*" }
+    ]}
+
+    with_config hash do |path|
+      dir = path.parent
+
+      (dir + "foo.yml").write(YAML.dump([{ "id" => "rule1", "pattern" => "_", "message" => "rule1" }]))
+      (dir + "rules").mkpath
+      (dir + "rules" + "1.yml").write(YAML.dump([{ "id" => "rule2", "pattern" => "_", "message" => "rule1" }]))
+      (dir + "rules" + "2.yml").write(YAML.dump([
+                                                   { "id" => "rule3", "pattern" => "_", "message" => "rule1" },
+                                                   { "id" => "rule4", "pattern" => "_", "message" => "rule1" }
+                                                 ]))
+
+      config = Config.load(YAML.load(path.read), config_path: path, root_dir: path, stderr: stderr)
+
+      assert_equal ["rule1", "rule2", "rule3", "rule4"], config.rules.map(&:id)
+    end
   end
 end
