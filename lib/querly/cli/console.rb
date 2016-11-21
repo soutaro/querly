@@ -33,7 +33,7 @@ Querly #{VERSION}, interactive console
       def analyzer
         return @analyzer if @analyzer
 
-        @analyzer = Analyzer.new()
+        @analyzer = Analyzer.new(config: nil)
 
         ScriptEnumerator.new(paths: paths).each do |path, script|
           case script

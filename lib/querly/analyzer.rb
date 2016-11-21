@@ -1,10 +1,10 @@
 module Querly
   class Analyzer
-    attr_reader :rules
+    attr_reader :config
     attr_reader :scripts
 
-    def initialize()
-      @rules = []
+    def initialize(config:)
+      @config = config
       @scripts = []
     end
 
@@ -14,7 +14,7 @@ module Querly
     def run
       scripts.each do |script|
         each_subnode script.root_pair do |node_pair|
-          rules.each do |rule|
+          config.rules.each do |rule|
             if rule.patterns.any? {|pattern| test_pair(node_pair, pattern) }
               yield script, rule, node_pair
             end
