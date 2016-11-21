@@ -109,7 +109,7 @@ module Querly
       def load_config
         if config_path.file?
           yaml = YAML.load(config_path.read)
-          Config.load(yaml, root_dir: Pathname.pwd, stderr: STDERR)
+          Config.load(yaml, root_dir: config_path.parent.realpath, stderr: STDERR)
         end
       end
     end

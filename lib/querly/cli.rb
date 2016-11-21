@@ -5,6 +5,7 @@ module Querly
   class CLI < Thor
     desc "check [paths]", "Check paths based on configuration"
     option :config, default: "querly.yml"
+    option :root
     option :format, default: "text", type: :string, enum: %w(text json)
     def check(*paths)
       require 'querly/cli/formatter'
@@ -26,9 +27,12 @@ Specify configuration file by --config option.
           exit 1
         end
 
+        root_option = options[:root]
+        root_path = root_option ? Pathname(root_option).realpath : config_path.parent.realpath
+
         config = begin
           yaml = YAML.load(config_path.read)
-          Config.load(yaml, root_dir: Pathname.pwd, stderr: STDERR)
+          Config.load(yaml, root_dir: root_path, stderr: STDERR)
         rescue => exn
           formatter.config_error config_path, exn
           exit
