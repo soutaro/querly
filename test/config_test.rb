@@ -29,7 +29,17 @@ class ConfigTest < Minitest::Test
         ],
         "preprocessor" => {
           ".slim" => "slimrb --compile"
-        }
+        },
+        "check" => [
+          {
+            "path" => "/test",
+            "rules" => ["rails", "minitest"]
+          },
+          {
+            "path" => "/test/integration",
+            "rules" => ["capybara", { "except" => "minitest" }]
+          }
+        ]
       }, root_dir: Pathname("/foo/bar"), stderr: stderr
     ).config
 
