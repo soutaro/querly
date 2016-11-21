@@ -178,15 +178,19 @@ module Querly
 
           case args
           when Argument::AnySeq
-            if args.tail && first_node
-              case
-              when nodes.last.type == :kwsplat
-                true
-              when nodes.last.type == :hash && args.tail.is_a?(Argument::KeyValue)
-                hash = hash_node_to_hash(nodes.last)
-                test_hash_args(hash, args.tail)
+            if args.tail
+              if first_node
+                case
+                when nodes.last.type == :kwsplat
+                  true
+                when nodes.last.type == :hash && args.tail.is_a?(Argument::KeyValue)
+                  hash = hash_node_to_hash(nodes.last)
+                  test_hash_args(hash, args.tail)
+                else
+                  test_hash_args({}, args.tail)
+                end
               else
-                true
+                test_hash_args({}, args.tail)
               end
             else
               true
