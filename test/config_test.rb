@@ -9,7 +9,7 @@ class ConfigTest < Minitest::Test
   end
 
   def test_factory_config_returns_empty_config
-    config = Config::Factory.new({}, root_dir: Pathname("/foo/bar"), stderr: stderr).config
+    config = Config::Factory.new({}, config_path: Pathname("/foo/bar"), root_dir: Pathname("/foo/bar"), stderr: stderr).config
 
     assert_instance_of Config, config
     assert_empty config.rules
@@ -40,7 +40,10 @@ class ConfigTest < Minitest::Test
             "rules" => ["capybara", { "except" => "minitest" }]
           }
         ]
-      }, root_dir: Pathname("/foo/bar"), stderr: stderr
+      },
+      config_path: Pathname("/foo/bar"),
+      root_dir: Pathname("/foo/bar"),
+      stderr: stderr
     ).config
 
     assert_instance_of Config, config
@@ -50,13 +53,13 @@ class ConfigTest < Minitest::Test
   end
 
   def test_factory_config_prints_warning_on_tagging
-    Config::Factory.new({ "tagging" => [] }, root_dir: Pathname("/foo/bar"), stderr: stderr).config
+    Config::Factory.new({ "tagging" => [] }, config_path: Pathname("/foo/bar"), root_dir: Pathname("/foo/bar"), stderr: stderr).config
 
     assert_match /tagging is deprecated and ignored/, stderr.string
   end
 
   def test_relative_path_from_root
-    config = Config::Factory.new({}, root_dir: Pathname("/foo/bar"), stderr: stderr).config
+    config = Config::Factory.new({}, config_path: Pathname("/foo/bar"), root_dir: Pathname("/foo/bar"), stderr: stderr).config
 
     # Relative path from root_dir
     assert_equal Pathname("a/b/c.rb"), config.relative_path_from_root(Pathname("a/b/c.rb"))

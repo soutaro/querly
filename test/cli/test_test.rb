@@ -36,6 +36,7 @@ class TestTest < Minitest::Test
               { "id" => "id2", "pattern" => "_", "message" => "hello" }
             ]
         },
+        config_path: Pathname.pwd,
         root_dir: Pathname.pwd,
         stderr: stderr
       )
@@ -66,6 +67,7 @@ class TestTest < Minitest::Test
             },
           ]
         },
+        config_path: Pathname.pwd,
         root_dir: Pathname.pwd,
         stderr: stderr
       )
@@ -95,6 +97,7 @@ class TestTest < Minitest::Test
             },
           ]
         },
+        config_path: Pathname.pwd,
         root_dir: Pathname.pwd,
         stderr: stderr
       )
@@ -124,6 +127,7 @@ class TestTest < Minitest::Test
             },
           ]
         },
+        config_path: Pathname.pwd,
         root_dir: Pathname.pwd,
         stderr: stderr
       )

@@ -32,7 +32,7 @@ Specify configuration file by --config option.
 
         config = begin
           yaml = YAML.load(config_path.read)
-          Config.load(yaml, root_dir: root_path, stderr: STDERR)
+          Config.load(yaml, config_path: config_path, root_dir: root_path, stderr: STDERR)
         rescue => exn
           formatter.config_error config_path, exn
           exit

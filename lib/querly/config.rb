@@ -12,8 +12,8 @@ module Querly
       @checks = checks
     end
 
-    def self.load(hash, root_dir:, stderr: STDERR)
-      Factory.new(hash, root_dir: root_dir, stderr: stderr).config
+    def self.load(hash, config_path:, root_dir:, stderr: STDERR)
+      Factory.new(hash, config_path: config_path, root_dir: root_dir, stderr: stderr).config
     end
 
     def all_rules
@@ -28,9 +28,11 @@ module Querly
       attr_reader :yaml
       attr_reader :root_dir
       attr_reader :stderr
+      attr_reader :config_path
 
-      def initialize(yaml, root_dir:, stderr: STDERR)
+      def initialize(yaml, config_path:, root_dir:, stderr: STDERR)
         @yaml = yaml
+        @config_path = config_path
         @root_dir = root_dir
         @stderr = stderr
       end

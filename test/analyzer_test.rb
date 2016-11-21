@@ -22,6 +22,7 @@ class AnalyzerTest < Minitest::Test
         "check" => [{ "path" => "/test", "rules" => [{ "only" => "rule2" }] },
                     { "path" => "/test/unit", "rules" => ["rule3"] }]
       },
+      config_path: root_dir,
       root_dir: root_dir,
       stderr: stderr
     )

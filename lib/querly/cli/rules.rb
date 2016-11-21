@@ -13,7 +13,7 @@ module Querly
 
       def config
         yaml = YAML.load(config_path.read)
-        @config ||= Config.load(yaml, root_dir: config_path.parent.realpath)
+        @config ||= Config.load(yaml, config_path: config_path, root_dir: config_path.parent.realpath)
       end
 
       def run
