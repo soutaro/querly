@@ -128,6 +128,9 @@ module Querly
               true
             end
 
+          when :regexp
+            type == :regexp
+            
           end
         end
       end

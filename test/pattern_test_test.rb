@@ -244,4 +244,10 @@ class PatternTestTest < Minitest::Test
     assert_equal 1, nodes.size
     assert_equal ruby("foo()"), nodes.first
   end
+
+  def test_regexp
+    nodes = query_pattern(":regexp:", "[/1/, /#{2}/, 3]")
+    assert_equal 2, nodes.size
+    assert_equal [ruby("/1/"), ruby("/#{2}/")], nodes
+  end
 end

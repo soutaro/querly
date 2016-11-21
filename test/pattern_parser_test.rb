@@ -147,4 +147,10 @@ class PatternParserTest < Minitest::Test
     assert_instance_of K::Discarded, pat
     assert pat.negated
   end
+
+  def test_regexp
+    pat = parse_expr(":regexp:")
+    assert_instance_of E::Literal, pat
+    assert_equal :regexp, pat.type
+  end
 end

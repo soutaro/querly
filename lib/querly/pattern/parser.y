@@ -22,6 +22,7 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
   | FLOAT { result = Expr::Literal.new(type: :float, value: val[0]) }
   | SYMBOL { result = Expr::Literal.new(type: :symbol, value: val[0]) }
   | NUMBER { result = Expr::Literal.new(type: :number, value: val[0]) }
+  | REGEXP { result = Expr::Literal.new(type: :regexp, value: nil) }
   | DSTR { result = Expr::Dstr.new() }
   | UNDERBAR { result = Expr::Any.new }
   | NIL { result = Expr::Nil.new }
@@ -125,6 +126,8 @@ def next_token
     [:SYMBOL, nil]
   when input.scan(/:number:/)
     [:NUMBER, nil]
+  when input.scan(/:regexp:/)
+    [:REGEXP, nil]
   when input.scan(/:\w+/)
     s = input.matched
     [:SYMBOL, s[1, s.size - 1].to_sym]
