@@ -19,6 +19,7 @@ require "querly/pattern/parser"
 require 'querly/pattern/kind'
 require "querly/config"
 require "querly/preprocessor"
+require "querly/check"
 
 module Querly
   # Your code goes here...
