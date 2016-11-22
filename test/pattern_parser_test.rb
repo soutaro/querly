@@ -153,4 +153,16 @@ class PatternParserTest < Minitest::Test
     assert_instance_of E::Literal, pat
     assert_equal :regexp, pat.type
   end
+
+  def test_any_receiver
+    pat = parse_expr("foo...bar")
+
+    assert_instance_of E::Send, pat
+    assert_equal :bar, pat.name
+
+    assert_instance_of E::ReceiverContext, pat.receiver
+
+    assert_instance_of E::Vcall, pat.receiver.receiver
+    assert_equal :foo, pat.receiver.receiver.name
+  end
 end

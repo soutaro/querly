@@ -67,17 +67,28 @@ constant: UIDENT { result = [val[0]] }
 send: LIDENT { result = Expr::Vcall.new(name: val[0]) }
   | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0], block: nil) }
   | method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: Expr::Any.new,
-                                                             name: val[0],
-                                                             args: val[2],
-                                                             block: val[4]) }
-  | expr DOT method_name_or_ident block { result = Expr::Send.new(receiver: val[0],
-                                                                  name: val[2],
+                                                                            name: val[0],
+                                                                            args: val[2],
+                                                                            block: val[4]) }
+  | receiver method_name_or_ident block { result = Expr::Send.new(receiver: val[0],
+                                                                  name: val[1],
                                                                   args: Argument::AnySeq.new,
-                                                                  block: val[3]) }
-  | expr DOT method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: val[0],
-                                                                                     name: val[2],
-                                                                                     args: val[4],
-                                                                                     block: val[6]) }
+                                                                  block: val[2]) }
+  | receiver method_name_or_ident block { result = Expr::Send.new(receiver: val[0],
+                                                                  name: val[1],
+                                                                  args: Argument::AnySeq.new,
+                                                                  block: val[2]) }
+  | receiver method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: val[0],
+                                                                                     name: val[1],
+                                                                                     args: val[3],
+                                                                                     block: val[5]) }
+  | receiver method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: val[0],
+                                                                                     name: val[1],
+                                                                                     args: val[3],
+                                                                                     block: val[5]) }
+
+receiver: expr DOT { result = val[0] }
+  | expr DOTDOTDOT { result = Expr::ReceiverContext.new(receiver: val[0]) }
 
 block: { result = nil }
   | WITH_BLOCK { result = true }

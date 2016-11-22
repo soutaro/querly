@@ -118,6 +118,13 @@ rules:
     tags:
       - test
       - capybara
+  - id: sample.order-group
+    pattern: order...group
+    before:
+      - records.where.order.group
+      - records.order.where.group
+    message: |
+      Using both group and order may generate broken SQL
 
 preprocessor:
   .slim: slimrb --compile

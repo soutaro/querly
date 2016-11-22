@@ -255,6 +255,22 @@ module Querly
         end
       end
 
+      class ReceiverContext < Base
+        attr_reader :receiver
+
+        def initialize(receiver:)
+          @receiver = receiver
+        end
+
+        def test_node(node)
+          if receiver.test_node(node)
+            true
+          else
+            node&.type == :send && test_node(node.children[0])
+          end
+        end
+      end
+
       class Vcall < Base
         attr_reader :name
 

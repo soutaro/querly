@@ -250,4 +250,29 @@ class PatternTestTest < Minitest::Test
     assert_equal 2, nodes.size
     assert_equal [ruby("/1/"), ruby("/#{2}/")], nodes
   end
+
+  def test_any_receiver1
+    nodes = query_pattern("f...g", "f.g")
+    assert_equal [ruby("f.g")], nodes
+  end
+
+  def test_any_receiver2
+    nodes = query_pattern("f...h", "f.g.h")
+    assert_equal [ruby("f.g.h")], nodes
+  end
+
+  def test_any_receiver3
+    nodes = query_pattern("g...h", "f(g).h")
+    assert_equal [], nodes
+  end
+
+  def test_any_receiver4
+    nodes = query_pattern("a...b...c", "[a.c.b.d.c]")
+    assert_equal [ruby("a.c.b.d.c")], nodes
+  end
+
+  def test_any_receiver5
+    nodes = query_pattern("a...b", "[a.b.b]")
+    assert_equal Set.new([ruby("a.b.b"), ruby("a.b")]), Set.new(nodes)
+  end
 end
