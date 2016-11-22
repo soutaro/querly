@@ -4,12 +4,14 @@ module Querly
     attr_reader :preprocessors
     attr_reader :root_dir
     attr_reader :checks
+    attr_reader :rules_cache
 
     def initialize(rules:, preprocessors:, root_dir:, checks:)
       @rules = rules
       @root_dir = root_dir
       @preprocessors = preprocessors
       @checks = checks
+      @rules_cache = {}
     end
 
     def self.load(hash, config_path:, root_dir:, stderr: STDERR)
@@ -22,6 +24,21 @@ module Querly
 
     def relative_path_from_root(path)
       path.absolute? ? path.relative_path_from(root_dir) : path.cleanpath
+    end
+
+    def rules_for_path(path)
+      relative_path = relative_path_from_root(path)
+      matching_checks = checks.select {|check| check.match?(path: relative_path) }
+
+      if rules_cache.key?(matching_checks)
+        rules_cache[matching_checks]
+      else
+        matching_checks.flat_map(&:rules).inject(all_rules) do |rules, query|
+          query.apply(current: rules, all: all_rules)
+        end.tap do |rules|
+          rules_cache[matching_checks] = rules
+        end
+      end
     end
 
     class Factory

@@ -95,4 +95,26 @@ class ConfigTest < Minitest::Test
       assert_equal ["rule1", "rule2", "rule3", "rule4"], config.rules.map(&:id)
     end
   end
+
+  def test_analyzer_rules_for_path
+    root_dir = Pathname("/foo/bar")
+
+    config = Config.load(
+      {
+        "rules" => [{ "id" => "rule1", "pattern" => "_", "message" => "" },
+                    { "id" => "rule2", "pattern" => "_", "message" => "" },
+                    { "id" => "rule3", "pattern" => "_", "message" => "" },
+                    { "id" => "rule4", "pattern" => "_", "message" => "" }],
+        "check" => [{ "path" => "/test", "rules" => [{ "only" => "rule2" }] },
+                    { "path" => "/test/unit", "rules" => ["rule3"] }]
+      },
+      config_path: root_dir,
+      root_dir: root_dir,
+      stderr: stderr
+    )
+
+    assert_equal ["rule1", "rule2", "rule3", "rule4"], config.rules_for_path(root_dir + "foo.rb").map(&:id)
+    assert_equal ["rule2"], config.rules_for_path(root_dir + "test/foo.rb").map(&:id)
+    assert_equal ["rule2", "rule3"], config.rules_for_path(root_dir + "test/unit/foo.rb").map(&:id)
+  end
 end
