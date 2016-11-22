@@ -14,7 +14,7 @@ module Querly
     def run
       scripts.each do |script|
         rules = config.rules_for_path(script.path)
-        each_subnode script.root_pair do |node_pair|
+        script.root_pair.each_subpair do |node_pair|
           rules.each do |rule|
             if rule.patterns.any? {|pattern| test_pair(node_pair, pattern) }
               yield script, rule, node_pair
@@ -26,7 +26,7 @@ module Querly
 
     def find(pattern)
       scripts.each do |script|
-        each_subnode script.root_pair do |node_pair|
+        script.root_pair.each_subpair do |node_pair|
           if test_pair(node_pair, pattern)
             yield script, node_pair
           end
@@ -36,16 +36,6 @@ module Querly
 
     def test_pair(node_pair, pattern)
       pattern.expr =~ node_pair && pattern.test_kind(node_pair)
-    end
-
-    def each_subnode(node_pair, &block)
-      return unless node_pair.node
-
-      yield node_pair
-
-      node_pair.children.each do |child|
-        each_subnode child, &block
-      end
     end
   end
 end

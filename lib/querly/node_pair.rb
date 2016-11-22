@@ -17,5 +17,19 @@ module Querly
         end
       end
     end
+
+    def each_subpair(&block)
+      if block_given?
+        return unless node
+
+        yield self
+
+        children.each do |child|
+          child.each_subpair &block
+        end
+      else
+        enum_for :each_subpair
+      end
+    end
   end
 end
