@@ -15,6 +15,7 @@ kinded_expr: expr { result = Kind::Any.new(expr: val[0]) }
 
 expr: constant { result = Expr::Constant.new(path: val[0]) }
   | send
+  | SELF { result = Expr::Self.new }
   | EXCLAMATION expr { result = Expr::Not.new(pattern: val[1]) }
   | BOOL { result = Expr::Literal.new(type: :bool, value: val[0]) }
   | STRING { result = Expr::Literal.new(type: :string, value: val[0]) }
@@ -154,6 +155,8 @@ def next_token
     [:UNDERBAR, input.matched]
   when input.scan(/[A-Z]\w*/)
     [:UIDENT, input.matched.to_sym]
+  when input.scan(/self/)
+    [:SELF, nil]
   when input.scan(/[a-z_](\w)*(\?|\!|=)?/)
     [:LIDENT, input.matched.to_sym]
   when input.scan(/\(/)

@@ -165,4 +165,9 @@ class PatternParserTest < Minitest::Test
     assert_instance_of E::Vcall, pat.receiver.receiver
     assert_equal :foo, pat.receiver.receiver.name
   end
+
+  def test_parse_self
+    pat = parse_expr("self")
+    assert_instance_of E::Self, pat
+  end
 end

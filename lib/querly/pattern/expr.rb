@@ -170,9 +170,20 @@ module Querly
           case node&.type
           when :send
             return false unless name == node.children[1]
-            return false unless receiver.test_node(node.children[0])
+            return false unless test_receiver(node.children[0])
             return false unless test_args(node.children.drop(2), args)
             true
+          end
+        end
+
+        def test_receiver(node)
+          case receiver
+          when Self
+            !node || receiver.test_node(node)
+          when nil
+            true
+          else
+            receiver.test_node(node)
           end
         end
 
@@ -271,6 +282,12 @@ module Querly
         end
       end
 
+      class Self < Base
+        def test_node(node)
+          node&.type == :self
+        end
+      end
+
       class Vcall < Base
         attr_reader :name
 
@@ -299,8 +316,6 @@ module Querly
             node.children[1] == name
           when :lvar
             node.children.first == name
-          when :self
-            name == :self
           end
         end
       end

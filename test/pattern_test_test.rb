@@ -275,4 +275,9 @@ class PatternTestTest < Minitest::Test
     nodes = query_pattern("a...b", "[a.b.b]")
     assert_equal Set.new([ruby("a.b.b"), ruby("a.b")]), Set.new(nodes)
   end
+
+  def test_self
+    nodes = query_pattern("self.f", "f(); self.f(); foo.f()")
+    assert_equal Set.new([ruby("self.f"), ruby("f()")]), Set.new(nodes)
+  end
 end

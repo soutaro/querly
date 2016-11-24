@@ -2,6 +2,8 @@
 
 ## master
 
+* Fix `self` pattern matching
+
 ## 0.2.0 (2016-11-24)
 
 * Remove `tagging` section from config
