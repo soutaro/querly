@@ -17,7 +17,7 @@ class SmokeTest < Minitest::Test
   end
 
   def sh!(*args, **options)
-    output, status = Open3.capture2e(*args, { chdir: dirs.last.to_s }.merge(options))
+    output, _, status = Open3.capture3(*args, { chdir: dirs.last.to_s }.merge(options))
 
     unless status.success?
       raise "Failed: #{args.inspect}"
