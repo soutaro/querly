@@ -14,12 +14,12 @@ class SmokeTest < Minitest::Test
     dirs.pop
   end
 
-  def sh(*args, **options)
+  def sh!(*args, **options)
     output, status = Open3.capture2e(*args, { chdir: dirs.last.to_s }.merge(options))
 
     unless status.success?
-      puts output
       raise "Failed: #{args.inspect}"
+      puts output
     end
 
     output
@@ -30,22 +30,23 @@ class SmokeTest < Minitest::Test
   end
 
   def test_help
-    sh("bundle", "exec", "querly", "help")
+    sh!("bundle", "exec", "querly", "help")
   end
 
   def test_rules
-    sh("bundle", "exec", "querly", "--config=sample.yml", "rules")
+    sh!("bundle", "exec", "querly", "--config=sample.yml", "rules")
   end
 
   def test_check
-    sh("bundle", "exec", "querly", "--config=sample.yml", "check", ".")
+    sh!("bundle", "exec", "querly", "--config=sample.yml", "check", ".")
   end
 
   def test_test
-    sh("bundle", "exec", "querly", "--config=sample.yml", "test", ".")
+    sh!("bundle", "exec", "querly", "--config=sample.yml", "test", ".")
   end
 
   def test_console
-    sh("bundle", "exec", "querly", "console", ".", stdin_data: ["help", "reload", "find self.p", "quit"].join("\n"))
+    sh!("bundle", "exec", "querly", "console", ".", stdin_data: ["help", "reload", "find self.p", "quit"].join("\n"))
+  end
   end
 end
