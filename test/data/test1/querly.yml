@@ -1,0 +1,11 @@
+rules:
+  - id: test1.rule1
+    pattern:
+      - foobar
+    message: |
+      Use foo.bar instead of foobar
+
+      foo.bar is not good.
+    justification:
+      - Some reason
+      - Another reason

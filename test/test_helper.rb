@@ -5,6 +5,7 @@ require "querly/cli/test"
 
 require 'minitest/autorun'
 require "tmpdir"
+require "unification_assertion"
 
 Rainbow.enabled = false
 

@@ -1,0 +1,5 @@
+rules:
+  - id: test2.rule1
+    pattern:
+      - foobar
+    message: Use foo.bar instead of foobar
