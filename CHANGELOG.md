@@ -2,6 +2,8 @@
 
 ## master
 
+* Add `version` command
+
 ## 0.2.1 (2016-11-24)
 
 * Fix `self` pattern matching

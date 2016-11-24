@@ -55,6 +55,10 @@ class SmokeTest < Minitest::Test
     sh!("bundle", "exec", "querly", "console", ".", stdin_data: ["help", "reload", "find self.p", "quit"].join("\n"))
   end
 
+  def test_version
+    sh!("bundle", "exec", "querly", "version")
+  end
+
   def test_check_json_format
     push_dir root + "test/data/test1" do
       output = JSON.parse(sh!("bundle", "exec", "querly", "check", "--format=json", "."), symbolize_names: true)

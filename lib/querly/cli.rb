@@ -81,6 +81,11 @@ Specify configuration file by --config option.
       Rules.new(config_path: config_path, ids: ids).run
     end
 
+    desc "version", "Print version"
+    def version
+      puts "Querly #{VERSION}"
+    end
+
     private
 
     def config_path
