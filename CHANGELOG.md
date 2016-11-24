@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.2.1 (2016-11-24)
+
 * Fix `self` pattern matching
 
 ## 0.2.0 (2016-11-24)
