@@ -1,22 +1,23 @@
-# Querly - Query Method Calls from Ruby Programs
+# Querly - Pattern Based Checking Tool for Ruby
 
 [![Build Status](https://travis-ci.org/soutaro/querly.svg?branch=master)](https://travis-ci.org/soutaro/querly)
 
 Querly is a query language and tool to find out method calls from Ruby programs.
-You write simple query for method calls, and Querly finds out *wrong* pieces from your program.
+Define rules to check your program with patterns to find out *bad* pieces.
+Querly finds out matching pieces from your program.
 
 ## Overview
 
-Your project should have many local rules:
+Your project may have many local rules:
 
-* Should not use `Customer#update_mail` but 30x faster `Customer.update_all_email` (Slower `#update_mail` is left just for existing code, but new code should not use it)
+* Should not use `Customer#update_mail` and use 30x faster `Customer.update_all_email` instead (Slower `#update_mail` is left just for existing code, but new code should not use it)
 * Should not use `root_url` without `locale:` parameter
 * Should not use `Net::HTTP` for Web API calls, but use `HTTPClient`
 
 These local rule violations will be found during code review.
-Reviewers will ask commiter to revise, commiter will fix, fine.
+Reviewers will ask commiter to revise; commiter will fix; fine.
 Really?
-It is boring and time consuming.
+It is boring and time-consuming.
 We need some automation!
 
 However, that rules cannot be the standard.
@@ -43,7 +44,7 @@ rules:
     message: Use HTTPClient to make HTTP request
 ```
 
-Write down your local rules, and let Querly do boring checks.
+Write down your local rules, and let Querly check conformance with them.
 Focus on spec, design, UX, and other important things during code review!
 
 ## Installation
@@ -66,8 +67,8 @@ Copy the following YAML and paste as `querly.yml` in your project's repo.
 rules:
   - id: sample.debug_print
     pattern:
-      - p
-      - pp
+      - self.p
+      - self.pp
     message: Delete debug print
 ```
 
@@ -120,7 +121,7 @@ There will be many false positives, and *querly warning free code* does not make
 
 * TODO: support to ignore warnings through magic comments in code
 
-This is not to ensure *there is nothing wrong in the code*, but just tells you *code fragments you should review with special care*.
+Querly is not to ensure *there is nothing wrong in the code*, but just tells you *code fragments you should review with special care*.
 I believe it still improves your software development productivity.
 
 ### Incoming updates?

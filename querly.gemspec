@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Soutaro Matsumoto"]
   spec.email         = ["matsumoto@soutaro.com"]
 
-  spec.summary       = %q{Query Method Calls from Ruby Programs}
-  spec.description   = %q{Querly is a query language and tool to find out method calls from Ruby programs. You write simple query, and Querly finds out wrong pieces in your program.}
+  spec.summary       = %q{Pattern Based Checking Tool for Ruby}
+  spec.description   = %q{Querly is a query language and tool to find out method calls from Ruby programs. Define rules to check your program with patterns to find out *bad* pieces. Querly finds out matching pieces from your program.}
   spec.homepage      = "https://github.com/soutaro/querly"
 
   spec.files         = `git ls-files -z`
