@@ -77,6 +77,22 @@ class PatternParserTest < Minitest::Test
                              block: false), pat
   end
 
+  def test_send_without_block2
+    pat = parse_expr("foo !{}")
+    assert_equal E::Send.new(receiver: E::Any.new,
+                             name: :foo,
+                             args: A::AnySeq.new,
+                             block: false), pat
+  end
+
+  def test_send_with_block_uident
+    pat = parse_expr("Foo {}")
+    assert_equal E::Send.new(receiver: E::Any.new,
+                             name: :Foo,
+                             args: A::AnySeq.new,
+                             block: true), pat
+  end
+
   def test_method_names
     assert_equal :[], parse_expr("[]()").name
     assert_equal :[]=, parse_expr("[]=()").name
