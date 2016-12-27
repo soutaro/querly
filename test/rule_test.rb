@@ -42,13 +42,11 @@ class RuleTest < Minitest::Test
   end
 
   def test_load_rule_raises_on_pattern_syntax_error
-    assert_raises Racc::ParseError do
-      Rule.load(
-        "id" => "foo.bar.baz",
-        "pattern" => "1+2",
-        "message" => "message1"
-      )
+    exn = assert_raises Rule::PatternSyntaxError do
+      Rule.load("id" => "id1", "pattern" => "syntax error")
     end
+
+    assert_match(/Pattern syntax error: rule=id1, index=0, pattern=syntax error:/, exn.message)
   end
 
   def test_load_rule_raises_without_id

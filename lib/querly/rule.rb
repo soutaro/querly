@@ -38,6 +38,7 @@ module Querly
     end
 
     class InvalidRuleHashError < StandardError; end
+    class PatternSyntaxError < StandardError; end
 
     def self.load(hash)
       id = hash["id"]
@@ -45,7 +46,13 @@ module Querly
 
       srcs = Array(hash["pattern"])
       raise InvalidRuleHashError, "pattern is missing" if srcs.empty?
-      patterns = srcs.map {|src| Pattern::Parser.parse(src) }
+      patterns = srcs.map.with_index do |src, index|
+        begin
+          Pattern::Parser.parse(src)
+        rescue Racc::ParseError => exn
+          raise PatternSyntaxError, "Pattern syntax error: rule=#{hash["id"]}, index=#{index}, pattern=#{Rainbow(src.split("\n").first).blue}: #{exn}"
+        end
+      end
 
       messages = Array(hash["message"])
       raise InvalidRuleHashError, "message is missing" if messages.empty?
