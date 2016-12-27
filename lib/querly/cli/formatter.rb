@@ -2,6 +2,8 @@ module Querly
   class CLI
     module Formatter
       class Base
+        include Concerns::BacktraceFormatter
+
         # Called when analyzer started
         def start; end
 
@@ -26,7 +28,8 @@ module Querly
         # Abort(status != 0) after the call
         def fatal_error(error)
           STDERR.puts Rainbow("Fatal error: #{error}").red
-          STDERR.puts error.backtrace.inspect
+          STDERR.puts "Backtrace:"
+          STDERR.puts format_backtrace(error.backtrace)
         end
 
         # Called on exit/abort
@@ -37,7 +40,8 @@ module Querly
         def config_error(path, error)
           STDERR.puts Rainbow("Failed to load configuration: #{path}").red
           STDERR.puts error
-          STDERR.puts error.backtrace.inspect
+          STDERR.puts "Backtrace:"
+          STDERR.puts format_backtrace(error.backtrace)
         end
 
         def script_error(path, error)

@@ -20,6 +20,7 @@ require 'querly/pattern/kind'
 require "querly/config"
 require "querly/preprocessor"
 require "querly/check"
+require "querly/concerns/backtrace_formatter"
 
 module Querly
   # Your code goes here...

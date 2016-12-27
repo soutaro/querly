@@ -3,6 +3,8 @@ require 'readline'
 module Querly
   class CLI
     class Console
+      include Concerns::BacktraceFormatter
+
       attr_reader :paths
 
       def initialize(paths:)
@@ -87,8 +89,9 @@ Querly #{VERSION}, interactive console
 
               puts "#{count} results"
             rescue => exn
-              STDOUT.puts exn.inspect
-              STDOUT.puts exn.backtrace
+              STDOUT.puts Rainbow("Error: #{exn}").red
+              STDOUT.puts "Backtrace:"
+              STDOUT.puts format_backtrace(exn.backtrace)
             end
           else
             puts_commands
