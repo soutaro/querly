@@ -1,7 +1,7 @@
 require 'pathname'
 require "yaml"
 require "rainbow"
-require "parser/ruby24"
+require "parser/current"
 require "set"
 require "open3"
 
