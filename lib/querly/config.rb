@@ -77,7 +77,14 @@ module Querly
               end
             end
           end
+
+          if import["require"]
+            stderr.puts "Require rules from #{import["require"]}..."
+            require import["require"]
+          end
         end
+
+        rules.concat Querly.required_rules
 
         checks = Array(yaml["check"]).map {|hash| Check.load(hash) }
 

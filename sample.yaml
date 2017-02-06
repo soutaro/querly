@@ -130,7 +130,8 @@ preprocessor:
   .slim: slimrb --compile
 
 import:
-  - load: rules/*.yml
+  - load: querly/rules/*.yml
+  - require: querly/rules/sample
 
 check:
   - path: /

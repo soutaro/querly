@@ -94,6 +94,27 @@ Visit our wiki pages for configuration and query language reference.
 
 Use `querly console` command to test patterns interactively.
 
+## Requiring Rules
+
+`import` section in config file now allows accepts `require` command.
+
+```yaml
+import:
+  - require: querly/rules/sample
+  - require: your_library/querly/rules
+```
+
+Querly ships with `querly/rules/sample` rule set. Check `lib/querly/rules/sample.rb` and `rules/sample.yml` for detail.
+
+### Publishing Gems with Querly Rules
+
+Querly provides `Querly.load_rule` API to allow publishing your rules as part of Ruby library.
+Put rules YAML file in your gem, and add Ruby script in some directory like `lib/your_library/querly/rules.rb`.
+
+```
+Querly.load_rules File.join(__dir__, relative_path_to_yaml_file)
+```
+
 ## Notes
 
 ### Querly's analysis is syntactic

@@ -23,5 +23,18 @@ require "querly/check"
 require "querly/concerns/backtrace_formatter"
 
 module Querly
-  # Your code goes here...
+  @@required_rules = []
+
+  def self.required_rules
+    @@required_rules
+  end
+
+  def self.load_rule(*files)
+    files.each do |file|
+      path = Pathname(file)
+      yaml = YAML.load(path.read)
+      rules = yaml.map {|hash| Rule.load(hash) }
+      required_rules.concat rules
+    end
+  end
 end

@@ -1,0 +1,34 @@
+- id: sample.ruby.pathname
+  pattern: Pathname.new
+  message: |
+    Did you mean `Pathname` method?
+
+- id: sample.ruby.file.dir
+  pattern: "File.dirname(:string:)"
+  message: |
+    Did you mean `__dir__`?
+
+- id: sample.ruby.file.open
+  pattern: File.open(...) !{}
+  message: |
+    Using block is better in Ruby
+
+- id: sample.ruby.debug_print
+  pattern:
+    - self.p
+    - self.pp
+  message: |
+    Delete debug print
+
+- id: sample.ruby.clone
+  pattern:
+    - clone()
+    - "clone(!freeze: _)"
+  message: |
+    Did you mean `dup`?
+
+    `clone` returns frozen object when receiver is frozen.
+
+    * If object is frozen, you usually does not need to clone it
+    * When you need a copy of a object, you provablly want to modify that; did you mean dup?
+    * Ruby 2.4 accepts freeze keyword and returns not frozen object
