@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.3.0
+
 * Add `version` command
 * Fix *with block* and *without block* pattern parsing
 * Prettier backtrace printing
