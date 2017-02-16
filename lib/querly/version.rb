@@ -1,3 +1,3 @@
 module Querly
-  VERSION = "0.3.0.beta.2"
+  VERSION = "0.3.0"
 end
