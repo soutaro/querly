@@ -2,7 +2,7 @@
 
 ## master
 
-## 0.3.0
+## 0.3.1 (2017-02-16)
 
 * Allow `require` rules from config file
 * Add `version` command
