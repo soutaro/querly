@@ -88,6 +88,10 @@ module Querly
           @values = values ? Array(values) : nil
         end
 
+        def with_values(values)
+          self.class.new(type: type, values: values)
+        end
+
         def test_value(object)
           if values
             values.any? {|value| value === object }

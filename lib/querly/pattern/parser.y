@@ -19,6 +19,7 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
   | EXCLAMATION expr { result = Expr::Not.new(pattern: val[1]) }
   | BOOL { result = Expr::Literal.new(type: :bool, values: val[0]) }
   | literal { result = val[0] }
+  | literal AS META { result = val[0].with_values(resolve_meta(val[2])) }
   | DSTR { result = Expr::Dstr.new() }
   | UNDERBAR { result = Expr::Any.new }
   | NIL { result = Expr::Nil.new }
@@ -58,6 +59,7 @@ key_value: keyword COLON expr { result = { key: val[0], value: val[2], negated: 
 
 method_name: METHOD
   | EXCLAMATION
+  | AS
   | META { result = resolve_meta(val[0]) }
 
 method_name_or_ident: method_name
@@ -150,6 +152,8 @@ def next_token
   when input.scan(/:\w+/)
     s = input.matched
     [:SYMBOL, s[1, s.size - 1].to_sym]
+  when input.scan(/as/)
+    [:AS, :as]
   when input.scan(/{}/)
     [:WITH_BLOCK, nil]
   when input.scan(/!{}/)

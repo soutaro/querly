@@ -198,4 +198,18 @@ class PatternParserTest < Minitest::Test
       parse_expr("'g('h())", where: { g: [:foo, :bar] })
     end
   end
+
+  def test_as_method
+    pat = parse_expr("self.as")
+
+    assert_instance_of E::Send, pat
+    assert_equal [:as], pat.name
+  end
+
+  def test_string
+    pat = parse_expr(":string: as 's", where: { s: ["foo"] })
+    assert_instance_of E::Literal, pat
+    assert_equal :string, pat.type
+    assert_equal ["foo"], pat.values
+  end
 end

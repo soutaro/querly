@@ -305,4 +305,9 @@ class PatternTestTest < Minitest::Test
     nodes = query_pattern("self.f", "f(); self.f(); foo.f()")
     assert_equal Set.new([ruby("self.f"), ruby("f()")]), Set.new(nodes)
   end
+
+  def test_string_value
+    nodes = query_pattern("has_many(:symbol: as 'children)", "has_many(:children); has_many(:repositories)", where: { children: [:children] })
+    assert_equal Set.new([ruby("has_many :children")]), Set.new(nodes)
+  end
 end
