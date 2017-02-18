@@ -125,6 +125,15 @@ rules:
       - records.order.where.group
     message: |
       Using both group and order may generate broken SQL
+  - id: sample.pp_meta
+    message: |
+      Method names can be a meta variable reference
+
+      Meta variable starts with single quote ', and followed with lower letter.
+    pattern:
+      - subject: "'p(...)"
+        where:
+          p: /p+/
 
 preprocessor:
   .slim: slimrb --compile
