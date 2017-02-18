@@ -64,6 +64,25 @@ class PatternTestTest < Minitest::Test
     end
   end
 
+  def test_string
+    nodes = E::Literal.new(type: :string, values: ["foo"])
+    assert nodes.test_node(ruby('"foo"'))
+    refute nodes.test_node(ruby('"bar"'))
+  end
+
+  def test_string2
+    nodes = E::Literal.new(type: :string, values: ["foo", "bar"])
+    assert nodes.test_node(ruby('"foo"'))
+    assert nodes.test_node(ruby('"bar"'))
+    refute nodes.test_node(ruby('"baz"'))
+  end
+
+  def test_string3
+    nodes = E::Literal.new(type: :string, values: [/foo/])
+    assert nodes.test_node(ruby('"foo bar"'))
+    refute nodes.test_node(ruby('"baz"'))
+  end
+
   def test_call_without_args
     nodes = query_pattern("foo", "foo(); foo(1)")
     assert_equal 2, nodes.size

@@ -81,56 +81,49 @@ module Querly
 
       class Literal < Base
         attr_reader :type
-        attr_reader :value
+        attr_reader :values
 
-        def initialize(type:, value: nil)
+        def initialize(type:, values: nil)
           @type = type
-          @value = value
+          @values = values ? Array(values) : nil
+        end
+
+        def test_value(object)
+          if values
+            values.any? {|value| value === object }
+          else
+            true
+          end
         end
 
         def test_node(node)
           case node&.type
           when :int
             return false unless type == :int || type == :number
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :float
             return false unless type == :float || type == :number
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :true
-            type == :bool && (value == nil || value == true)
+            type == :bool && (values == nil || values == [true])
 
           when :false
-            type == :bool && (value == nil || value == false)
+            type == :bool && (values == nil || values == [false])
 
           when :str
             return false unless type == :string
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :sym
             return false unless type == :symbol
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :regexp
             type == :regexp
-            
+            test_value(node.children.first)
+
           end
         end
       end
