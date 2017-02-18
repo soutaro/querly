@@ -48,7 +48,7 @@ module Querly
       raise InvalidRuleHashError, "pattern is missing" if srcs.empty?
       patterns = srcs.map.with_index do |src, index|
         begin
-          Pattern::Parser.parse(src)
+          Pattern::Parser.parse(src, where: {})
         rescue Racc::ParseError => exn
           raise PatternSyntaxError, "Pattern syntax error: rule=#{hash["id"]}, index=#{index}, pattern=#{Rainbow(src.split("\n").first).blue}: #{exn}"
         end

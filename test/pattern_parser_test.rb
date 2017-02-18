@@ -186,4 +186,16 @@ class PatternParserTest < Minitest::Test
     pat = parse_expr("self")
     assert_instance_of E::Self, pat
   end
+
+  def test_send_with_meta
+    pat = parse_expr("'g()", where: { g: [:foo, :bar] })
+    assert_instance_of E::Send, pat
+    assert_equal [:foo, :bar], pat.name
+  end
+
+  def test_send_with_missing_meta
+    assert_raises Racc::ParseError do
+      parse_expr("'g('h())", where: { g: [:foo, :bar] })
+    end
+  end
 end

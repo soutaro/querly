@@ -14,12 +14,12 @@ module TestHelper
   A = Querly::Pattern::Argument
   K = Querly::Pattern::Kind
 
-  def parse_expr(src)
-    Querly::Pattern::Parser.parse(src).expr
+  def parse_expr(src, where: {})
+    Querly::Pattern::Parser.parse(src, where: where).expr
   end
 
   def parse_kinded(src)
-    Querly::Pattern::Parser.parse(src)
+    Querly::Pattern::Parser.parse(src, where: {})
   end
 
   def query_pattern(pattern, src)
