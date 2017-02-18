@@ -18,17 +18,20 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
   | SELF { result = Expr::Self.new }
   | EXCLAMATION expr { result = Expr::Not.new(pattern: val[1]) }
   | BOOL { result = Expr::Literal.new(type: :bool, values: val[0]) }
-  | STRING { result = Expr::Literal.new(type: :string, values: val[0]) }
-  | INT { result = Expr::Literal.new(type: :int, values: val[0]) }
-  | FLOAT { result = Expr::Literal.new(type: :float, values: val[0]) }
-  | SYMBOL { result = Expr::Literal.new(type: :symbol, values: val[0]) }
-  | NUMBER { result = Expr::Literal.new(type: :number, values: val[0]) }
-  | REGEXP { result = Expr::Literal.new(type: :regexp, values: nil) }
+  | literal { result = val[0] }
   | DSTR { result = Expr::Dstr.new() }
   | UNDERBAR { result = Expr::Any.new }
   | NIL { result = Expr::Nil.new }
   | LPAREN expr RPAREN { result = val[1] }
   | IVAR { result = Expr::Ivar.new(name: val[0]) }
+
+literal:
+    STRING { result = Expr::Literal.new(type: :string, values: val[0]) }
+  | INT { result = Expr::Literal.new(type: :int, values: val[0]) }
+  | FLOAT { result = Expr::Literal.new(type: :float, values: val[0]) }
+  | SYMBOL { result = Expr::Literal.new(type: :symbol, values: val[0]) }
+  | NUMBER { result = Expr::Literal.new(type: :number, values: val[0]) }
+  | REGEXP { result = Expr::Literal.new(type: :regexp, values: nil) }
 
 args:  { result = nil }
   | expr { result = Argument::Expr.new(expr: val[0], tail: nil)}
