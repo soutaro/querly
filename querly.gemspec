@@ -28,6 +28,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "unification_assertion", "0.0.1"
 
   spec.add_dependency 'thor', "~> 0.19"
-  spec.add_dependency "parser", "~> 2.3.1"
+  spec.add_dependency "parser", "~> 2.4.0"
   spec.add_dependency "rainbow", "~> 2.1"
 end
