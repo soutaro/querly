@@ -92,7 +92,7 @@ class ConfigTest < Minitest::Test
 
       config = Config.load(YAML.load(path.read), config_path: path, root_dir: path, stderr: stderr)
 
-      assert_equal ["rule1", "rule2", "rule3", "rule4"], config.rules.map(&:id)
+      assert_equal ["rule1", "rule2", "rule3", "rule4"], config.rules.map(&:id).sort
     end
   end
 
