@@ -70,12 +70,21 @@ module Querly
           enumerate_files_in_dir child, &block
         end
       when path.file?
+
+    
+        extensions = %w[
+          .rb .builder .fcgi .gemspec .god .jbuilder .jb .mspec .opal .pluginspec
+          .podspec .rabl .rake .rbuild .rbw .rbx .ru .ruby .spec .thor .watchr
+        ]
+        basenames = %w[
+          .irbrc .pryrc buildfile Appraisals Berksfile Brewfile Buildfile Capfile
+          Cheffile Dangerfile Deliverfile Fastfile Gemfile Guardfile Jarfile Mavenfile
+          Podfile Puppetfile Rakefile Snapfile Thorfile Vagabondfile Vagrantfile
+        ]
         should_load_file = case
-                           when path.extname == ".rb"
+                           when extensions.include?(path.extname)
                              true
-                           when path.extname == ".gemspec"
-                             true
-                           when path.basename.to_s == "Rakefile"
+                           when basenames.include?(path.basename.to_s)
                              true
                            else
                              preprocessors.key?(path.extname)
