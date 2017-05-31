@@ -67,7 +67,7 @@ module Querly
         errors = 0
 
         rules.each do |rule|
-          rule.before_examples.each.with_index do |example, example_index|
+          rule.before_examples.each.with_index(1) do |example, example_index|
             tests += 1
 
             begin
@@ -81,7 +81,7 @@ module Querly
             end
           end
 
-          rule.after_examples.each.with_index do |example, example_index|
+          rule.after_examples.each.with_index(1) do |example, example_index|
             tests += 1
 
             begin
