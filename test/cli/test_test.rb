@@ -18,8 +18,9 @@ class TestTest < Minitest::Test
       nil
     end
 
-    test.run
+    result = test.run
 
+    assert_equal 1, result
     assert_match /There is nothing to test at querly\.yaml/, stdout.string
   end
 
@@ -42,8 +43,9 @@ class TestTest < Minitest::Test
       )
     end
 
-    test.run
+    result = test.run
 
+    assert_equal 1, result
     assert_match /Rule id id1 duplicated!/, stdout.string
     refute_match /Rule id id2 duplicated!/, stdout.string
   end
@@ -73,8 +75,9 @@ class TestTest < Minitest::Test
       )
     end
 
-    test.run
+    result = test.run
 
+    assert_equal 0, result
     assert_match /All tests green!/, stdout.string
   end
 
@@ -103,8 +106,9 @@ class TestTest < Minitest::Test
       )
     end
 
-    test.run
+    result = test.run
 
+    assert_equal 1, result
     assert_match /id1:\t0th \*before\* example didn't match with any pattern/, stdout.string
     assert_match /id1:\t0th \*after\* example matched with some of patterns/, stdout.string
     assert_match /1 examples found which should not match, but matched/, stdout.string
@@ -133,8 +137,9 @@ class TestTest < Minitest::Test
       )
     end
 
-    test.run
+    result = test.run
 
+    assert_equal 1, result
     assert_match /2 examples raised error/, stdout.string
   end
 end

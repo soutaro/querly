@@ -9,6 +9,15 @@ module Querly
         @config_path = config_path
         @stdout = stdout
         @stderr = stderr
+        @success = true
+      end
+
+      def fail!
+        @success = false
+      end
+
+      def failed?
+        !@success
       end
 
       def run
@@ -17,15 +26,19 @@ module Querly
         unless config
           stdout.puts "There is nothing to test at #{config_path} ..."
           stdout.puts "Make a configuration and run test again!"
-          return
+          return 1
         end
 
         validate_rule_uniqueness(config.rules)
         validate_rule_patterns(config.rules)
+
+        failed? ? 1 : 0
       rescue => exn
         stderr.puts Rainbow("Fatal error:").red
         stderr.puts exn.inspect
         stderr.puts exn.backtrace.map {|x| "  " + x }.join("\n")
+
+        1
       end
 
       def validate_rule_uniqueness(rules)
@@ -41,6 +54,8 @@ module Querly
             duplications += 1
           end
         end
+
+        fail! unless duplications == 0
       end
 
       def validate_rule_patterns(rules)
@@ -86,6 +101,7 @@ module Querly
           stdout.puts "  #{false_positives} examples found which should not match, but matched"
           stdout.puts "  #{false_negatives} examples found which should match, but didn't"
           stdout.puts "  #{errors} examples raised error"
+          fail!
         else
           stdout.puts Rainbow("  All tests green!").green
         end
