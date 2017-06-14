@@ -71,7 +71,7 @@ Specify configuration file by --config option.
     option :config, default: "querly.yml"
     def test()
       require "querly/cli/test"
-      Test.new(config_path: config_path).run
+      exit Test.new(config_path: config_path).run
     end
 
     desc "rules", "Print loaded rules"
