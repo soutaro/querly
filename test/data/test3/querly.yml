@@ -1,0 +1,7 @@
+rules:
+  - id: test.pppp
+    message: pp...
+    pattern:
+      subject: "'p(...)"
+      where:
+        p: /p+/

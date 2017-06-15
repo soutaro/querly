@@ -7,11 +7,11 @@ class PatternParserTest < Minitest::Test
     pattern = parse_expr("foo().bar")
 
     assert_instance_of E::Send, pattern
-    assert_equal :bar, pattern.name
+    assert_equal [:bar], pattern.name
     assert_instance_of A::AnySeq, pattern.args
 
     assert_instance_of E::Send, pattern.receiver
-    assert_equal :foo, pattern.receiver.name
+    assert_equal [:foo], pattern.receiver.name
     assert_nil pattern.receiver.args
   end
 
@@ -94,25 +94,25 @@ class PatternParserTest < Minitest::Test
   end
 
   def test_method_names
-    assert_equal :[], parse_expr("[]()").name
-    assert_equal :[]=, parse_expr("[]=()").name
-    assert_equal :!, parse_expr("!()").name
+    assert_equal [:[]], parse_expr("[]()").name
+    assert_equal [:[]=], parse_expr("[]=()").name
+    assert_equal [:!], parse_expr("!()").name
   end
 
   def test_send
     assert_equal :f, parse_expr("f").name
-    assert_equal :f, parse_expr("f()").name
-    assert_equal :f, parse_expr("_.f").name
-    assert_equal :f, parse_expr("_.f()").name
-    assert_equal :F, parse_expr("F()").name
-    assert_equal :F, parse_expr("_.F()").name
-    assert_equal :F, parse_expr("_.F").name
+    assert_equal [:f], parse_expr("f()").name
+    assert_equal [:f], parse_expr("_.f").name
+    assert_equal [:f], parse_expr("_.f()").name
+    assert_equal [:F], parse_expr("F()").name
+    assert_equal [:F], parse_expr("_.F()").name
+    assert_equal [:F], parse_expr("_.F").name
   end
 
   def test_method_name
-    assert_equal :f!, parse_expr("f!()").name
-    assert_equal :f=, parse_expr("f=(3)").name
-    assert_equal :f?, parse_expr("f?()").name
+    assert_equal [:f!], parse_expr("f!()").name
+    assert_equal [:f=], parse_expr("f=(3)").name
+    assert_equal [:f?], parse_expr("f?()").name
   end
 
   def test_block_pass
@@ -174,7 +174,7 @@ class PatternParserTest < Minitest::Test
     pat = parse_expr("foo...bar")
 
     assert_instance_of E::Send, pat
-    assert_equal :bar, pat.name
+    assert_equal [:bar], pat.name
 
     assert_instance_of E::ReceiverContext, pat.receiver
 
@@ -185,5 +185,17 @@ class PatternParserTest < Minitest::Test
   def test_parse_self
     pat = parse_expr("self")
     assert_instance_of E::Self, pat
+  end
+
+  def test_send_with_meta
+    pat = parse_expr("'g()", where: { g: [:foo, :bar] })
+    assert_instance_of E::Send, pat
+    assert_equal [:foo, :bar], pat.name
+  end
+
+  def test_send_with_missing_meta
+    assert_raises Racc::ParseError do
+      parse_expr("'g('h())", where: { g: [:foo, :bar] })
+    end
   end
 end

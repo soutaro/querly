@@ -181,6 +181,14 @@ class PatternTestTest < Minitest::Test
     assert_equal ruby("foo.map(&:id)"), nodes.first
   end
 
+  def test_call_with_names
+    node = E::Send.new(name: [:foo, :bar, /baz/], args: nil, receiver: E::Any.new, block: nil)
+    assert node.test_node(ruby("foo()"))
+    assert node.test_node(ruby("bar()"))
+    assert node.test_node(ruby("foo_bar_baz()"))
+    refute node.test_node(ruby("test()"))
+  end
+
   def test_vcall
     # Vcall pattern matches with local variable
     nodes = query_pattern("foo", "foo = 1; foo.bar")

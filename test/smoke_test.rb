@@ -102,4 +102,32 @@ class SmokeTest < Minitest::Test
                        }, JSON.parse(out, symbolize_names: true))
     end
   end
+
+  def test_run4
+    push_dir root + "test/data/test3" do
+      out, _, status = sh("bundle", "exec", "querly", "check", "--format=json", ".")
+
+      assert status.success?
+      assert_unifiable({
+                         issues: [
+                           {
+                             script: "script.rb",
+                             location: { start: [1, 0], end: [1, 4] },
+                             rule: { id: "test.pppp", messages: :_, justifications: :_ }
+                           },
+                           {
+                             script: "script.rb",
+                             location: { start: [2, 0], end: [2, 5] },
+                             rule: { id: "test.pppp", messages: :_, justifications: :_ }
+                           },
+                           {
+                             script: "script.rb",
+                             location: { start: [3, 0], end: [3, 6] },
+                             rule: { id: "test.pppp", messages: :_, justifications: :_ }
+                           },
+                         ],
+                         errors: []
+                       }, JSON.parse(out, symbolize_names: true))
+    end
+  end
 end

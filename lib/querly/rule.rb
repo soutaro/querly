@@ -44,13 +44,30 @@ module Querly
       id = hash["id"]
       raise InvalidRuleHashError, "id is missing" unless id
 
-      srcs = Array(hash["pattern"])
+      srcs = case hash["pattern"]
+             when Array
+               hash["pattern"]
+             when nil
+               []
+             else
+               [hash["pattern"]]
+             end
+
       raise InvalidRuleHashError, "pattern is missing" if srcs.empty?
       patterns = srcs.map.with_index do |src, index|
+        case src
+        when String
+          subject = src
+          where = {}
+        when Hash
+          subject = src['subject']
+          where = Hash[src['where'].map {|k,v| [k.to_sym, translate_where(v)] }]
+        end
+
         begin
-          Pattern::Parser.parse(src)
+          Pattern::Parser.parse(subject, where: where)
         rescue Racc::ParseError => exn
-          raise PatternSyntaxError, "Pattern syntax error: rule=#{hash["id"]}, index=#{index}, pattern=#{Rainbow(src.split("\n").first).blue}: #{exn}"
+          raise PatternSyntaxError, "Pattern syntax error: rule=#{hash["id"]}, index=#{index}, pattern=#{Rainbow(subject.split("\n").first).blue}, where=#{where.inspect}: #{exn}"
         end
       end
 
@@ -70,6 +87,17 @@ module Querly
                before_examples: before_examples,
                after_examples: after_examples,
                justifications: justifications)
+    end
+
+    def self.translate_where(value)
+      Array(value).map do |v|
+        case v
+        when /\A\/(.*)\/\Z/
+          Regexp.new($1)
+        else
+          v.to_sym
+        end
+      end
     end
   end
 end

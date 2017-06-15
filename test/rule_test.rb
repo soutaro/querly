@@ -46,7 +46,7 @@ class RuleTest < Minitest::Test
       Rule.load("id" => "id1", "pattern" => "syntax error")
     end
 
-    assert_match(/Pattern syntax error: rule=id1, index=0, pattern=syntax error:/, exn.message)
+    assert_match(/Pattern syntax error: rule=id1, index=0, pattern=syntax error, where={}:/, exn.message)
   end
 
   def test_load_rule_raises_without_id
@@ -71,5 +71,13 @@ class RuleTest < Minitest::Test
     end
 
     assert_equal "message is missing", exn.message
+  end
+
+  def test_load_including_pattern_with_where_clause
+    rule = Rule.load("id" => "id1", "message" => "message", "pattern" => { 'subject' => "'g()'", 'where' => { 'g' => ["foo", "/bar/"] } })
+    assert_equal 1, rule.patterns.size
+
+    pattern = rule.patterns.first
+    assert_equal [:foo, /bar/], pattern.expr.name
   end
 end

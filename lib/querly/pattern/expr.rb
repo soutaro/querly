@@ -142,7 +142,7 @@ module Querly
         attr_reader :block
 
         def initialize(receiver:, name:, block:, args: Argument::AnySeq.new)
-          @name = name
+          @name = Array(name)
           @receiver = receiver
           @args = args
           @block = block
@@ -161,6 +161,10 @@ module Querly
           test_node pair.node
         end
 
+        def test_name(node)
+          name.any? {|n| n === node.children[1] }
+        end
+
         def test_node(node)
           return false if block == true && node.type != :block
           return false if block == false && node.type == :block
@@ -169,7 +173,7 @@ module Querly
 
           case node&.type
           when :send
-            return false unless name == node.children[1]
+            return false unless test_name(node)
             return false unless test_receiver(node.children[0])
             return false unless test_args(node.children.drop(2), args)
             true

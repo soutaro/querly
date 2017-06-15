@@ -55,6 +55,7 @@ key_value: keyword COLON expr { result = { key: val[0], value: val[2], negated: 
 
 method_name: METHOD
   | EXCLAMATION
+  | META { result = resolve_meta(val[0]) }
 
 method_name_or_ident: method_name
   | LIDENT
@@ -103,14 +104,16 @@ end
 require "strscan"
 
 attr_reader :input
+attr_reader :where
 
-def initialize(input)
+def initialize(input, where:)
   super()
   @input = StringScanner.new(input)
+  @where = where
 end
 
-def self.parse(str)
-  self.new(str).do_parse
+def self.parse(str, where:)
+  self.new(str, where: where).do_parse
 end
 
 def next_token
@@ -158,6 +161,9 @@ def next_token
     [:UIDENT, input.matched.to_sym]
   when input.scan(/self/)
     [:SELF, nil]
+  when input.scan(/'[a-z]\w*/)
+    s = input.matched
+    [:META, s[1, s.size - 1].to_sym]
   when input.scan(/[a-z_](\w)*(\?|\!|=)?/)
     [:LIDENT, input.matched.to_sym]
   when input.scan(/\(/)
@@ -197,4 +203,8 @@ def next_token
   when input.scan(/&/)
     [:AMP, nil]
   end
+end
+
+def resolve_meta(name)
+  where[name] or raise Racc::ParseError, "Undefined meta variable: '#{name}"
 end
