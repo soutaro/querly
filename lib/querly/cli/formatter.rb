@@ -122,6 +122,12 @@ module Querly
                     id: rule.id,
                     messages: rule.messages,
                     justifications: rule.justifications,
+                    examples: rule.examples.map {|example|
+                      {
+                        before: example.before,
+                        after: example.after
+                      }
+                    }
                   },
                   location: {
                     start: [pair.node.loc.first_line, pair.node.loc.column],
