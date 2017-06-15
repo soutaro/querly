@@ -62,7 +62,7 @@ Querly #{VERSION}, interactive console
             STDOUT.puts " done"
           when /^find (.+)/
             begin
-              pattern = Pattern::Parser.parse($1)
+              pattern = Pattern::Parser.parse($1, where: {})
 
               count = 0
 
