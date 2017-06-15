@@ -81,7 +81,7 @@ class TestTest < Minitest::Test
     assert_match /All tests green!/, stdout.string
   end
 
-  def test_rule_patterns_fail
+  def test_rule_patterns_before_after_fail
     test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
 
     def test.load_config
@@ -115,6 +115,41 @@ class TestTest < Minitest::Test
     assert_match /1 examples found which should match, but didn't/, stdout.string
   end
 
+  def test_rule_patterns_example_fail
+    test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
+
+    def test.load_config
+      Config.load(
+        {
+          "rules" => [
+            {
+              "id" => "id1",
+              "pattern" => [
+                "foo()",
+                "foo(1)"
+              ],
+              "message" => "hello",
+              "examples" => [{ "before" => "self.foo(1)", "after" => "self.foo(1)" },
+                             { "before" => "foo(0)", "after" => "bar(1)" }
+              ]
+            },
+          ]
+        },
+        config_path: Pathname.pwd,
+        root_dir: Pathname.pwd,
+        stderr: stderr
+      )
+    end
+
+    result = test.run
+
+    assert_equal 1, result
+    assert_match /id1:\tafter of 1st example matched with some of patterns/, stdout.string
+    assert_match /id1:\tbefore of 2nd example didn't match with any pattern/, stdout.string
+    assert_match /1 examples found which should not match, but matched/, stdout.string
+    assert_match /1 examples found which should match, but didn't/, stdout.string
+  end
+
   def test_rule_patterns_error
     test = Test.new(config_path: Pathname("querly.yaml"), stdout: stdout, stderr: stderr)
 
@@ -126,8 +161,7 @@ class TestTest < Minitest::Test
               "id" => "id1",
               "pattern" => "_",
               "message" => "hello",
-              "before" => ["self.foo("],
-              "after" => ["1)"]
+              "examples" => [{ "before" => "self.foo(", "after" => "1)" }]
             },
           ]
         },

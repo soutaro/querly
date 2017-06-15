@@ -94,6 +94,34 @@ module Querly
               stdout.puts(Rainbow("  #{rule.id}") + ":\tParsing failed for #{ordinalize example_index} *after* example")
             end
           end
+
+          rule.examples.each.with_index(1) do |example, index|
+            if example.before
+              tests += 1
+              begin
+                unless rule.patterns.any? {|pat| test_pattern(pat, example.before, expected: true) }
+                  stdout.puts(Rainbow("  #{rule.id}").red + ":\tbefore of #{ordinalize index} example didn't match with any pattern")
+                  false_negatives += 1
+                end
+              rescue Parser::SyntaxError
+                errors += 1
+                stdout.puts(Rainbow("  #{rule.id}").red + ":\tParsing failed on before of #{ordinalize index} example")
+              end
+            end
+
+            if example.after
+              tests += 1
+              begin
+                unless rule.patterns.all? {|pat| test_pattern(pat, example.after, expected: false) }
+                  stdout.puts(Rainbow("  #{rule.id}").red + ":\tafter of #{ordinalize index} example matched with some of patterns")
+                  false_positives += 1
+                end
+              rescue Parser::SyntaxError
+                errors += 1
+                stdout.puts(Rainbow("  #{rule.id}") + ":\tParsing failed on after of #{ordinalize index} example")
+              end
+            end
+          end
         end
 
         stdout.puts "Tested #{rules.size} rules with #{tests} tests."
