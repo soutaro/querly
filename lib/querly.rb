@@ -6,8 +6,6 @@ require "set"
 require "open3"
 require "active_support/inflector"
 
-Parser::Builders::Default.emit_lambda = true
-
 require "querly/version"
 require 'querly/analyzer'
 require 'querly/rule'

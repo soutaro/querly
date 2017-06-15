@@ -51,4 +51,10 @@ module TestHelper
   def stdout
     @stdout ||= StringIO.new
   end
+
+  def mktmpdir
+    Dir.mktmpdir do |dir|
+      yield Pathname(dir)
+    end
+  end
 end
