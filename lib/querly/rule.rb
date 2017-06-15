@@ -1,5 +1,19 @@
 module Querly
   class Rule
+    class Example
+      attr_reader :before
+      attr_reader :after
+
+      def initialize(before:, after:)
+        @before = before
+        @after = after
+      end
+
+      def ==(other)
+        other.is_a?(Example) && other.before == before && other.after == after
+      end
+    end
+
     attr_reader :id
     attr_reader :patterns
     attr_reader :messages
@@ -8,9 +22,10 @@ module Querly
     attr_reader :justifications
     attr_reader :before_examples
     attr_reader :after_examples
+    attr_reader :examples
     attr_reader :tags
 
-    def initialize(id:, messages:, patterns:, sources:, tags:, before_examples:, after_examples:, justifications:)
+    def initialize(id:, messages:, patterns:, sources:, tags:, before_examples:, after_examples:, justifications:, examples:)
       @id = id
       @patterns = patterns
       @sources = sources
@@ -19,6 +34,7 @@ module Querly
       @before_examples = before_examples
       @after_examples = after_examples
       @tags = tags
+      @examples = examples
     end
 
     def match?(identifier: nil, tags: nil)
@@ -75,6 +91,10 @@ module Querly
       raise InvalidRuleHashError, "message is missing" if messages.empty?
 
       tags = Set.new(Array(hash["tags"]))
+      examples = [hash["examples"]].compact.flatten.map do |example|
+        raise(InvalidRuleHashError, "Example should have at least before or after, #{example.inspect}") unless example.key?("before") || example.key?("after")
+        Example.new(before: example["before"], after: example["after"])
+      end
       before_examples = Array(hash["before"])
       after_examples = Array(hash["after"])
       justifications = Array(hash["justification"])
@@ -86,7 +106,8 @@ module Querly
                tags: tags,
                before_examples: before_examples,
                after_examples: after_examples,
-               justifications: justifications)
+               justifications: justifications,
+               examples: examples)
     end
 
     def self.translate_where(value)

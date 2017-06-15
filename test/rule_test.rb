@@ -16,12 +16,51 @@ class RuleTest < Minitest::Test
     assert_equal ["message1"], rule.messages
     assert_equal [E::Ivar.new(name: nil)], rule.patterns.map(&:expr)
     assert_equal Set.new, rule.tags
-    assert_equal [], rule.before_examples
-    assert_equal [], rule.after_examples
+    assert_equal [], rule.examples
     assert_equal [], rule.justifications
   end
 
+  def test_load_rule3
+    rule = Rule.load(
+      "id" => "foo.bar.baz",
+      "pattern" => ["@", "_"],
+      "message" => "message1",
+      "tags" => ["tag1", "tag2"],
+      "examples" => { "before" => "foo", "after" => "bar"},
+      "justification" => ["some", "message"]
+    )
+
+    assert_equal "foo.bar.baz", rule.id
+    assert_equal ["message1"], rule.messages
+    assert_equal [E::Ivar.new(name: nil), E::Any.new], rule.patterns.map(&:expr)
+    assert_equal Set.new(["tag1", "tag2"]), rule.tags
+    assert_equal [Rule::Example.new(before: "foo", after: "bar")], rule.examples
+    assert_equal ["some", "message"], rule.justifications
+  end
+
   def test_load_rule2
+    rule = Rule.load(
+      "id" => "foo.bar.baz",
+      "pattern" => ["@", "_"],
+      "message" => "message1",
+      "tags" => ["tag1", "tag2"],
+      "examples" => [{ "before" => "foo", "after" => "bar"},
+                     { "before" => "foo" },
+                     { "after" => "bar" }],
+      "justification" => ["some", "message"]
+    )
+
+    assert_equal "foo.bar.baz", rule.id
+    assert_equal ["message1"], rule.messages
+    assert_equal [E::Ivar.new(name: nil), E::Any.new], rule.patterns.map(&:expr)
+    assert_equal Set.new(["tag1", "tag2"]), rule.tags
+    assert_equal [Rule::Example.new(before: "foo", after: "bar"),
+                  Rule::Example.new(before: "foo", after: nil),
+                  Rule::Example.new(before: nil, after: "bar")], rule.examples
+    assert_equal ["some", "message"], rule.justifications
+  end
+
+  def test_load_rule_before_and_after_examples
     rule = Rule.load(
       "id" => "foo.bar.baz",
       "pattern" => ["@", "_"],
@@ -36,6 +75,7 @@ class RuleTest < Minitest::Test
     assert_equal ["message1"], rule.messages
     assert_equal [E::Ivar.new(name: nil), E::Any.new], rule.patterns.map(&:expr)
     assert_equal Set.new(["tag1", "tag2"]), rule.tags
+    assert_equal [], rule.examples
     assert_equal ["foo", "bar"], rule.before_examples
     assert_equal ["baz", "a"], rule.after_examples
     assert_equal ["some", "message"], rule.justifications
@@ -79,5 +119,11 @@ class RuleTest < Minitest::Test
 
     pattern = rule.patterns.first
     assert_equal [:foo, /bar/], pattern.expr.name
+  end
+
+  def test_load_rule_raises_exception_on_invalid_example
+    assert_raises Rule::InvalidRuleHashError do
+      Rule.load("id" => "id1", "message" => "message", "pattern" => { 'subject' => "'g()'", 'where' => { 'g' => ["foo", "/bar/"] } }, "examples" => [{}])
+    end
   end
 end
