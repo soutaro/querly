@@ -2,6 +2,14 @@
 
 ## master
 
+* Exit 1 on test failure #9
+* Fix example index printing in test (@pocke) #8, #10
+
+## 0.4.0 (2017-05-25)
+
+* Update `parser` to 2.4 compatible version
+* Check more pathnames which looks like Ruby by default (@pocke) #7
+
 ## 0.3.1 (2017-02-16)
 
 * Allow `require` rules from config file
