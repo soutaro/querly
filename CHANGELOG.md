@@ -5,6 +5,7 @@
 * Exit 1 on test failure #9
 * Fix example index printing in test (@pocke) #8, #10
 * Introduce pattern matching on method name by set of string and regexp
+* Rule definitions in config can have more structured `examples` attribute
 
 ## 0.4.0 (2017-05-25)
 
