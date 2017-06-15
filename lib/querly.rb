@@ -4,6 +4,7 @@ require "rainbow"
 require "parser/current"
 require "set"
 require "open3"
+require "active_support/inflector"
 
 Parser::Builders::Default.emit_lambda = true
 

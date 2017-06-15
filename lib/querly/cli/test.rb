@@ -72,12 +72,12 @@ module Querly
 
             begin
               unless rule.patterns.any? {|pat| test_pattern(pat, example, expected: true) }
-                stdout.puts(Rainbow("  #{rule.id}").red + ":\t#{example_index}th *before* example didn't match with any pattern")
+                stdout.puts(Rainbow("  #{rule.id}").red + ":\t#{ordinalize example_index} *before* example didn't match with any pattern")
                 false_negatives += 1
               end
             rescue Parser::SyntaxError
               errors += 1
-              stdout.puts(Rainbow("  #{rule.id}").red + ":\tParsing failed for #{example_index}th *before* example")
+              stdout.puts(Rainbow("  #{rule.id}").red + ":\tParsing failed for #{ordinalize example_index} *before* example")
             end
           end
 
@@ -86,12 +86,12 @@ module Querly
 
             begin
               unless rule.patterns.all? {|pat| test_pattern(pat, example, expected: false) }
-                stdout.puts(Rainbow("  #{rule.id}").red + ":\t#{example_index}th *after* example matched with some of patterns")
+                stdout.puts(Rainbow("  #{rule.id}").red + ":\t#{ordinalize example_index} *after* example matched with some of patterns")
                 false_positives += 1
               end
             rescue Parser::SyntaxError
               errors += 1
-              stdout.puts(Rainbow("  #{rule.id}") + ":\tParsing failed for #{example_index}th *after* example")
+              stdout.puts(Rainbow("  #{rule.id}") + ":\tParsing failed for #{ordinalize example_index} *after* example")
             end
           end
         end
@@ -127,6 +127,10 @@ module Querly
           yaml = YAML.load(config_path.read)
           Config.load(yaml, config_path: config_path, root_dir: config_path.parent.realpath, stderr: STDERR)
         end
+      end
+
+      def ordinalize(number)
+        ActiveSupport::Inflector.ordinalize(number)
       end
     end
   end
