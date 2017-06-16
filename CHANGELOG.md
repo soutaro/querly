@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.5.0 (2017-06-16)
+
 * Exit 1 on test failure #9
 * Fix example index printing in test (@pocke) #8, #10
 * Introduce pattern matching on method name by set of string and regexp
