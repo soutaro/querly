@@ -9,3 +9,6 @@ rules:
     justification:
       - Some reason
       - Another reason
+    examples:
+      - before: foobar
+        after: foobarbaz

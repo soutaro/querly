@@ -70,7 +70,8 @@ class SmokeTest < Minitest::Test
                              rule: {
                                id: "test1.rule1",
                                messages: ["Use foo.bar instead of foobar\n\nfoo.bar is not good.\n"],
-                               justifications: ["Some reason", "Another reason"]
+                               justifications: ["Some reason", "Another reason"],
+                               examples: [{ before: "foobar", after: "foobarbaz" }],
                              }
                            }
                          ],
@@ -113,17 +114,17 @@ class SmokeTest < Minitest::Test
                            {
                              script: "script.rb",
                              location: { start: [1, 0], end: [1, 4] },
-                             rule: { id: "test.pppp", messages: :_, justifications: :_ }
+                             rule: { id: "test.pppp", messages: :_, justifications: :_, examples: :_ }
                            },
                            {
                              script: "script.rb",
                              location: { start: [2, 0], end: [2, 5] },
-                             rule: { id: "test.pppp", messages: :_, justifications: :_ }
+                             rule: { id: "test.pppp", messages: :_, justifications: :_, examples: :_ }
                            },
                            {
                              script: "script.rb",
                              location: { start: [3, 0], end: [3, 6] },
-                             rule: { id: "test.pppp", messages: :_, justifications: :_ }
+                             rule: { id: "test.pppp", messages: :_, justifications: :_, examples: :_ }
                            },
                          ],
                          errors: []

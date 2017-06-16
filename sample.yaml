@@ -134,6 +134,17 @@ rules:
       - subject: "'p(...)"
         where:
           p: /p+/
+  - id: sample.count
+    pattern: count() !{}
+    message: |
+      Use size or length for count, if receiver is an array
+    examples:
+      - before: "[].count"
+        after: "[].size"
+      - after: "[].count(:x)"
+      - after: "[].count {|x| x > 3 }"
+      - before: "[].count(x)"
+        after: "[].count"
 
 preprocessor:
   .slim: slimrb --compile
