@@ -55,6 +55,14 @@ module Querly
 
       def run_haml
         require "haml"
+        if Haml::VERSION >= '5.0.0'
+          raise <<~ERROR
+            HAML 5.0+ is detected.
+            `querly-pp haml` does not work on HAML 5.0+.
+            Use `haml -d` instead.
+          ERROR
+        end
+
         load_libs
 
         source = stdin.read
