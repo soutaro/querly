@@ -30,5 +30,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor', "~> 0.19"
   spec.add_dependency "parser", "~> 2.4.0"
   spec.add_dependency "rainbow", "~> 2.1"
-  spec.add_dependency "activesupport", "~> 5.1.1"
+  spec.add_dependency "activesupport", "~> 5.0"
 end
