@@ -40,7 +40,7 @@ Specify configuration file by --config option.
 
         analyzer = Analyzer.new(config: config)
 
-        ScriptEnumerator.new(paths: paths.map {|path| Pathname(path) }, config: config).each do |path, script|
+        ScriptEnumerator.new(paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) }, config: config).each do |path, script|
           case script
           when Script
             analyzer.scripts << script
@@ -64,7 +64,7 @@ Specify configuration file by --config option.
     desc "console [paths]", "Start console for given paths"
     def console(*paths)
       require 'querly/cli/console'
-      Console.new(paths: paths.map {|path| Pathname(path) }).start
+      Console.new(paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) }).start
     end
 
     desc "test", "Check configuration"

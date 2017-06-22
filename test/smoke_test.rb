@@ -48,7 +48,7 @@ class SmokeTest < Minitest::Test
   end
 
   def test_test
-    sh!("bundle", "exec", "querly", "--config=sample.yml", "test", ".")
+    sh!("bundle", "exec", "querly", "--config=sample.yml", "test")
   end
 
   def test_console
@@ -66,6 +66,28 @@ class SmokeTest < Minitest::Test
                          issues: [
                            {
                              script: "script.rb",
+                             location: { start: [1,0], end: [1,8] },
+                             rule: {
+                               id: "test1.rule1",
+                               messages: ["Use foo.bar instead of foobar\n\nfoo.bar is not good.\n"],
+                               justifications: ["Some reason", "Another reason"],
+                               examples: [{ before: "foobar", after: "foobarbaz" }],
+                             }
+                           }
+                         ],
+                         errors: []
+                       }, output)
+    end
+  end
+
+  def test_check_when_omit_paths
+    test_dir = root + "test/data/test1"
+    push_dir test_dir do
+      output = JSON.parse(sh!("bundle", "exec", "querly", "check", "--format=json"), symbolize_names: true)
+      assert_unifiable({
+                         issues: [
+                           {
+                             script: (test_dir + "script.rb").cleanpath.to_s,
                              location: { start: [1,0], end: [1,8] },
                              rule: {
                                id: "test1.rule1",
