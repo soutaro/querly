@@ -2,6 +2,12 @@
 
 ## master
 
+## 0.6.0 (2017-06-27)
+
+* Load current directory when no path is given (@wata727) #18
+* Require Active Support ~> 5.0 (@gfx) #17
+* Print error message if HAML 5.0 is loaded (@pocke) #16
+
 ## 0.5.0 (2017-06-16)
 
 * Exit 1 on test failure #9
