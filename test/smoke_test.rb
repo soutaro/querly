@@ -153,4 +153,17 @@ class SmokeTest < Minitest::Test
                        }, JSON.parse(out, symbolize_names: true))
     end
   end
+
+  def test_load_file_not_found
+    push_dir root + "test/data/test3" do
+      out, _, status = sh("bundle", "exec", "querly", "check", "--format=json", "not_found.rb")
+
+      assert status.success?
+      assert_unifiable({
+                         issues: [],
+                         errors: [{ path: "not_found.rb", error: :_ }]
+                       }, JSON.parse(out, symbolize_names: true))
+    end
+  end
+
 end
