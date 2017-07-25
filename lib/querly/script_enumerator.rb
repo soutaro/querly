@@ -11,11 +11,10 @@ module Querly
     def each(&block)
       if block_given?
         paths.each do |path|
-          case
-          when path.file?
-            load_script_from_path path, &block
-          when path.directory?
+          if path.directory?
             enumerate_files_in_dir(path, &block)
+          else
+            load_script_from_path path, &block
           end
         end
       else
