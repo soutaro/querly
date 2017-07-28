@@ -66,10 +66,10 @@ keyword: LIDENT | UIDENT
 constant: UIDENT { result = [val[0]] }
   | UIDENT COLONCOLON constant { result = [val[0]] + val[2] }
 
-send: LIDENT block { result = val[1] != nil ? Expr::Send.new(receiver: Expr::Any.new, name: val[0], args: Argument::AnySeq.new, block: val[1]) : Expr::Vcall.new(name: val[0]) }
-  | UIDENT block { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0], block: val[1]) }
-  | method_name { result = Expr::Send.new(receiver: Expr::Any.new, name: val[0], block: nil) }
-  | method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: Expr::Any.new,
+send: LIDENT block { result = val[1] != nil ? Expr::Send.new(receiver: nil, name: val[0], args: Argument::AnySeq.new, block: val[1]) : Expr::Vcall.new(name: val[0]) }
+  | UIDENT block { result = Expr::Send.new(receiver: nil, name: val[0], block: val[1]) }
+  | method_name { result = Expr::Send.new(receiver: nil, name: val[0], block: nil) }
+  | method_name_or_ident LPAREN args RPAREN block { result = Expr::Send.new(receiver: nil,
                                                                             name: val[0],
                                                                             args: val[2],
                                                                             block: val[4]) }

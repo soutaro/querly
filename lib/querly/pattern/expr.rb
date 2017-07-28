@@ -23,7 +23,7 @@ module Querly
 
       class Any < Base
         def test_node(node)
-          true
+          !!node
         end
       end
 
