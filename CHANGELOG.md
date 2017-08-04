@@ -2,6 +2,8 @@
 
 ## master
 
+* Add Wiki pages to repository in manual directory #25
+
 ## 0.6.0 (2017-06-27)
 
 * Load current directory when no path is given (@wata727) #18
