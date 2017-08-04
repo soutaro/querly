@@ -118,12 +118,24 @@ class RuleTest < Minitest::Test
     assert_equal 1, rule.patterns.size
 
     pattern = rule.patterns.first
-    assert_equal [:foo, /bar/], pattern.expr.name
+    assert_equal ["foo", /bar/], pattern.expr.name
   end
 
   def test_load_rule_raises_exception_on_invalid_example
     assert_raises Rule::InvalidRuleHashError do
       Rule.load("id" => "id1", "message" => "message", "pattern" => { 'subject' => "'g()'", 'where' => { 'g' => ["foo", "/bar/"] } }, "examples" => [{}])
     end
+  end
+
+  def test_translate_where
+    w = YAML.load(<<-YAML)
+- foo
+- /bar/
+- :baz
+- 1
+- 2.0
+    YAML
+
+    assert_equal ["foo", /bar/, :baz, 1, 2.0], Rule.translate_where(w)
   end
 end

@@ -116,7 +116,7 @@ module Querly
         when /\A\/(.*)\/\Z/
           Regexp.new($1)
         else
-          v.to_sym
+          v
         end
       end
     end

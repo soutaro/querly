@@ -162,7 +162,14 @@ module Querly
         end
 
         def test_name(node)
-          name.any? {|n| n === node.children[1] }
+          name.map do |n|
+            case n
+            when String
+              n.to_sym
+            else
+              n
+            end
+          end.any? {|n| n === node.children[1] }
         end
 
         def test_node(node)
