@@ -87,10 +87,10 @@ If your code contains `p` or `pp` calls, querly will print warning messages.
 
 ## Configuration
 
-Visit our wiki pages for configuration and query language reference.
+See the following manual for configuration and query language reference.
 
-* [Configuration](https://github.com/soutaro/querly/wiki/Configuration)
-* [Patterns](https://github.com/soutaro/querly/wiki/Patterns)
+* [Configuration](https://github.com/soutaro/querly/blob/master/manual/configuration.md)
+* [Patterns](https://github.com/soutaro/querly/blob/master/manual/patterns.md)
 
 Use `querly console` command to test patterns interactively.
 
