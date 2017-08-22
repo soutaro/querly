@@ -31,7 +31,7 @@ class PatternParserTest < Minitest::Test
 
   def test_pattern
     pat = parse_expr(":racc")
-    assert_equal E::Literal.new(type: :symbol, value: :racc), pat
+    assert_equal E::Literal.new(type: :symbol, values: :racc), pat
   end
 
   def test_constant
@@ -44,7 +44,7 @@ class PatternParserTest < Minitest::Test
     assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: A::KeyValue.new(key: :x,
-                                                   value: E::Literal.new(type: :int, value: 1),
+                                                   value: E::Literal.new(type: :int, values: 1),
                                                    negated: true,
                                                    tail: A::AnySeq.new),
                              block: nil), pat
@@ -55,7 +55,7 @@ class PatternParserTest < Minitest::Test
     assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: A::KeyValue.new(key: :X,
-                                                   value: E::Literal.new(type: :int, value: 1),
+                                                   value: E::Literal.new(type: :int, values: 1),
                                                    negated: true,
                                                    tail: A::AnySeq.new),
                              block: nil), pat
@@ -120,7 +120,7 @@ class PatternParserTest < Minitest::Test
     args = pat.args
 
     assert_instance_of A::BlockPass, args
-    assert_equal E::Literal.new(type: :symbol, value: :id), args.expr
+    assert_equal E::Literal.new(type: :symbol, values: :id), args.expr
   end
 
   def test_vcall
@@ -197,5 +197,19 @@ class PatternParserTest < Minitest::Test
     assert_raises Racc::ParseError do
       parse_expr("'g('h())", where: { g: [:foo, :bar] })
     end
+  end
+
+  def test_as_method
+    pat = parse_expr("self.as")
+
+    assert_instance_of E::Send, pat
+    assert_equal [:as], pat.name
+  end
+
+  def test_string
+    pat = parse_expr(":string: as 's", where: { s: ["foo"] })
+    assert_instance_of E::Literal, pat
+    assert_equal :string, pat.type
+    assert_equal ["foo"], pat.values
   end
 end

@@ -17,18 +17,22 @@ expr: constant { result = Expr::Constant.new(path: val[0]) }
   | send
   | SELF { result = Expr::Self.new }
   | EXCLAMATION expr { result = Expr::Not.new(pattern: val[1]) }
-  | BOOL { result = Expr::Literal.new(type: :bool, value: val[0]) }
-  | STRING { result = Expr::Literal.new(type: :string, value: val[0]) }
-  | INT { result = Expr::Literal.new(type: :int, value: val[0]) }
-  | FLOAT { result = Expr::Literal.new(type: :float, value: val[0]) }
-  | SYMBOL { result = Expr::Literal.new(type: :symbol, value: val[0]) }
-  | NUMBER { result = Expr::Literal.new(type: :number, value: val[0]) }
-  | REGEXP { result = Expr::Literal.new(type: :regexp, value: nil) }
+  | BOOL { result = Expr::Literal.new(type: :bool, values: val[0]) }
+  | literal { result = val[0] }
+  | literal AS META { result = val[0].with_values(resolve_meta(val[2])) }
   | DSTR { result = Expr::Dstr.new() }
   | UNDERBAR { result = Expr::Any.new }
   | NIL { result = Expr::Nil.new }
   | LPAREN expr RPAREN { result = val[1] }
   | IVAR { result = Expr::Ivar.new(name: val[0]) }
+
+literal:
+    STRING { result = Expr::Literal.new(type: :string, values: val[0]) }
+  | INT { result = Expr::Literal.new(type: :int, values: val[0]) }
+  | FLOAT { result = Expr::Literal.new(type: :float, values: val[0]) }
+  | SYMBOL { result = Expr::Literal.new(type: :symbol, values: val[0]) }
+  | NUMBER { result = Expr::Literal.new(type: :number, values: val[0]) }
+  | REGEXP { result = Expr::Literal.new(type: :regexp, values: nil) }
 
 args:  { result = nil }
   | expr { result = Argument::Expr.new(expr: val[0], tail: nil)}
@@ -55,6 +59,7 @@ key_value: keyword COLON expr { result = { key: val[0], value: val[2], negated: 
 
 method_name: METHOD
   | EXCLAMATION
+  | AS
   | META { result = resolve_meta(val[0]) }
 
 method_name_or_ident: method_name
@@ -147,6 +152,8 @@ def next_token
   when input.scan(/:\w+/)
     s = input.matched
     [:SYMBOL, s[1, s.size - 1].to_sym]
+  when input.scan(/as/)
+    [:AS, :as]
   when input.scan(/{}/)
     [:WITH_BLOCK, nil]
   when input.scan(/!{}/)

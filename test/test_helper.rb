@@ -18,12 +18,12 @@ module TestHelper
     Querly::Pattern::Parser.parse(src, where: where).expr
   end
 
-  def parse_kinded(src)
-    Querly::Pattern::Parser.parse(src, where: {})
+  def parse_kinded(src, where: {})
+    Querly::Pattern::Parser.parse(src, where: where)
   end
 
-  def query_pattern(pattern, src)
-    pat = parse_kinded(pattern)
+  def query_pattern(pattern, src, where: {})
+    pat = parse_kinded(pattern, where: where)
 
     analyzer = Querly::Analyzer.new(config: nil)
     analyzer.scripts << Querly::Script.new(path: Pathname("(input)"),

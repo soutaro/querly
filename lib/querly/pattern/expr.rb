@@ -81,56 +81,53 @@ module Querly
 
       class Literal < Base
         attr_reader :type
-        attr_reader :value
+        attr_reader :values
 
-        def initialize(type:, value: nil)
+        def initialize(type:, values: nil)
           @type = type
-          @value = value
+          @values = values ? Array(values) : nil
+        end
+
+        def with_values(values)
+          self.class.new(type: type, values: values)
+        end
+
+        def test_value(object)
+          if values
+            values.any? {|value| value === object }
+          else
+            true
+          end
         end
 
         def test_node(node)
           case node&.type
           when :int
             return false unless type == :int || type == :number
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :float
             return false unless type == :float || type == :number
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :true
-            type == :bool && (value == nil || value == true)
+            type == :bool && (values == nil || values == [true])
 
           when :false
-            type == :bool && (value == nil || value == false)
+            type == :bool && (values == nil || values == [false])
 
           when :str
             return false unless type == :string
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :sym
             return false unless type == :symbol
-            if value
-              value == node.children.first
-            else
-              true
-            end
+            test_value(node.children.first)
 
           when :regexp
             type == :regexp
-            
+            test_value(node.children.first)
+
           end
         end
       end
@@ -162,7 +159,14 @@ module Querly
         end
 
         def test_name(node)
-          name.any? {|n| n === node.children[1] }
+          name.map do |n|
+            case n
+            when String
+              n.to_sym
+            else
+              n
+            end
+          end.any? {|n| n === node.children[1] }
         end
 
         def test_node(node)
