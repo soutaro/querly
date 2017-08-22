@@ -41,7 +41,7 @@ class PatternParserTest < Minitest::Test
 
   def test_keyword_arg
     pat = parse_expr("foo(!x: 1, ...)")
-    assert_equal E::Send.new(receiver: E::Any.new,
+    assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: A::KeyValue.new(key: :x,
                                                    value: E::Literal.new(type: :int, value: 1),
@@ -52,7 +52,7 @@ class PatternParserTest < Minitest::Test
 
   def test_keyword_arg2
     pat = parse_expr("foo(!X: 1, ...)")
-    assert_equal E::Send.new(receiver: E::Any.new,
+    assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: A::KeyValue.new(key: :X,
                                                    value: E::Literal.new(type: :int, value: 1),
@@ -63,7 +63,7 @@ class PatternParserTest < Minitest::Test
 
   def test_send_with_block
     pat = parse_expr("foo() {}")
-    assert_equal E::Send.new(receiver: E::Any.new,
+    assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: nil,
                              block: true), pat
@@ -71,7 +71,7 @@ class PatternParserTest < Minitest::Test
 
   def test_send_without_block
     pat = parse_expr("foo() !{}")
-    assert_equal E::Send.new(receiver: E::Any.new,
+    assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: nil,
                              block: false), pat
@@ -79,7 +79,7 @@ class PatternParserTest < Minitest::Test
 
   def test_send_without_block2
     pat = parse_expr("foo !{}")
-    assert_equal E::Send.new(receiver: E::Any.new,
+    assert_equal E::Send.new(receiver: nil,
                              name: :foo,
                              args: A::AnySeq.new,
                              block: false), pat
@@ -87,7 +87,7 @@ class PatternParserTest < Minitest::Test
 
   def test_send_with_block_uident
     pat = parse_expr("Foo {}")
-    assert_equal E::Send.new(receiver: E::Any.new,
+    assert_equal E::Send.new(receiver: nil,
                              name: :Foo,
                              args: A::AnySeq.new,
                              block: true), pat
