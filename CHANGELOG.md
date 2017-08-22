@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.7.0 (2017-08-22)
+
 * Add Wiki pages to repository in manual directory #25
 * Add named literal pattern `:string: as 'name` with `where: { name: ["alice", /bob/] }` #24
 * Add `init` command #28
