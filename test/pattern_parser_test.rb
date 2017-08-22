@@ -212,4 +212,18 @@ class PatternParserTest < Minitest::Test
     assert_equal :string, pat.type
     assert_equal ["foo"], pat.values
   end
+
+  def test_as_something
+    pat = parse_expr("assert()")
+    assert_instance_of E::Send, pat
+    assert_equal [:assert], pat.name
+  end
+
+  def test_as_things2
+    %w(assert true_or_false falsey).each do |word|
+      pat = parse_expr("#{word}()")
+      assert_instance_of E::Send, pat
+      assert_equal [word.to_sym], pat.name
+    end
+  end
 end

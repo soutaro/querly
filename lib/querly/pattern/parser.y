@@ -127,9 +127,9 @@ def next_token
   case
   when input.eos?
     [false, false]
-  when input.scan(/true/)
+  when input.scan(/true\b/)
     [:BOOL, true]
-  when input.scan(/false/)
+  when input.scan(/false\b/)
     [:BOOL, false]
   when input.scan(/nil/)
     [:NIL, false]
@@ -152,7 +152,7 @@ def next_token
   when input.scan(/:\w+/)
     s = input.matched
     [:SYMBOL, s[1, s.size - 1].to_sym]
-  when input.scan(/as/)
+  when input.scan(/as\b/)
     [:AS, :as]
   when input.scan(/{}/)
     [:WITH_BLOCK, nil]
