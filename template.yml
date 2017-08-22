@@ -1,0 +1,69 @@
+rules:
+  - id: sample.debug_print
+    pattern:
+      - self.p
+      - self.pp
+    message: Delete debug print
+    examples:
+      - before: |
+          pp some: error
+
+  - id: sample.file.open
+    pattern: File.open(...) !{}
+    message: |
+      Use block to read/write file
+
+      If you use block, the open method closes file implicitly.
+      You don't have to close files explicitly.
+    examples:
+      - before: |
+          io = File.open("foo.txt")
+          io.write("hello world")
+          io.close
+        after: |
+          File.open("foo.txt") do |io|
+            io.write("hello world")
+          end
+
+  - id: sample.exception
+    pattern: Exception
+    message: |
+      You probablly should use StandardError
+
+      If you are trying to define error class, inherit that from StandardError.
+    justification:
+      - You are sure you want to define an exception which is not rescued by default
+    examples:
+      - before: class MyError < Exception; end
+        after: class MyError < StandardError; end
+
+  - id: sample.test.assert_equal_size
+    pattern:
+      subject: "assert_equal(:int: as 'zero, _.'size, ...)"
+      where:
+        zero: 0
+        size:
+          - size
+          - count
+    message: |
+      Comparing size of something with 0 can be written using assert_empty
+    examples:
+      - before: |
+          assert_equal 0, some.size
+        after: |
+          assert_empty some.size
+      - before: |
+          assert_equal 0, some.count
+        after: |
+          assert_empty some.count
+
+preprocessor:
+  .slim: slimrb --compile
+
+checks:
+  - path: /
+    rules:
+      except: sample.test
+  - path: /test
+    rules:
+      add: sample.test

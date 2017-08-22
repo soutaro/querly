@@ -1,6 +1,7 @@
 require_relative "test_helper"
 
 require "open3"
+require "tmpdir"
 
 class SmokeTest < Minitest::Test
   include UnificationAssertion
@@ -166,4 +167,21 @@ class SmokeTest < Minitest::Test
     end
   end
 
+  def mktmpdir
+    tmp = root + "tmp"
+    tmp.mkdir unless tmp.directory?
+    Dir.mktmpdir("a", root + "tmp") do |dir|
+      yield Pathname(dir)
+    end
+  end
+
+  def test_init
+    mktmpdir do |path|
+      push_dir path do
+        _, _ = sh!("bundle", "exec", "querly", "init")
+        assert_operator (path + "querly.yml"), :file?
+        _, _ = sh!("bundle", "exec", "querly", "test", "--config=querly.yml")
+      end
+    end
+  end
 end

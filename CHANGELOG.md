@@ -4,6 +4,7 @@
 
 * Add Wiki pages to repository in manual directory #25
 * Add named literal pattern `:string: as 'name` with `where: { name: ["alice", /bob/] }` #24
+* Add `init` command #28
 
 ## 0.6.0 (2017-06-27)
 
