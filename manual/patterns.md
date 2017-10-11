@@ -143,6 +143,27 @@ def f()
 end
 ```
 
+# Interpolation Syntax
+
+If you want to describe a pattern that can not be described with adove syntax, you can use interpolation as follows:
+
+```rb
+id: find_by_abc_and_def
+pattern:
+  subject: "'finder(...)"
+  where:
+    finder: 
+      - /find_by_\w+\_.*/
+      - find_by_id
+```
+
+It matches with `find_by_email_and_name(...)`.
+
+- Meta variables `'finder` can occur only as method name
+- Unused meta var definition i1s okay, but undefined meta var reference raises an error
+- If value of meta var is a string `foo`, it matches send nodes with exactly same method name
+- If value of meta var is a regexp `/foo/`, it matches send nodes with method name which `=~` the regexp
+
 # Difference from Ruby
 
 * Method call parenthesis cannot be omitted (if omitted, it means *any arguments*)
