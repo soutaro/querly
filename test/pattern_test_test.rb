@@ -312,13 +312,13 @@ class PatternTestTest < Minitest::Test
   end
 
   def test_conditional_if
-    nodes = query_pattern('foo [conditional]', 'if foo; foo; end')
+    nodes = query_pattern('foo [conditional]', 'if foo; bar; end')
     assert_equal 1, nodes.size
     assert_equal ruby('foo'), nodes.first
   end
 
   def test_conditional_while
-    nodes = query_pattern('foo [conditional]', 'while foo; foo; end')
+    nodes = query_pattern('foo [conditional]', 'while foo; bar; end')
     assert_equal 1, nodes.size
     assert_equal ruby('foo'), nodes.first
   end
