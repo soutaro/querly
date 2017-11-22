@@ -44,6 +44,8 @@ module Querly
             node.equal? parent.children.first
           when :or
             node.equal? parent.children.first
+          when :csend
+            node.equal? parent.children.first
           else
             false
           end

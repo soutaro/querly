@@ -310,4 +310,34 @@ class PatternTestTest < Minitest::Test
     nodes = query_pattern("has_many(:symbol: as 'children)", "has_many(:children); has_many(:repositories)", where: { children: [:children] })
     assert_equal Set.new([ruby("has_many :children")]), Set.new(nodes)
   end
+
+  def test_conditional_if
+    nodes = query_pattern('foo [conditional]', 'if foo; foo; end')
+    assert_equal 1, nodes.size
+    assert_equal ruby('foo'), nodes.first
+  end
+
+  def test_conditional_while
+    nodes = query_pattern('foo [conditional]', 'while foo; foo; end')
+    assert_equal 1, nodes.size
+    assert_equal ruby('foo'), nodes.first
+  end
+
+  def test_conditional_and
+    nodes = query_pattern('foo [conditional]', 'foo && bar')
+    assert_equal 1, nodes.size
+    assert_equal ruby('foo'), nodes.first
+  end
+
+  def test_conditional_or
+    nodes = query_pattern('foo [conditional]', 'foo || bar')
+    assert_equal 1, nodes.size
+    assert_equal ruby('foo'), nodes.first
+  end
+
+  def test_conditional_csend
+    nodes = query_pattern('foo [conditional]', 'foo&.bar')
+    assert_equal 1, nodes.size
+    assert_equal ruby('foo'), nodes.first
+  end
 end
