@@ -2,6 +2,8 @@
 
 ## master
 
+* Make `[conditional]` be aware of safe-navigation-operator (@pocke) #30
+ 
 ## 0.7.0 (2017-08-22)
 
 * Add Wiki pages to repository in manual directory #25
