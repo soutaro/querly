@@ -5,6 +5,7 @@
 * Make `[conditional]` be aware of safe-navigation-operator (@pocke) #30
 * Make preprocessors be aware of `bundle exec`.
   When `querly` is invoked with `bundle exec`, so are preprocessors, and vice vesa.
+* Add `--rule` option for `querly check` to filter rules to test
  
 ## 0.7.0 (2017-08-22)
 

@@ -25,7 +25,7 @@ module TestHelper
   def query_pattern(pattern, src, where: {})
     pat = parse_kinded(pattern, where: where)
 
-    analyzer = Querly::Analyzer.new(config: nil)
+    analyzer = Querly::Analyzer.new(config: nil, rule: nil)
     analyzer.scripts << Querly::Script.new(path: Pathname("(input)"),
                                            node: Parser::CurrentRuby.parse(src, "(input)"))
 

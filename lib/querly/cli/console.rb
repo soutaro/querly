@@ -35,7 +35,7 @@ Querly #{VERSION}, interactive console
       def analyzer
         return @analyzer if @analyzer
 
-        @analyzer = Analyzer.new(config: nil)
+        @analyzer = Analyzer.new(config: nil, rule: nil)
 
         ScriptEnumerator.new(paths: paths, config: nil).each do |path, script|
           case script

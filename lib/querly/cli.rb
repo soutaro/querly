@@ -7,6 +7,7 @@ module Querly
     option :config, default: "querly.yml"
     option :root
     option :format, default: "text", type: :string, enum: %w(text json)
+    option :rule, type: :string
     def check(*paths)
       require 'querly/cli/formatter'
 
@@ -38,7 +39,7 @@ Specify configuration file by --config option.
           exit
         end
 
-        analyzer = Analyzer.new(config: config)
+        analyzer = Analyzer.new(config: config, rule: options[:rule])
 
         ScriptEnumerator.new(paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) }, config: config).each do |path, script|
           case script

@@ -28,6 +28,14 @@ class SmokeTest < Minitest::Test
     output
   end
 
+  def querly_path
+    Pathname(__dir__) + "../exe/querly"
+  end
+
+  def run_querly(*args, **options)
+    sh!(*args.unshift(querly_path.to_s), **options)
+  end
+
   def sh(*args, **options)
     Open3.capture3(*args, { chdir: dirs.last.to_s }.merge(options))
   end
@@ -37,32 +45,32 @@ class SmokeTest < Minitest::Test
   end
 
   def test_help
-    sh!("bundle", "exec", "querly", "help")
+    run_querly("help")
   end
 
   def test_rules
-    sh!("bundle", "exec", "querly", "--config=sample.yml", "rules")
+    run_querly("--config=sample.yml", "rules")
   end
 
   def test_check
-    sh!("bundle", "exec", "querly", "--config=sample.yml", "check", ".")
+    run_querly("--config=sample.yml", "check", ".")
   end
 
   def test_test
-    sh!("bundle", "exec", "querly", "--config=sample.yml", "test")
+    run_querly("--config=sample.yml", "test")
   end
 
   def test_console
-    sh!("bundle", "exec", "querly", "console", ".", stdin_data: ["help", "reload", "find self.p", "quit"].join("\n"))
+    run_querly("console", ".", stdin_data: ["help", "reload", "find self.p", "quit"].join("\n"))
   end
 
   def test_version
-    sh!("bundle", "exec", "querly", "version")
+    run_querly("version")
   end
 
   def test_check_json_format
     push_dir root + "test/data/test1" do
-      output = JSON.parse(sh!("bundle", "exec", "querly", "check", "--format=json", "."), symbolize_names: true)
+      output = JSON.parse(run_querly("check", "--format=json", "."), symbolize_names: true)
       assert_unifiable({
                          issues: [
                            {
@@ -81,10 +89,54 @@ class SmokeTest < Minitest::Test
     end
   end
 
+  def test_check_with_rule
+    push_dir root + "test/data/test1" do
+      output = JSON.parse(run_querly("check", "--format=json", "--rule=test1.rule1", "."), symbolize_names: true)
+      assert_unifiable({
+                         issues: [
+                           {
+                             script: "script.rb",
+                             location: { start: [1,0], end: [1,8] },
+                             rule: {
+                               id: "test1.rule1",
+                               messages: ["Use foo.bar instead of foobar\n\nfoo.bar is not good.\n"],
+                               justifications: ["Some reason", "Another reason"],
+                               examples: [{ before: "foobar", after: "foobarbaz" }],
+                             }
+                           }
+                         ],
+                         errors: []
+                       }, output)
+
+      output = JSON.parse(run_querly("check", "--format=json", "--rule=test1", "."), symbolize_names: true)
+      assert_unifiable({
+                         issues: [
+                           {
+                             script: "script.rb",
+                             location: { start: [1,0], end: [1,8] },
+                             rule: {
+                               id: "test1.rule1",
+                               messages: ["Use foo.bar instead of foobar\n\nfoo.bar is not good.\n"],
+                               justifications: ["Some reason", "Another reason"],
+                               examples: [{ before: "foobar", after: "foobarbaz" }],
+                             }
+                           }
+                         ],
+                         errors: []
+                       }, output)
+
+      output = JSON.parse(run_querly("check", "--format=json", "--rule=no_such_rule", "."), symbolize_names: true)
+      assert_unifiable({
+                         issues: [],
+                         errors: []
+                       }, output)
+    end
+  end
+
   def test_check_when_omit_paths
     test_dir = root + "test/data/test1"
     push_dir test_dir do
-      output = JSON.parse(sh!("bundle", "exec", "querly", "check", "--format=json"), symbolize_names: true)
+      output = JSON.parse(run_querly("check", "--format=json"), symbolize_names: true)
       assert_unifiable({
                          issues: [
                            {
@@ -157,7 +209,7 @@ class SmokeTest < Minitest::Test
 
   def test_load_file_not_found
     push_dir root + "test/data/test3" do
-      out, _, status = sh("bundle", "exec", "querly", "check", "--format=json", "not_found.rb")
+      out, _, status = sh(querly_path.to_s, "check", "--format=json", "not_found.rb")
 
       assert status.success?
       assert_unifiable({
@@ -178,9 +230,9 @@ class SmokeTest < Minitest::Test
   def test_init
     mktmpdir do |path|
       push_dir path do
-        _, _ = sh!("bundle", "exec", "querly", "init")
+        _, _ = run_querly("init")
         assert_operator (path + "querly.yml"), :file?
-        _, _ = sh!("bundle", "exec", "querly", "test", "--config=querly.yml")
+        _, _ = run_querly("test", "--config=querly.yml")
       end
     end
   end

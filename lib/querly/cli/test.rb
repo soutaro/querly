@@ -136,7 +136,7 @@ module Querly
       end
 
       def test_pattern(pattern, example, expected:)
-        analyzer = Analyzer.new(config: nil)
+        analyzer = Analyzer.new(config: nil, rule: nil)
 
         found = false
 
