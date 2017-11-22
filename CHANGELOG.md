@@ -6,6 +6,7 @@
 * Make preprocessors be aware of `bundle exec`.
   When `querly` is invoked with `bundle exec`, so are preprocessors, and vice vesa.
 * Add `--rule` option for `querly check` to filter rules to test
+* Print rule id in text output
  
 ## 0.7.0 (2017-08-22)
 

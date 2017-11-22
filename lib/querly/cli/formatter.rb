@@ -56,7 +56,7 @@ module Querly
           col = pair.node.loc.column
           message = rule.messages.first.split(/\n/).first
 
-          STDOUT.puts "#{path}:#{line}:#{col}\t#{src}\t#{message}"
+          STDOUT.puts "#{path}:#{line}:#{col}\t#{src}\t#{message} (#{rule.id})"
         end
       end
 
