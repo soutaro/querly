@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.8.0 (2017-12-19)
+
 * Make `[conditional]` be aware of safe-navigation-operator (@pocke) #30
 * Make preprocessors be aware of `bundle exec`.
   When `querly` is invoked with `bundle exec`, so are preprocessors, and vice vesa.
