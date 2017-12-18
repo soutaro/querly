@@ -140,7 +140,7 @@ module Querly
 
         found = false
 
-        node = Parser::CurrentRuby.parse(example)
+        node = Parser::Ruby24.parse(example)
         NodePair.new(node: node).each_subpair do |pair|
           if analyzer.test_pair(pair, pattern)
             found = true
