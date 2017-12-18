@@ -143,8 +143,6 @@ rules:
         after: "[].size"
       - after: "[].count(:x)"
       - after: "[].count {|x| x > 3 }"
-      - before: "[].count(x)"
-        after: "[].count"
 
 preprocessor:
   .slim: slimrb --compile
