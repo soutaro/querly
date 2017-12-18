@@ -4,3 +4,6 @@ rvm:
   - 2.3.3
   - 2.4.0
 before_install: gem install bundler -v 1.12.5
+script:
+  - bundle exec rake test
+  - bundle exec querly test --config=sample.yaml
