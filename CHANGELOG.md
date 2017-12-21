@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.8.1 (2017-12-22)
+
+* Update dependencies
+
 ## 0.8.0 (2017-12-19)
 
 * Make `[conditional]` be aware of safe-navigation-operator (@pocke) #30
@@ -9,7 +13,7 @@
   When `querly` is invoked with `bundle exec`, so are preprocessors, and vice vesa.
 * Add `--rule` option for `querly check` to filter rules to test
 * Print rule id in text output
- 
+
 ## 0.7.0 (2017-08-22)
 
 * Add Wiki pages to repository in manual directory #25
