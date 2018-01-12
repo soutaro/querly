@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.8.2 (2018-01-13)
+
+* Move `Concerns::BacktraceFormatter` under `Querly`  (@kohtaro24) #34
+
 ## 0.8.1 (2017-12-22)
 
 * Update dependencies
