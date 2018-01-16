@@ -2,6 +2,8 @@
 
 ## master
 
+* Fix preprocessor to avoid deadlocking #35
+
 ## 0.8.2 (2018-01-13)
 
 * Move `Concerns::BacktraceFormatter` under `Querly`  (@kohtaro24) #34

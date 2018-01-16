@@ -40,7 +40,7 @@ module Querly
 
       begin
         source = if preprocessor
-                   preprocessor.run!(path.read)
+                   preprocessor.run!(path)
                  else
                    path.read
                  end

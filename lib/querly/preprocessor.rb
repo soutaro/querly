@@ -18,14 +18,8 @@ module Querly
       @command = command
     end
 
-    def run!(source_code)
-      stdin_read, stdin_write = IO.pipe
+    def run!(path)
       stdout_read, stdout_write = IO.pipe
-
-      writer = Thread.new do
-        stdin_write.print source_code
-        stdin_write.close
-      end
 
       output = ""
 
@@ -35,10 +29,9 @@ module Querly
         end
       end
 
-      succeeded = system(command, in: stdin_read, out: stdout_write)
+      succeeded = system(command, in: path.to_s, out: stdout_write)
       stdout_write.close
 
-      writer.join
       reader.join
 
       raise Error.new(status: $?, command: command) unless succeeded
