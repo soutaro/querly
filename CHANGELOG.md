@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.8.3 (2018-01-16)
+
 * Fix preprocessor to avoid deadlocking #35
 
 ## 0.8.2 (2018-01-13)
