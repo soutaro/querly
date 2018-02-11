@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.84 (2018-02-11)
+
+* Loosen the restriction of `thor` version (shinnn) #36
+
 ## 0.8.3 (2018-01-16)
 
 * Fix preprocessor to avoid deadlocking #35
