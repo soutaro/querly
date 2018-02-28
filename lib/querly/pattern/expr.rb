@@ -125,7 +125,7 @@ module Querly
             test_value(node.children.first)
 
           when :regexp
-            type == :regexp
+            return false unless type == :regexp
             test_value(node.children.first)
 
           end

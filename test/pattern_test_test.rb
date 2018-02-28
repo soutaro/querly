@@ -49,6 +49,24 @@ class PatternTestTest < Minitest::Test
     end
   end
 
+  def test_int
+    nodes = query_pattern(":int:", "[/1/, 1, 3.0, 1i, 1r]")
+    assert_equal 1, nodes.size
+    assert_equal [ruby("1")], nodes
+  end
+
+  def test_float
+    nodes = query_pattern(":float:", "['42', /1/, 1, 3.0, 1i, 1r]")
+    assert_equal 1, nodes.size
+    assert_equal [ruby("3.0")], nodes
+  end
+
+  def test_bool
+    nodes = query_pattern(":bool:", "[true, false, nil]")
+    assert_equal 2, nodes.size
+    assert_equal [ruby("true"), ruby('false')], nodes
+  end
+
   def test_symbol
     nodes = query_pattern(":symbol:", ":foo")
     assert_node nodes.first, type: :sym do |name, *_|
@@ -81,6 +99,12 @@ class PatternTestTest < Minitest::Test
     nodes = E::Literal.new(type: :string, values: [/foo/])
     assert nodes.test_node(ruby('"foo bar"'))
     refute nodes.test_node(ruby('"baz"'))
+  end
+
+  def test_regexp
+    nodes = query_pattern(":regexp:", '[/1/, /#{2}/, 3]')
+    assert_equal 2, nodes.size
+    assert_equal [ruby("/1/"), ruby('/#{2}/')], nodes
   end
 
   def test_call_without_args
@@ -268,12 +292,6 @@ class PatternTestTest < Minitest::Test
     nodes = query_pattern("foo() !{}", "foo do foo() end")
     assert_equal 1, nodes.size
     assert_equal ruby("foo()"), nodes.first
-  end
-
-  def test_regexp
-    nodes = query_pattern(":regexp:", "[/1/, /#{2}/, 3]")
-    assert_equal 2, nodes.size
-    assert_equal [ruby("/1/"), ruby("/#{2}/")], nodes
   end
 
   def test_any_receiver1
