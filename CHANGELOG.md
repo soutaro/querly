@@ -2,9 +2,13 @@
 
 ## master
 
-## 0.84 (2018-02-11)
+## 0.9.0 (2018-03-02)
 
-* Loosen the restriction of `thor` version (shinnn) #36
+* Fix literal testing (@pocke) #37
+
+## 0.8.4 (2018-02-11)
+
+* Loosen the restriction of `thor` version (@shinnn) #36
 
 ## 0.8.3 (2018-01-16)
 
