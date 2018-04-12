@@ -2,6 +2,9 @@
 
 ## master
 
+* Update parser (@yoshoku) #38
+* Use Ruby25 parser
+
 ## 0.9.0 (2018-03-02)
 
 * Fix literal testing (@pocke) #37

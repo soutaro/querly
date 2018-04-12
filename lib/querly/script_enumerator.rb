@@ -56,7 +56,7 @@ module Querly
     end
 
     def parser
-      Parser::Ruby24.new(Builder.new).tap do |parser|
+      Parser::Ruby25.new(Builder.new).tap do |parser|
         parser.diagnostics.all_errors_are_fatal = true
         parser.diagnostics.ignore_warnings = true
       end
@@ -79,7 +79,7 @@ module Querly
         end
       when path.file?
 
-    
+
         extensions = %w[
           .rb .builder .fcgi .gemspec .god .jbuilder .jb .mspec .opal .pluginspec
           .podspec .rabl .rake .rbuild .rbw .rbx .ru .ruby .spec .thor .watchr
@@ -106,7 +106,7 @@ module Querly
       def string_value(token)
         value(token)
       end
-      
+
       def emit_lambda
         true
       end
