@@ -2,6 +2,8 @@
 
 ## master
 
+* Relax `rainbow` version requirement
+
 ## 0.10.0 (2018-04-13)
 
 * Update parser (@yoshoku) #38
