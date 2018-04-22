@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.11.0 (2018-04-22)
+
 * Relax `rainbow` version requirement
 
 ## 0.10.0 (2018-04-13)
