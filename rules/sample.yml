@@ -30,5 +30,5 @@
     `clone` returns frozen object when receiver is frozen.
 
     * If object is frozen, you usually does not need to clone it
-    * When you need a copy of a object, you provablly want to modify that; did you mean dup?
+    * When you need a copy of a object, you probably want to modify that; did you mean dup?
     * Ruby 2.4 accepts freeze keyword and returns not frozen object
