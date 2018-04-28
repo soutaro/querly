@@ -28,7 +28,7 @@ rules:
   - id: sample.exception
     pattern: Exception
     message: |
-      You probablly should use StandardError
+      You probably should use StandardError
 
       If you are trying to define error class, inherit that from StandardError.
     justification:
