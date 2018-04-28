@@ -160,7 +160,7 @@ pattern:
 It matches with `find_by_email_and_name(...)`.
 
 - Meta variables `'finder` can occur only as method name
-- Unused meta var definition i1s okay, but undefined meta var reference raises an error
+- Unused meta var definition is okay, but undefined meta var reference raises an error
 - If value of meta var is a string `foo`, it matches send nodes with exactly same method name
 - If value of meta var is a regexp `/foo/`, it matches send nodes with method name which `=~` the regexp
 
