@@ -36,7 +36,7 @@ Specify configuration file by --config option.
           Config.load(yaml, config_path: config_path, root_dir: root_path, stderr: STDERR)
         rescue => exn
           formatter.config_error config_path, exn
-          exit
+          exit 1
         end
 
         analyzer = Analyzer.new(config: config, rule: options[:rule])
