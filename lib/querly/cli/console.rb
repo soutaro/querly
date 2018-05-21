@@ -69,21 +69,16 @@ Querly #{VERSION}, interactive console
               analyzer.find(pattern) do |script, pair|
                 path = script.path.to_s
                 line = pair.node.loc.first_line
+                range = pair.node.loc.expression
+                start_col = range.column
+                end_col = range.last_column
 
-                while true
-                  parent = pair.parent
+                src = range.source_buffer.source_lines[line-1]
+                src = Rainbow(src[0...start_col]).blue +
+                  Rainbow(src[start_col...end_col]).bright.blue.bold +
+                  Rainbow(src[end_col..-1]).blue
 
-                  if parent && parent.node.loc.first_line == line
-                    pair = pair.parent
-                  else
-                    break
-                  end
-                end
-
-                src = Rainbow(pair.node.loc.expression.source.split(/\n/).first).blue
-                col = pair.node.loc.column
-
-                puts "  #{path}:#{line}:#{col}\t#{src}"
+                puts "  #{path}:#{line}:#{start_col}\t#{src}"
 
                 count += 1
               end
