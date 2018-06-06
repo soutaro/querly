@@ -43,7 +43,7 @@ Querly #{VERSION}, interactive console
             @analyzer.scripts << script
           when StandardError
             p path: path, script: script.inspect
-            p script.backtrace
+            puts script.backtrace
           end
         end
 
