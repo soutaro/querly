@@ -2,6 +2,14 @@
 
 ## master
 
+## 0.12.0 (2018-08-03)
+
+* Declare MIT license #44
+* Make reading backtrace easier in `console` command (@pocke) #43
+* Highlight matched expression in querly console (@pocke) #42
+* Set exit status = 1 when `querly.yaml` has syntax error (@pocke) #41
+* Fix typos (@koic, @vzvu3k6k) #40, #39
+
 ## 0.11.0 (2018-04-22)
 
 * Relax `rainbow` version requirement
