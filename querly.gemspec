@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Querly::VERSION
   spec.authors       = ["Soutaro Matsumoto"]
   spec.email         = ["matsumoto@soutaro.com"]
+  spec.license       = "MIT"
 
   spec.summary       = %q{Pattern Based Checking Tool for Ruby}
   spec.description   = %q{Querly is a query language and tool to find out method calls from Ruby programs. Define rules to check your program with patterns to find out *bad* pieces. Querly finds out matching pieces from your program.}
