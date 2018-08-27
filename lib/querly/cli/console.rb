@@ -6,13 +6,13 @@ module Querly
       include Concerns::BacktraceFormatter
 
       attr_reader :paths
-      attr_reader :history_file
+      attr_reader :history_path
       attr_reader :history_size
       attr_reader :history
 
-      def initialize(paths:, history_file: , history_size: )
+      def initialize(paths:, history_path:, history_size:)
         @paths = paths
-        @history_file = history_file
+        @history_path = history_path
         @history_size = history_size
         @history = []
       end
@@ -30,7 +30,7 @@ Querly #{VERSION}, interactive console
         reload!
         STDOUT.puts " ready!"
 
-        load_history if history_file
+        load_history
         start_loop
       end
 
@@ -105,7 +105,7 @@ Querly #{VERSION}, interactive console
       end
 
       def load_history
-        history_file.readlines.each do |line|
+        history_path.readlines.each do |line|
           line.chomp!
           Readline::HISTORY.push(line)
           history.push line
@@ -119,7 +119,7 @@ Querly #{VERSION}, interactive console
         if history.size > history_size
           @history = history.drop(history.size - history_size)
         end
-        history_file.write(history.join("\n") + "\n")
+        history_path.write(history.join("\n") + "\n")
       end
 
       def puts_commands
