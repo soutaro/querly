@@ -86,7 +86,7 @@ end
         write.puts "quit"
         read.gets
 
-        assert_nil read.gets
+        Process.wait pid
       end
 
       assert_equal ["find redirect_to", "find User.find_each"], history.readlines.map(&:chomp)
@@ -106,7 +106,7 @@ end
         write.puts "quit"
         read.gets
 
-        assert_nil read.gets
+        Process.wait pid
       end
 
       assert_equal ["find User.find_each", "find create!"], history.readlines.map(&:chomp)
@@ -138,7 +138,7 @@ end
         write.puts "quit"
         read.gets
 
-        assert_nil read.gets
+        Process.wait pid
       end
 
       history = path + "querly/history"
