@@ -11,3 +11,4 @@
 /lib/querly/pattern/parser.rb
 parser.output
 /Gemfile.lock
+.querly_history

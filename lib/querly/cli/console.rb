@@ -6,9 +6,13 @@ module Querly
       include Concerns::BacktraceFormatter
 
       attr_reader :paths
+      attr_reader :history_file
+      attr_reader :history_size
 
-      def initialize(paths:)
+      def initialize(paths:, history_file: ".querly_history", history_size: 1_000_000)
         @paths = paths
+        @history_file = history_file
+        @history_size = history_size
       end
 
       def start
@@ -24,7 +28,8 @@ Querly #{VERSION}, interactive console
         reload!
         STDOUT.puts " ready!"
 
-        loop
+        load_history if history_file
+        start_loop
       end
 
       def reload!
@@ -50,7 +55,7 @@ Querly #{VERSION}, interactive console
         @analyzer
       end
 
-      def loop
+      def start_loop
         while line = Readline.readline("> ", true)
           case line
           when "quit"
@@ -84,6 +89,8 @@ Querly #{VERSION}, interactive console
               end
 
               puts "#{count} results"
+
+              add_to_history(line) if history_file
             rescue => exn
               STDOUT.puts Rainbow("Error: #{exn}").red
               STDOUT.puts "Backtrace:"
@@ -93,6 +100,25 @@ Querly #{VERSION}, interactive console
             puts_commands
           end
         end
+      end
+
+      def load_history
+        IO.readlines(history_file).each do |line|
+          Readline::HISTORY.push(line.chomp)
+        end
+      rescue Errno::ENOENT
+        # in the first time
+      end
+
+      def add_to_history(entry)
+        Readline::HISTORY.push(entry)
+
+        while Readline::HISTORY.length > history_size
+          Readline::HISTORY.shift
+        end
+
+        buffer = Readline::HISTORY.to_a.join("\n") + "\n"
+        IO.write(history_file, buffer)
       end
 
       def puts_commands
