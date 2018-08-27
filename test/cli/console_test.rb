@@ -40,12 +40,13 @@ class ConsoleTest < Minitest::Test
       (path + "foo.rb").write(<<-EOF)
 class UsersController
   def create
-    User.create!(params[:user])
+    user = User.create!(params[:user])
+    redirect_to user_path(user)
   end
 end
       EOF
 
-      PTY.spawn({ "NO_COLOR" => "true" }, exe_path.to_s, "console", chdir: path.to_s) do |read, write, pid|
+      PTY.spawn({ "NO_COLOR" => "true", "QUERLY_HISTORY_SIZE" => "2" }, exe_path.to_s, "console", chdir: path.to_s) do |read, write, pid|
         read_for(read, pattern: /^> $/)
 
         write.puts "reload!"
@@ -56,6 +57,16 @@ end
         read.gets
         output = read_for(read, pattern: /^> $/)
         assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
+
+        write.puts "find redirect_to"
+        read.gets
+        output = read_for(read, pattern: /^> $/)
+        assert_match /#{Regexp.escape "redirect_to user_path(user)"}/, output
+
+        write.puts "find User.find_each"
+        read.gets
+        output = read_for(read, pattern: /^> $/)
+        assert_match /#{Regexp.escape "0 results"}/, output
 
         write.puts "find crea te !!"
         read.gets
@@ -74,7 +85,7 @@ end
       end
 
       history = path + ".querly_history"
-      assert_equal ["reload!", "find create!", "find crea te !!", "no such command"], history.readlines.map(&:chomp)
+      assert_equal ["find redirect_to", "find User.find_each"], history.readlines.map(&:chomp)
     end
   end
 end

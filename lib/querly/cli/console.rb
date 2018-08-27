@@ -8,11 +8,13 @@ module Querly
       attr_reader :paths
       attr_reader :history_file
       attr_reader :history_size
+      attr_reader :history
 
-      def initialize(paths:, history_file: Pathname(".querly_history"), history_size: 1_000_000)
+      def initialize(paths:, history_file: , history_size: )
         @paths = paths
         @history_file = history_file
         @history_size = history_size
+        @history = []
       end
 
       def start
@@ -89,6 +91,8 @@ Querly #{VERSION}, interactive console
               end
 
               puts "#{count} results"
+
+              save_history line
             rescue => exn
               STDOUT.puts Rainbow("Error: #{exn}").red
               STDOUT.puts "Backtrace:"
@@ -97,25 +101,25 @@ Querly #{VERSION}, interactive console
           else
             puts_commands
           end
-
-          save_history if history_file
         end
       end
 
       def load_history
         history_file.readlines.each do |line|
-          Readline::HISTORY.push(line.chomp)
+          line.chomp!
+          Readline::HISTORY.push(line)
+          history.push line
         end
       rescue Errno::ENOENT
         # in the first time
       end
 
-      def save_history
-        while Readline::HISTORY.length > history_size
-          Readline::HISTORY.shift
+      def save_history(line)
+        history.push line
+        if history.size > history_size
+          @history = history.drop(history.size - history_size)
         end
-
-        history_file.write(Readline::HISTORY.to_a.join("\n") + "\n")
+        history_file.write(history.join("\n") + "\n")
       end
 
       def puts_commands
