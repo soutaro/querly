@@ -1,6 +1,10 @@
 require "thor"
 require "json"
 
+if ENV["NO_COLOR"]
+  Rainbow.enabled = false
+end
+
 module Querly
   class CLI < Thor
     desc "check [paths]", "Check paths based on configuration"

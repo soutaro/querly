@@ -89,8 +89,6 @@ Querly #{VERSION}, interactive console
               end
 
               puts "#{count} results"
-
-              save_history if history_file
             rescue => exn
               STDOUT.puts Rainbow("Error: #{exn}").red
               STDOUT.puts "Backtrace:"
@@ -99,6 +97,8 @@ Querly #{VERSION}, interactive console
           else
             puts_commands
           end
+
+          save_history if history_file
         end
       end
 
