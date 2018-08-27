@@ -69,9 +69,16 @@ Specify configuration file by --config option.
     desc "console [paths]", "Start console for given paths"
     def console(*paths)
       require 'querly/cli/console'
+      home_path = if (path = ENV["QUERLY_HOME"])
+                       Pathname(path)
+                     else
+                       Pathname(Dir.home) + ".querly"
+                     end
+      home_path.mkdir unless home_path.exist?
+
       Console.new(
         paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) },
-        history_file: Pathname(".querly_history"),
+        history_path: home_path + "history",
         history_size: ENV["QUERLY_HISTORY_SIZE"]&.to_i || 1_000_000
       ).start
     end

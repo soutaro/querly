@@ -46,7 +46,12 @@ class UsersController
 end
       EOF
 
-      PTY.spawn({ "NO_COLOR" => "true", "QUERLY_HISTORY_SIZE" => "2" }, exe_path.to_s, "console", chdir: path.to_s) do |read, write, pid|
+      homedir = path + "home"
+      homedir.mkdir
+
+      history = path + "home/.querly/history"
+
+      PTY.spawn({ "NO_COLOR" => "true", "QUERLY_HISTORY_SIZE" => "2", "HOME" => homedir.to_s }, exe_path.to_s, "console", chdir: path.to_s) do |read, write, pid|
         read_for(read, pattern: /^> $/)
 
         write.puts "reload!"
@@ -84,8 +89,60 @@ end
         assert_nil read.gets
       end
 
-      history = path + ".querly_history"
       assert_equal ["find redirect_to", "find User.find_each"], history.readlines.map(&:chomp)
+
+      PTY.spawn({ "NO_COLOR" => "true", "QUERLY_HISTORY_SIZE" => "2", "HOME" => homedir.to_s }, exe_path.to_s, "console", chdir: path.to_s) do |read, write, pid|
+        read_for(read, pattern: /^> $/)
+
+        write.puts "reload!"
+        read.gets
+        read_for(read, pattern: /^> $/)
+
+        write.puts "find create!"
+        read.gets
+        output = read_for(read, pattern: /^> $/)
+        assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
+
+        write.puts "quit"
+        read.gets
+
+        assert_nil read.gets
+      end
+
+      assert_equal ["find User.find_each", "find create!"], history.readlines.map(&:chomp)
+    end
+  end
+
+  def test_history_location_override
+    mktmpdir do |path|
+      (path + "foo.rb").write(<<-EOF)
+class UsersController
+  def create
+    user = User.create!(params[:user])
+    redirect_to user_path(user)
+  end
+end
+      EOF
+
+      homedir = path + "querly"
+      homedir.mkdir
+
+      PTY.spawn({ "NO_COLOR" => "true", "QUERLY_HISTORY_SIZE" => "2", "QUERLY_HOME" => homedir.to_s }, exe_path.to_s, "console", chdir: path.to_s) do |read, write, pid|
+        read_for(read, pattern: /^> $/)
+
+        write.puts "find create!"
+        read.gets
+        output = read_for(read, pattern: /^> $/)
+        assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
+
+        write.puts "quit"
+        read.gets
+
+        assert_nil read.gets
+      end
+
+      history = path + "querly/history"
+      assert_equal ["find create!"], history.readlines.map(&:chomp)
     end
   end
 end
