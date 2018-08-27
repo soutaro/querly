@@ -2,6 +2,11 @@
 
 ## master
 
+## 0.13.0 (2018-08-27)
+
+* Make history file location configurable through `QUERLY_HOME` (defaults to `~/.querly`)
+* Save `console` history (@gfx) #47
+
 ## 0.12.0 (2018-08-03)
 
 * Declare MIT license #44
