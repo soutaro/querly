@@ -83,6 +83,16 @@ Specify configuration file by --config option.
       ).start
     end
 
+    desc "find pattern [paths]", "Find for the pattern in given paths"
+    def find(pattern, *paths)
+      require 'querly/cli/find'
+
+      Find.new(
+        pattern: pattern,
+        paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) },
+      ).start
+    end
+
     desc "test", "Check configuration"
     option :config, default: "querly.yml"
     def test()
