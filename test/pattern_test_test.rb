@@ -218,6 +218,14 @@ class PatternTestTest < Minitest::Test
     assert_equal ruby("foo(2, key: 3)"), nodes.first
   end
 
+
+  def test_call_with_two_dot3
+    nodes = query_pattern("foo(..., 1, ...)",
+                          "foo(1); foo(1, 2, 3); foo(true, false); foo(2)")
+
+    assert_equal [ruby("foo(1)"), ruby("foo(1,2,3)")], nodes
+  end
+
   def test_call_with_block_pass
     nodes = query_pattern("map(&:id)", "foo.map(&:id)")
     assert_equal 1, nodes.size

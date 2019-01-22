@@ -200,7 +200,8 @@ module Querly
 
           case args
           when Argument::AnySeq
-            if args.tail
+            case args.tail
+            when Argument::KeyValue
               if first_node
                 case
                 when nodes.last.type == :kwsplat
@@ -213,6 +214,10 @@ module Querly
                 end
               else
                 test_hash_args({}, args.tail)
+              end
+            when Argument::Expr
+              nodes.size.times.any? do |i|
+                test_args(nodes.drop(i), args.tail)
               end
             else
               true
