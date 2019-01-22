@@ -2,6 +2,11 @@
 
 ## master
 
+## 0.14.0 (2019-01-22)
+
+* Allow having `...` pattens anywhere positional argument patterns are valid #54
+* Add `querly find` command (@gfx) #49
+
 ## 0.13.0 (2018-08-27)
 
 * Make history file location configurable through `QUERLY_HOME` (defaults to `~/.querly`)
