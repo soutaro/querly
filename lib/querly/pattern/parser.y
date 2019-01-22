@@ -40,6 +40,7 @@ args:  { result = nil }
   | AMP expr { result = Argument::BlockPass.new(expr: val[1]) }
   | kw_args
   | DOTDOTDOT { result = Argument::AnySeq.new }
+  | DOTDOTDOT COMMA args { result = Argument::AnySeq.new(tail: val[2]) }
   | DOTDOTDOT COMMA kw_args { result = Argument::AnySeq.new(tail: val[2]) }
 
 kw_args: { result = nil }

@@ -39,6 +39,15 @@ class PatternParserTest < Minitest::Test
     assert_equal E::Constant.new(path: [:E]), pat
   end
 
+  def test_dot3_args
+    pat = parse_expr("foo(..., 1, ...)")
+    assert_equal E::Send.new(receiver: nil,
+                             name: :foo,
+                             args: A::AnySeq.new(tail: A::Expr.new(expr: E::Literal.new(type: :int, values: 1),
+                                                                   tail: A::AnySeq.new)),
+                             block: nil), pat
+  end
+
   def test_keyword_arg
     pat = parse_expr("foo(!x: 1, ...)")
     assert_equal E::Send.new(receiver: nil,
