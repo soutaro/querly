@@ -60,10 +60,10 @@ rules:
 preprocessor:
   .slim: slimrb --compile
 
-checks:
+check:
   - path: /
     rules:
-      except: sample.test
+      - except: sample.test
   - path: /test
     rules:
-      add: sample.test
+      - append: sample.test
