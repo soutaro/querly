@@ -2,6 +2,11 @@
 
 ## master
 
+## 0.15.0 (2019-02-13)
+
+* Fix broken `querly init` template (@ybiquitous) #56
+* Relax `activesupport` requirement (@y-yagi) #57
+
 ## 0.14.0 (2019-01-22)
 
 * Allow having `...` pattens anywhere positional argument patterns are valid #54
