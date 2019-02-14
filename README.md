@@ -1,3 +1,4 @@
+![Querly logo](https://github.com/soutaro/querly/blob/master/logo/Querly%20horizontal.png)
 # Querly - Pattern Based Checking Tool for Ruby
 
 [![Build Status](https://travis-ci.org/soutaro/querly.svg?branch=master)](https://travis-ci.org/soutaro/querly)
