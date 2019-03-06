@@ -103,7 +103,7 @@ end
         output = read_for(read, pattern: /^> $/)
         assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
 
-        write.puts "quit"
+        write.puts "exit"
         read.gets
 
         Process.wait pid

@@ -60,7 +60,7 @@ Querly #{VERSION}, interactive console
       def start_loop
         while line = Readline.readline("> ", true)
           case line
-          when "quit"
+          when "quit", "exit"
             exit
           when "reload!"
             STDOUT.print "reloading..."
