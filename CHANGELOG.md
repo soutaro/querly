@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.15.1 (2019-03-12)
+
 * Relax parser version requirement
 
 ## 0.15.0 (2019-02-13)
