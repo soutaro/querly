@@ -2,6 +2,8 @@
 
 ## master
 
+* Relax parser version requirement
+
 ## 0.15.0 (2019-02-13)
 
 * Fix broken `querly init` template (@ybiquitous) #56
