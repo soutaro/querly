@@ -169,7 +169,7 @@ You can also use `as` syntax with `:symbol:` and so on.
 ```yaml
 id: migration_references
 pattern:
-  subject: 't.integer(:symbol: as 'column, ...)'
+  subject: "t.integer(:symbol: as 'column, ...)"
   where:
     column: '/.+_id/'
 ```
