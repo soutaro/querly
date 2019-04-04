@@ -147,7 +147,7 @@ end
 
 If you want to describe a pattern that can not be described with adove syntax, you can use interpolation as follows:
 
-```rb
+```yaml
 id: find_by_abc_and_def
 pattern:
   subject: "'finder(...)"
@@ -163,6 +163,16 @@ It matches with `find_by_email_and_name(...)`.
 - Unused meta var definition is okay, but undefined meta var reference raises an error
 - If value of meta var is a string `foo`, it matches send nodes with exactly same method name
 - If value of meta var is a regexp `/foo/`, it matches send nodes with method name which `=~` the regexp
+
+You can also use `as` syntax with `:symbol:` and so on.
+
+```yaml
+id: migration_references
+pattern:
+  subject: "t.integer(:symbol: as 'column, ...)"
+  where:
+    column: '/.+_id/'
+```
 
 # Difference from Ruby
 
