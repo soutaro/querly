@@ -118,6 +118,30 @@ class PatternParserTest < Minitest::Test
     assert_equal [:F], parse_expr("_.F").name
   end
 
+  def test_any_method
+    recv = E::Vcall.new(name: :a)
+    assert_equal E::Send.new(receiver: recv,
+                             name: /.+/,
+                             args: A::AnySeq.new,
+                             block: nil), parse_expr("a._")
+    assert_equal E::Send.new(receiver: recv,
+                             name: /.+/,
+                             args: A::AnySeq.new,
+                             block: true), parse_expr("a._{}")
+    assert_equal E::Send.new(receiver: recv,
+                             name: /.+/,
+                             args: A::AnySeq.new,
+                             block: false), parse_expr("a._!{}")
+    assert_equal E::Send.new(receiver: recv,
+                             name: /.+/,
+                             args: nil,
+                             block: nil), parse_expr("a._()")
+    assert_equal E::Send.new(receiver: recv,
+                             name: /.+/,
+                             args: A::Expr.new(expr: E::Vcall.new(name: :b), tail: nil),
+                             block: nil), parse_expr("a._(b)")
+  end
+
   def test_method_name
     assert_equal [:f!], parse_expr("f!()").name
     assert_equal [:f=], parse_expr("f=(3)").name
