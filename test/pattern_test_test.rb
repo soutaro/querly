@@ -251,6 +251,24 @@ class PatternTestTest < Minitest::Test
     assert_equal ruby("bar.foo"), nodes.first
   end
 
+  def test_call_any_method
+    nodes = query_pattern("foo._", "foo; foo.bar; foo.baz")
+    assert_equal 2, nodes.size
+    assert_equal [ruby("foo.bar"), ruby("foo.baz")], nodes
+  end
+
+  def test_call_any_method_with_args
+    nodes = query_pattern("foo._(baz)", "foo.bar(baz); foo.bar(bar)")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo.bar(baz)"), nodes.first
+  end
+
+  def test_call_any_method_with_block
+    nodes = query_pattern("foo._{}", "foo.bar; foo.baz{}")
+    assert_equal 1, nodes.size
+    assert_equal ruby("foo.baz{}"), nodes.first
+  end
+
   def test_vcall
     # Vcall pattern matches with local variable
     nodes = query_pattern("foo", "foo = 1; foo.bar")
