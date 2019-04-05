@@ -79,10 +79,13 @@ module Querly
         source_buffer = Parser::Source::Buffer.new('(erb)')
         source_buffer.source = source
         parser = BetterHtml::Parser.new(source_buffer, template_language: :html)
+
+        new_source = source.gsub(/./, ' ')
         parser.ast.descendants(:erb).each do |erb_node|
           _, _, code_node, = *erb_node
-          stdout.puts code_node.loc.source
+          new_source[code_node.loc.range] = code_node.loc.source
         end
+        stdout.puts new_source
       end
     end
   end
