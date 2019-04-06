@@ -84,6 +84,7 @@ module Querly
         parser.ast.descendants(:erb).each do |erb_node|
           _, _, code_node, = *erb_node
           new_source[code_node.loc.range] = code_node.loc.source
+          new_source[code_node.loc.range.end] = ';'
         end
         stdout.puts new_source
       end
