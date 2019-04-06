@@ -42,7 +42,7 @@ module Querly
       end
 
       def run
-        available_commands = [:haml]
+        available_commands = [:haml, :erb]
 
         if available_commands.include?(command)
           send :"run_#{command}"
@@ -69,6 +69,24 @@ module Querly
 
           stdout.print compiler.precompiled
         end
+      end
+
+      def run_erb
+        require 'better_html'
+        require 'better_html/parser'
+        load_libs
+        source = stdin.read
+        source_buffer = Parser::Source::Buffer.new('(erb)')
+        source_buffer.source = source
+        parser = BetterHtml::Parser.new(source_buffer, template_language: :html)
+
+        new_source = source.gsub(/./, ' ')
+        parser.ast.descendants(:erb).each do |erb_node|
+          _, _, code_node, = *erb_node
+          new_source[code_node.loc.range] = code_node.loc.source
+          new_source[code_node.loc.range.end] = ';'
+        end
+        stdout.puts new_source
       end
     end
   end
