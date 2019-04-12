@@ -71,6 +71,8 @@ bar.foo.baz               # foo...bar...baz does not match
 * `1.23` (float)
 * `:foobar` (symbol)
 * `:symbol:` (any symbol literal)
+* `"foobar"` (string)
+    * NOTE: It only supports double quotation.
 * `:string:` (any string literal)
 * `:dstr:` (any dstr `"hi #{name}"`)
 * `true`, `false` (true and false)
@@ -145,7 +147,7 @@ end
 
 # Interpolation Syntax
 
-If you want to describe a pattern that can not be described with adove syntax, you can use interpolation as follows:
+If you want to describe a pattern that can not be described with above syntax, you can use interpolation as follows:
 
 ```yaml
 id: find_by_abc_and_def
