@@ -2,6 +2,13 @@
 
 ## master
 
+## 0.16.0 (2019-04-23)
+
+* Support string literal pattern (@pocke) [#64](https://github.com/soutaro/querly/pull/64)
+* Allow underscore method name pattern (@pocke) [#63](https://github.com/soutaro/querly/pull/63)
+* Add erb support (@hanachin) [#61](https://github.com/soutaro/querly/pull/61)
+* Add `exit` command on console (@wata727) [#59](https://github.com/soutaro/querly/pull/59)
+
 ## 0.15.1 (2019-03-12)
 
 * Relax parser version requirement
