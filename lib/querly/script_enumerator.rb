@@ -45,21 +45,12 @@ module Querly
                    path.read
                  end
 
-        buffer = Parser::Source::Buffer.new(path.to_s, 1)
-        buffer.source = source
-        script = Script.new(path: path, node: parser.parse(buffer))
+        script = Script.load(path: path, source: source)
       rescue StandardError, LoadError, Preprocessor::Error => exn
         script = exn
       end
 
       yield(path, script)
-    end
-
-    def parser
-      Parser::Ruby25.new(Builder.new).tap do |parser|
-        parser.diagnostics.all_errors_are_fatal = true
-        parser.diagnostics.ignore_warnings = true
-      end
     end
 
     def preprocessors
@@ -99,16 +90,6 @@ module Querly
                            end
 
         load_script_from_path(path, &block) if should_load_file
-      end
-    end
-
-    class Builder < Parser::Builders::Default
-      def string_value(token)
-        value(token)
-      end
-
-      def emit_lambda
-        true
       end
     end
   end
