@@ -133,6 +133,8 @@ def next_token
     [:NIL, false]
   when input.scan(/:string:/)
     [:STRING, nil]
+  when input.scan(/"([^"]+)"/)
+    [:STRING, input[1]]
   when input.scan(/:dstr:/)
     [:DSTR, nil]
   when input.scan(/:int:/)

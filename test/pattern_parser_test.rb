@@ -246,6 +246,22 @@ class PatternParserTest < Minitest::Test
     assert_equal ["foo"], pat.values
   end
 
+  def test_string_literal
+    pat = parse_expr('"foo"')
+    assert_instance_of E::Literal, pat
+    assert_equal :string, pat.type
+    assert_equal ["foo"], pat.values
+  end
+
+  def test_string_literal_with_backslash_escape
+    skip("Implement escape sequence in the future")
+
+    pat = parse_expr('"foo\n"')
+    assert_instance_of E::Literal, pat
+    assert_equal :string, pat.type
+    assert_equal ["foo\n"], pat.values
+  end
+
   def test_as_something
     pat = parse_expr("assert()")
     assert_instance_of E::Send, pat
