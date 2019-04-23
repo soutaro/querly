@@ -146,6 +146,8 @@ rules:
 
 preprocessor:
   .slim: slimrb --compile
+  .haml: querly-pp haml
+  .erb: querly-pp erb
 
 import:
   - load: querly/rules/*.yml

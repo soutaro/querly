@@ -58,7 +58,9 @@ rules:
           assert_empty some.count
 
 preprocessor:
-  .slim: slimrb --compile
+  # .slim: slimrb --compile # Install `slim` gem for slim support
+  # .erb: querly-pp erb     # Install `better_erb` gem for erb support
+  # .haml: querly-pp haml   # Install `haml` gem for haml support
 
 check:
   - path: /
