@@ -8,12 +8,14 @@ module Querly
       attr_reader :paths
       attr_reader :history_path
       attr_reader :history_size
+      attr_reader :config
       attr_reader :history
 
-      def initialize(paths:, history_path:, history_size:)
+      def initialize(paths:, history_path:, history_size:, config: nil)
         @paths = paths
         @history_path = history_path
         @history_size = history_size
+        @config = config
         @history = []
       end
 
@@ -42,9 +44,9 @@ Querly #{VERSION}, interactive console
       def analyzer
         return @analyzer if @analyzer
 
-        @analyzer = Analyzer.new(config: nil, rule: nil)
+        @analyzer = Analyzer.new(config: config, rule: nil)
 
-        ScriptEnumerator.new(paths: paths, config: nil).each do |path, script|
+        ScriptEnumerator.new(paths: paths, config: config).each do |path, script|
           case script
           when Script
             @analyzer.scripts << script

@@ -32,15 +32,10 @@ Specify configuration file by --config option.
           exit 1
         end
 
-        root_option = options[:root]
-        root_path = root_option ? Pathname(root_option).realpath : config_path.parent.realpath
-
-        config = begin
-          yaml = YAML.load(config_path.read)
-          Config.load(yaml, config_path: config_path, root_dir: root_path, stderr: STDERR)
+        begin
+          config = config(root_option: options[:root])
         rescue => exn
           formatter.config_error config_path, exn
-          exit 1
         end
 
         analyzer = Analyzer.new(config: config, rule: options[:rule])
@@ -67,6 +62,7 @@ Specify configuration file by --config option.
     end
 
     desc "console [paths]", "Start console for given paths"
+    option :config, default: "querly.yml"
     def console(*paths)
       require 'querly/cli/console'
       home_path = if (path = ENV["QUERLY_HOME"])
@@ -75,21 +71,26 @@ Specify configuration file by --config option.
                        Pathname(Dir.home) + ".querly"
                      end
       home_path.mkdir unless home_path.exist?
+      config = config_path.file? ? config(root_option: nil) : nil
 
       Console.new(
         paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) },
         history_path: home_path + "history",
-        history_size: ENV["QUERLY_HISTORY_SIZE"]&.to_i || 1_000_000
+        history_size: ENV["QUERLY_HISTORY_SIZE"]&.to_i || 1_000_000,
+        config: config,
       ).start
     end
 
     desc "find pattern [paths]", "Find for the pattern in given paths"
+    option :config, default: "querly.yml"
     def find(pattern, *paths)
       require 'querly/cli/find'
 
+      config = config_path.file? ? config(root_option: nil) : nil
       Find.new(
         pattern: pattern,
         paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) },
+        config: config,
       ).start
     end
 
@@ -124,6 +125,13 @@ Specify configuration file by --config option.
     end
 
     private
+
+    def config(root_option:)
+      root_path = root_option ? Pathname(root_option).realpath : config_path.parent.realpath
+
+      yaml = YAML.load(config_path.read)
+      Config.load(yaml, config_path: config_path, root_dir: root_path, stderr: STDERR)
+    end
 
     def config_path
       [Pathname(options[:config]),
