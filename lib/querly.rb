@@ -5,6 +5,7 @@ require "parser/ruby25"
 require "set"
 require "open3"
 require "active_support/inflector"
+require "parallel"
 
 require "querly/version"
 require 'querly/analyzer'

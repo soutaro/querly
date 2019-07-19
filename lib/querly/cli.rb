@@ -12,6 +12,7 @@ module Querly
     option :root
     option :format, default: "text", type: :string, enum: %w(text json)
     option :rule, type: :string
+    option :threads, default: Parallel.processor_count, type: :numeric
     def check(*paths)
       require 'querly/cli/formatter'
 
@@ -22,6 +23,8 @@ module Querly
                     Formatter::JSON.new
                   end
       formatter.start
+
+      threads = Integer(options[:threads])
 
       begin
         unless config_path.file?
@@ -40,7 +43,7 @@ Specify configuration file by --config option.
 
         analyzer = Analyzer.new(config: config, rule: options[:rule])
 
-        ScriptEnumerator.new(paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) }, config: config).each do |path, script|
+        ScriptEnumerator.new(paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) }, config: config, threads: threads).each do |path, script|
           case script
           when Script
             analyzer.scripts << script
@@ -63,6 +66,7 @@ Specify configuration file by --config option.
 
     desc "console [paths]", "Start console for given paths"
     option :config, default: "querly.yml"
+    option :threads, default: Parallel.processor_count, type: :numeric
     def console(*paths)
       require 'querly/cli/console'
       home_path = if (path = ENV["QUERLY_HOME"])
@@ -72,25 +76,31 @@ Specify configuration file by --config option.
                      end
       home_path.mkdir unless home_path.exist?
       config = config_path.file? ? config(root_option: nil) : nil
+      threads = Integer(options[:threads])
 
       Console.new(
         paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) },
         history_path: home_path + "history",
         history_size: ENV["QUERLY_HISTORY_SIZE"]&.to_i || 1_000_000,
         config: config,
+        threads: threads
       ).start
     end
 
     desc "find pattern [paths]", "Find for the pattern in given paths"
     option :config, default: "querly.yml"
+    option :threads, default: Parallel.processor_count, type: :numeric
     def find(pattern, *paths)
       require 'querly/cli/find'
 
       config = config_path.file? ? config(root_option: nil) : nil
+      threads = Integer(options[:threads])
+
       Find.new(
         pattern: pattern,
         paths: paths.empty? ? [Pathname.pwd] : paths.map {|path| Pathname(path) },
         config: config,
+        threads: threads
       ).start
     end
 

@@ -9,7 +9,7 @@ class ScriptEnumeratorTest < Minitest::Test
   def test_parsing_ruby
     mktmpdir do |dir|
       config = Config.new(rules: [], preprocessors: {}, root_dir: dir, checks: [])
-      e = ScriptEnumerator.new(paths: nil, config: config)
+      e = ScriptEnumerator.new(paths: nil, config: config, threads: 1)
 
       ruby_path = dir + "foo.rb"
       ruby_path.write <<-EOR
@@ -27,7 +27,7 @@ end
   def test_parse_error_ruby
     mktmpdir do |dir|
       config = Config.new(rules: [], preprocessors: {}, root_dir: dir, checks: [])
-      e = ScriptEnumerator.new(paths: nil, config: config)
+      e = ScriptEnumerator.new(paths: nil, config: config, threads: 1)
 
       ruby_path = dir + "foo.rb"
       ruby_path.write <<-EOR
@@ -44,7 +44,7 @@ def foo()
   def test_no_parse_error_on_invalid_utf8_sequence
     mktmpdir do |dir|
       config = Config.new(rules: [], preprocessors: {}, root_dir: dir, checks: [])
-      e = ScriptEnumerator.new(paths: nil, config: config)
+      e = ScriptEnumerator.new(paths: nil, config: config, threads: 1)
 
       ruby_path = dir + "foo.rb"
       ruby_path.write '"\xFF"'
