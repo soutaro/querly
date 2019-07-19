@@ -2,6 +2,11 @@
 
 ## master
 
+## 1.0.0 (2019-7-19)
+
+* Add `--config` option for `find` and `console` [#67](https://github.com/soutaro/querly/pull/67)
+* Improve preprocessor performance by processing concurrently [#68](https://github.com/soutaro/querly/pull/68)
+
 ## 0.16.0 (2019-04-23)
 
 * Support string literal pattern (@pocke) [#64](https://github.com/soutaro/querly/pull/64)
