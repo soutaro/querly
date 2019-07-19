@@ -35,4 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "parser", ">= 2.5.0"
   spec.add_dependency "rainbow", ">= 2.1"
   spec.add_dependency "activesupport", ">= 5.0"
+  spec.add_dependency "parallel", "~>1.17"
 end

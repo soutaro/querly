@@ -2,23 +2,36 @@ module Querly
   class ScriptEnumerator
     attr_reader :paths
     attr_reader :config
+    attr_reader :threads
 
-    def initialize(paths:, config:)
+    def initialize(paths:, config:, threads:)
       @paths = paths
       @config = config
+      @threads = threads
     end
 
+    # Yields `Script` object concurrently, in different threads.
     def each(&block)
+      if block_given?
+        Parallel.each(each_path, in_threads: threads) do |path|
+          load_script_from_path path, &block
+        end
+      else
+        self.enum_for :each
+      end
+    end
+
+    def each_path(&block)
       if block_given?
         paths.each do |path|
           if path.directory?
             enumerate_files_in_dir(path, &block)
           else
-            load_script_from_path path, &block
+            yield path
           end
         end
       else
-        self.enum_for :each
+        enum_for :each_path
       end
     end
 
@@ -89,7 +102,7 @@ module Querly
                              preprocessors.key?(path.extname)
                            end
 
-        load_script_from_path(path, &block) if should_load_file
+        yield path if should_load_file
       end
     end
   end

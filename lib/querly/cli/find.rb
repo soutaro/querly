@@ -8,11 +8,13 @@ module Querly
       attr_reader :pattern_str
       attr_reader :paths
       attr_reader :config
+      attr_reader :threads
 
-      def initialize(pattern:, paths:, config: nil)
+      def initialize(pattern:, paths:, config: nil, threads:)
         @pattern_str = pattern
         @paths = paths
         @config = config
+        @threads = threads
       end
 
       def start
@@ -38,7 +40,7 @@ module Querly
         puts "#{count} results"
       rescue => exn
         STDOUT.puts Rainbow("Error: #{exn}").red
-        STDTOU.puts "pattern: #{pattern_str}"
+        STDOUT.puts "pattern: #{pattern_str}"
         STDOUT.puts "Backtrace:"
         STDOUT.puts format_backtrace(exn.backtrace)
       end
@@ -52,7 +54,7 @@ module Querly
 
         @analyzer = Analyzer.new(config: config, rule: nil)
 
-        ScriptEnumerator.new(paths: paths, config: config).each do |path, script|
+        ScriptEnumerator.new(paths: paths, config: config, threads: threads).each do |path, script|
           case script
           when Script
             @analyzer.scripts << script
