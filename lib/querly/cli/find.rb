@@ -7,10 +7,12 @@ module Querly
 
       attr_reader :pattern_str
       attr_reader :paths
+      attr_reader :config
 
-      def initialize(pattern:, paths:)
+      def initialize(pattern:, paths:, config: nil)
         @pattern_str = pattern
         @paths = paths
+        @config = config
       end
 
       def start
@@ -48,9 +50,9 @@ module Querly
       def analyzer
         return @analyzer if @analyzer
 
-        @analyzer = Analyzer.new(config: nil, rule: nil)
+        @analyzer = Analyzer.new(config: config, rule: nil)
 
-        ScriptEnumerator.new(paths: paths, config: nil).each do |path, script|
+        ScriptEnumerator.new(paths: paths, config: config).each do |path, script|
           case script
           when Script
             @analyzer.scripts << script
