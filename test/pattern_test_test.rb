@@ -241,40 +241,42 @@ class PatternTestTest < Minitest::Test
   end
 
   def test_call_without_receiver
-    nodes = query_pattern("foo", "foo; bar.foo")
-    assert_equal 2, nodes.size
+    nodes = query_pattern("foo", "foo; bar.foo; bar&.foo")
+    assert_equal 3, nodes.size
   end
 
   def test_call_with_any_receiver
-    nodes = query_pattern("_.foo", "foo; bar.foo")
-    assert_equal 1, nodes.size
-    assert_equal ruby("bar.foo"), nodes.first
+    nodes = query_pattern("_.foo", "foo; bar.foo; bar&.foo")
+    assert_equal 2, nodes.size
+    assert_equal [ruby("bar.foo"), ruby("bar&.foo")], nodes
   end
 
   def test_call_any_method
-    nodes = query_pattern("foo._", "foo; foo.bar; foo.baz")
-    assert_equal 2, nodes.size
-    assert_equal [ruby("foo.bar"), ruby("foo.baz")], nodes
+    nodes = query_pattern("foo._", "foo; foo.bar; foo.baz; foo&.baz")
+    assert_equal 3, nodes.size
+    assert_equal [ruby("foo.bar"), ruby("foo.baz"), ruby("foo&.baz")], nodes
   end
 
   def test_call_any_method_with_args
-    nodes = query_pattern("foo._(baz)", "foo.bar(baz); foo.bar(bar)")
-    assert_equal 1, nodes.size
-    assert_equal ruby("foo.bar(baz)"), nodes.first
+    nodes = query_pattern("foo._(baz)", "foo.bar(baz); foo.bar(bar); foo&.bar(baz)")
+    assert_equal 2, nodes.size
+    assert_equal [ruby("foo.bar(baz)"), ruby("foo&.bar(baz)")], nodes
   end
 
   def test_call_any_method_with_block
-    nodes = query_pattern("foo._{}", "foo.bar; foo.baz{}")
-    assert_equal 1, nodes.size
-    assert_equal ruby("foo.baz{}"), nodes.first
+    nodes = query_pattern("foo._{}", "foo.bar; foo.baz{}; foo&.foobar{}")
+    assert_equal 2, nodes.size
+    assert_equal [ruby("foo.baz{}"), ruby("foo&.foobar{}")], nodes
   end
 
   def test_vcall
     # Vcall pattern matches with local variable
-    nodes = query_pattern("foo", "foo = 1; foo.bar")
-    assert_equal 1, nodes.size
+    nodes = query_pattern("foo", "foo = 1; foo.bar; foo&.bar")
+    assert_equal 2, nodes.size
     assert_equal :lvar, nodes.first.type
     assert_equal :foo, nodes.first.children.first
+    assert_equal :lvar, nodes[1].type
+    assert_equal :foo, nodes[1].children.first
   end
 
   def test_vcall2
@@ -343,6 +345,11 @@ class PatternTestTest < Minitest::Test
   def test_any_receiver5
     nodes = query_pattern("a...b", "[a.b.b]")
     assert_equal Set.new([ruby("a.b.b"), ruby("a.b")]), Set.new(nodes)
+  end
+
+  def test_any_receiver6
+    nodes = query_pattern("f...h", "f&.g&.h")
+    assert_equal [ruby("f&.g&.h")], nodes
   end
 
   def test_self
