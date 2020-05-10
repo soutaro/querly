@@ -101,6 +101,12 @@ class PatternTestTest < Minitest::Test
     refute nodes.test_node(ruby('"baz"'))
   end
 
+  def test_byte_sequence_string
+    nodes = E::Literal.new(type: :string, values: [/foo/])
+    assert nodes.test_node(ruby('"\xfffoo"'))
+    refute nodes.test_node(ruby('"\xffbaz"'))
+  end
+
   def test_regexp
     nodes = query_pattern(":regexp:", '[/1/, /#{2}/, 3]')
     assert_equal 2, nodes.size
