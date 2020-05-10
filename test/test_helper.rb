@@ -38,7 +38,7 @@ module TestHelper
   end
 
   def ruby(src)
-    Parser::Ruby25.parse(src)
+    Querly::Script.load(path: "(input)", source: src).node
   end
 
   def with_config(hash)
