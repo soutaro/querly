@@ -1,0 +1,28 @@
+name: Ruby
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        container_tag:
+        - 2.6-bionic
+        - 2.7-bionic
+        - master-nightly-bionic
+    container:
+      image: rubylang/ruby:${{ matrix.container_tag }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run test
+      run: |
+        ruby -v
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        bin/setup
+        bundle exec rake build test
