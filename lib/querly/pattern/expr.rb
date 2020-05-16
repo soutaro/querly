@@ -147,7 +147,8 @@ module Querly
 
         def =~(pair)
           # Skip send node with block
-          if pair.node.type == :send && pair.parent
+          type = pair.node.type
+          if (type == :send || type == :csend) && pair.parent
             if pair.parent.node.type == :block
               if pair.parent.node.children.first.equal? pair.node
                 return false
@@ -176,7 +177,7 @@ module Querly
           node = node.children.first if node&.type == :block
 
           case node&.type
-          when :send
+          when :send, :csend
             return false unless test_name(node)
             return false unless test_receiver(node.children[0])
             return false unless test_args(node.children.drop(2), args)
@@ -290,7 +291,8 @@ module Querly
           if receiver.test_node(node)
             true
           else
-            node&.type == :send && test_node(node.children[0])
+            type = node&.type
+            (type == :send || type == :csend) && test_node(node.children[0])
           end
         end
       end
@@ -315,7 +317,7 @@ module Querly
             # We don't want lvar without method call
             # Skips when the node is not receiver of :send
             parent_node = pair.parent&.node
-            if parent_node && parent_node.type == :send && parent_node.children.first.equal?(node)
+            if parent_node && (parent_node.type == :send || parent_node.type == :csend) && parent_node.children.first.equal?(node)
               test_node(node)
             end
           else
@@ -325,7 +327,7 @@ module Querly
 
         def test_node(node)
           case node&.type
-          when :send
+          when :send, :csend
             node.children[1] == name
           when :lvar
             node.children.first == name
