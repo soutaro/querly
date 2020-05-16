@@ -118,7 +118,7 @@ module Querly
 
           when :str
             return false unless type == :string
-            test_value(node.children.first)
+            test_value(node.children.first.scrub)
 
           when :sym
             return false unless type == :symbol
