@@ -2,6 +2,11 @@
 
 ## master
 
+## 1.1.0 (2020-05-17)
+
+* Fix invalid bytes sequence in UTF-8 error by @mallowlabs [#75](https://github.com/soutaro/querly/pull/75)
+* Detect safe navigation operator as a method call by @pocke [#71](https://github.com/soutaro/querly/pull/71)
+
 ## 1.0.0 (2019-7-19)
 
 * Add `--config` option for `find` and `console` [#67](https://github.com/soutaro/querly/pull/67)
