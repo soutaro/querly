@@ -61,27 +61,27 @@ end
         write.puts "find create!"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
+        assert_match %r/#{Regexp.escape "User.create!(params[:user])"}/, output
 
         write.puts "find redirect_to"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "redirect_to user_path(user)"}/, output
+        assert_match %r/#{Regexp.escape "redirect_to user_path(user)"}/, output
 
         write.puts "find User.find_each"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "0 results"}/, output
+        assert_match %r/#{Regexp.escape "0 results"}/, output
 
         write.puts "find crea te !!"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "parse error on value"}/, output
+        assert_match %r/#{Regexp.escape "parse error on value"}/, output
 
         write.puts "no such command"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "Commands:"}/, output
+        assert_match %r/#{Regexp.escape "Commands:"}/, output
 
         write.puts "quit"
         read.gets
@@ -101,7 +101,7 @@ end
         write.puts "find create!"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
+        assert_match %r/#{Regexp.escape "User.create!(params[:user])"}/, output
 
         write.puts "exit"
         read.gets
@@ -133,7 +133,7 @@ end
         write.puts "find create!"
         read.gets
         output = read_for(read, pattern: /^> $/)
-        assert_match /#{Regexp.escape "User.create!(params[:user])"}/, output
+        assert_match %r/#{Regexp.escape "User.create!(params[:user])"}/, output
 
         write.puts "quit"
         read.gets

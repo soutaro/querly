@@ -21,7 +21,7 @@ class TestTest < Minitest::Test
     result = test.run
 
     assert_equal 1, result
-    assert_match /There is nothing to test at querly\.yaml/, stdout.string
+    assert_match %r/There is nothing to test at querly\.yaml/, stdout.string
   end
 
   def test_rule_uniqueness
@@ -46,8 +46,8 @@ class TestTest < Minitest::Test
     result = test.run
 
     assert_equal 1, result
-    assert_match /Rule id id1 duplicated!/, stdout.string
-    refute_match /Rule id id2 duplicated!/, stdout.string
+    assert_match %r/Rule id id1 duplicated!/, stdout.string
+    refute_match %r/Rule id id2 duplicated!/, stdout.string
   end
 
   def test_rule_patterns_pass
@@ -78,7 +78,7 @@ class TestTest < Minitest::Test
     result = test.run
 
     assert_equal 0, result
-    assert_match /All tests green!/, stdout.string
+    assert_match %r/All tests green!/, stdout.string
   end
 
   def test_rule_patterns_before_after_fail
@@ -109,10 +109,10 @@ class TestTest < Minitest::Test
     result = test.run
 
     assert_equal 1, result
-    assert_match /id1:\t1st \*before\* example didn't match with any pattern/, stdout.string
-    assert_match /id1:\t1st \*after\* example matched with some of patterns/, stdout.string
-    assert_match /1 examples found which should not match, but matched/, stdout.string
-    assert_match /1 examples found which should match, but didn't/, stdout.string
+    assert_match %r/id1:\t1st \*before\* example didn't match with any pattern/, stdout.string
+    assert_match %r/id1:\t1st \*after\* example matched with some of patterns/, stdout.string
+    assert_match %r/1 examples found which should not match, but matched/, stdout.string
+    assert_match %r/1 examples found which should match, but didn't/, stdout.string
   end
 
   def test_rule_patterns_example_fail
@@ -144,10 +144,10 @@ class TestTest < Minitest::Test
     result = test.run
 
     assert_equal 1, result
-    assert_match /id1:\tafter of 1st example matched with some of patterns/, stdout.string
-    assert_match /id1:\tbefore of 2nd example didn't match with any pattern/, stdout.string
-    assert_match /1 examples found which should not match, but matched/, stdout.string
-    assert_match /1 examples found which should match, but didn't/, stdout.string
+    assert_match %r/id1:\tafter of 1st example matched with some of patterns/, stdout.string
+    assert_match %r/id1:\tbefore of 2nd example didn't match with any pattern/, stdout.string
+    assert_match %r/1 examples found which should not match, but matched/, stdout.string
+    assert_match %r/1 examples found which should match, but didn't/, stdout.string
   end
 
   def test_rule_patterns_error
@@ -174,6 +174,6 @@ class TestTest < Minitest::Test
     result = test.run
 
     assert_equal 1, result
-    assert_match /2 examples raised error/, stdout.string
+    assert_match %r/2 examples raised error/, stdout.string
   end
 end
