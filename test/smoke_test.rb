@@ -236,4 +236,19 @@ class SmokeTest < Minitest::Test
       end
     end
   end
+
+  def test_check_text_format_when_syntax_error
+    push_dir root + "test/data/test2" do
+      out, err, status = sh(querly_path.to_s, "check", "--format=text", ".")
+
+      assert status.success?
+      assert_empty out
+      assert_equal [
+        "Failed to load script: script.rb\n",
+        "script.rb:2:1: error: unexpected token $end\n",
+        "script.rb:2: \n",
+        "script.rb:2: \n",
+      ].join, err
+    end
+  end
 end
