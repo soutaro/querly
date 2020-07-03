@@ -1,0 +1,10 @@
+require:
+  - rubocop-rubycw
+
+AllCops:
+  DisabledByDefault: true
+  Exclude:
+    - test/data/**/*.rb
+
+Rubycw/Rubycw:
+  Enabled: true
