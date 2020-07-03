@@ -17,7 +17,6 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - run: gem install bundler --no-document
     - run: bundle install --jobs 4 --retry 3
     - run: bin/setup
     - run: bundle exec rake build test
