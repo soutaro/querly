@@ -1,7 +1,8 @@
 ![Querly logo](https://github.com/soutaro/querly/blob/master/logo/Querly%20horizontal.png)
+
 # Querly - Pattern Based Checking Tool for Ruby
 
-[![Build Status](https://travis-ci.org/soutaro/querly.svg?branch=master)](https://travis-ci.org/soutaro/querly)
+![Ruby](https://github.com/soutaro/querly/workflows/Ruby/badge.svg)
 
 Querly is a query language and tool to find out method calls from Ruby programs.
 Define rules to check your program with patterns to find out *bad* pieces.
