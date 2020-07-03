@@ -11,18 +11,13 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        container_tag:
-        - 2.6-bionic
-        - 2.7-bionic
-        - master-nightly-bionic
-    container:
-      image: rubylang/ruby:${{ matrix.container_tag }}
+        ruby: [2.6, 2.7, head]
     steps:
-    - uses: actions/checkout@v1
-    - name: Run test
-      run: |
-        ruby -v
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-        bin/setup
-        bundle exec rake build test
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - run: gem install bundler --no-document
+    - run: bundle install --jobs 4 --retry 3
+    - run: bin/setup
+    - run: bundle exec rake build test
