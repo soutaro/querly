@@ -57,7 +57,7 @@ class ConfigTest < Minitest::Test
   def test_factory_config_prints_warning_on_tagging
     Config::Factory.new({ "tagging" => [] }, config_path: Pathname("/foo/bar"), root_dir: Pathname("/foo/bar"), stderr: stderr).config
 
-    assert_match /tagging is deprecated and ignored/, stderr.string
+    assert_match %r/tagging is deprecated and ignored/, stderr.string
   end
 
   def test_relative_path_from_root

@@ -25,7 +25,7 @@ module Querly
         yield self
 
         children.each do |child|
-          child.each_subpair &block
+          child.each_subpair(&block)
         end
       else
         enum_for :each_subpair
