@@ -11,7 +11,7 @@ task :default => :test
 task :build => :racc
 task :test => :racc
 
-rule /\.rb/ => ".y" do |t|
+rule %r/\.rb/ => ".y" do |t|
   sh "racc", "-v", "-o", "#{t.name}", "#{t.source}"
 end
 
