@@ -82,7 +82,8 @@ module Querly
 
         new_source = source.gsub(/./, ' ')
         parser.ast.descendants(:erb).each do |erb_node|
-          _, _, code_node, = *erb_node
+          indicator_node, _, code_node, = *erb_node
+          next if indicator_node&.loc&.source == '#'
           new_source[code_node.loc.range] = code_node.loc.source
           new_source[code_node.loc.range.end] = ';'
         end
