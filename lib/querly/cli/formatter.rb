@@ -46,7 +46,12 @@ module Querly
 
         def script_error(path, error)
           STDERR.puts Rainbow("Failed to load script: #{path}").red
-          STDERR.puts error.inspect
+
+          if error.is_a? Parser::SyntaxError
+            STDERR.puts error.diagnostic.render
+          else
+            STDERR.puts error.inspect
+          end
         end
 
         def issue_found(script, rule, pair)
