@@ -2,6 +2,12 @@
 
 ## master
 
+## 1.2.0 (2020-12-15)
+
+* Relax Thor version requirements by @y-yagi ([#85](https://github.com/soutaro/querly/pull/85))
+* Fix ERB comment preprocessing by @mallowlabs ([#84](https://github.com/soutaro/querly/pull/84))
+* Better error message for Ruby code syntax error by @ybiquitous ([#83](https://github.com/soutaro/querly/pull/83))
+
 ## 1.1.0 (2020-05-17)
 
 * Fix invalid bytes sequence in UTF-8 error by @mallowlabs [#75](https://github.com/soutaro/querly/pull/75)
