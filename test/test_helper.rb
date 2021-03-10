@@ -28,7 +28,7 @@ module TestHelper
 
     analyzer = Querly::Analyzer.new(config: nil, rule: nil)
     analyzer.scripts << Querly::Script.new(path: Pathname("(input)"),
-                                           node: Parser::Ruby25.parse(src, "(input)"))
+                                           node: Parser::Ruby30.parse(src, "(input)"))
 
     [].tap do |result|
       analyzer.find(pat) do |script, pair|

@@ -1,0 +1,4 @@
+rules:
+  - id: test_rule
+    message: This is a test message
+    pattern: _.test

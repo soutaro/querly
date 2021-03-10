@@ -251,4 +251,14 @@ class SmokeTest < Minitest::Test
       ].join, err
     end
   end
+
+  def test_check_new_syntax
+    push_dir root + "test/data/test4" do
+      out, err, status = sh(querly_path.to_s, "check", ".")
+
+      assert status.success?
+      assert_empty out
+      assert_empty err
+    end
+  end
 end
