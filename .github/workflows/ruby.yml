@@ -8,15 +8,15 @@ on:
 
 jobs:
   test:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [2.6, 2.7, head]
+        ruby: ["2.6", "2.7", "3.0", head]
     steps:
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - run: bundle install --jobs 4 --retry 3
+        bundler-cache: true
     - run: bin/setup
     - run: bundle exec rake build test
