@@ -2,6 +2,11 @@
 
 ## master
 
+## 1.3.0 (2021-07-05)
+
+* Require Ruby 2.7 or 3.0 by @yubiquitous ([#88](https://github.com/soutaro/querly/pull/88))
+* Use 3.0 compatible parser by @yubiquitous ([#88](https://github.com/soutaro/querly/pull/88))
+
 ## 1.2.0 (2020-12-15)
 
 * Relax Thor version requirements by @y-yagi ([#85](https://github.com/soutaro/querly/pull/85))
