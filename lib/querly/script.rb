@@ -4,7 +4,7 @@ module Querly
     attr_reader :node
 
     def self.load(path:, source:)
-      parser = Parser::Ruby25.new(Builder.new).tap do |parser|
+      parser = Parser::Ruby30.new(Builder.new).tap do |parser|
         parser.diagnostics.all_errors_are_fatal = true
         parser.diagnostics.ignore_warnings = true
       end
