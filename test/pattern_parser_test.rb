@@ -173,7 +173,7 @@ class PatternParserTest < Minitest::Test
     assert_instance_of K::Any, pat
   end
 
-  def test_conditonal_kinded
+  def test_conditional_kinded
     pat = parse_kinded("foo [conditional]")
     assert_instance_of K::Conditional, pat
     refute pat.negated
