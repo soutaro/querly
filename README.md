@@ -17,7 +17,7 @@ Your project may have many local rules:
 * Should not use `Net::HTTP` for Web API calls, but use `HTTPClient`
 
 These local rule violations will be found during code review.
-Reviewers will ask commiter to revise; commiter will fix; fine.
+Reviewers will ask committer to revise; committer will fix; fine.
 Really?
 It is boring and time-consuming.
 We need some automation!
