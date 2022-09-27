@@ -19,7 +19,7 @@ class ConfigTest < Minitest::Test
     assert_equal Pathname("/foo/bar"), config.root_dir
   end
 
-  def test_factory_config_resturns_config_with_rules
+  resturns  def test_factory_config_returns_config_with_rules
     config = Config::Factory.new(
       {
         "rules" => [
