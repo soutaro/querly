@@ -171,12 +171,13 @@ module Querly
         end
 
         def test_node(node)
+          return false unless node
           return false if block == true && node.type != :block
           return false if block == false && node.type == :block
 
-          node = node.children.first if node&.type == :block
+          node = node.children.first if node.type == :block
 
-          case node&.type
+          case node.type
           when :send, :csend
             return false unless test_name(node)
             return false unless test_receiver(node.children[0])
